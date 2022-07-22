@@ -1,0 +1,11 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (T08OpenGL.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  anim.cpp
+C:\Users\Dasha\YandexDisk\OpenGL\Windows\T08OpenGL\T08OpenGL\src\anim\Globe.h(45,1): warning C4154: deletion of an array expression; conversion to pointer supplied
+  prim.cpp
+  rndbase.cpp
+  rnddata.cpp
+  main.cpp
+  Generating Code...
+C:\Users\Dasha\YandexDisk\OpenGL\Windows\T08OpenGL\T08OpenGL\src\anim\anim.h(58): warning C4717: 'rnd::anim::Init': recursive on all control paths, function will cause runtime stack overflow
+C:\Users\Dasha\YandexDisk\OpenGL\Windows\T08OpenGL\T08OpenGL\src\anim\anim.h(83): warning C4717: 'rnd::anim::Resize': recursive on all control paths, function will cause runtime stack overflow
+  T08OpenGL.vcxproj -> C:\Users\Dasha\YandexDisk\OpenGL\Windows\T08OpenGL\x64\Debug\T07OpenGL.exe
