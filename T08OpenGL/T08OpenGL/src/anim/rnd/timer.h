@@ -2,6 +2,7 @@
 #define __timer_h_
 
 #include "rnd.h"
+#include <windows.h>
 
 namespace rnd
 {
@@ -70,7 +71,14 @@ namespace rnd
       OldTime = t.QuadPart;
     }
     
-    
+    /*void DrawFPS( HWND hWnd )
+    {
+      static char buf[100];
+      sprintf(buf, "T08OpenGL, FPS: %.5f", FPS);
+ 
+      SetWindowText(hWnd, buf);
+    }
+    */
   };
 }
 

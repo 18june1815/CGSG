@@ -5,6 +5,7 @@ namespace rnd
 {
   HWND hWnd;
   HDC hDC;
+  HGLRC hGLRC;
   int FrameW, FrameH;
   HFONT hFnt;
   PAINTSTRUCT ps;

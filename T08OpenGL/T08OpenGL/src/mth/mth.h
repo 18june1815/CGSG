@@ -16,6 +16,34 @@ namespace mth
 
 
   template<typename type>
+    class vec2
+    {
+    public: 
+      type X, Y;
+      vec2( void )
+      {
+      }
+
+      vec2( type x, type y) : X(x), Y(y)
+      {
+      }
+    };
+
+  template<typename type>
+    class vec4
+    {
+    public:
+      type X, Y, Z, W;
+      vec4( void )
+      {
+      }
+
+      vec4( type x, type y, type z, type w ) : X(x), Y(y), Z(z), W(w)
+      {
+      }
+    };
+
+  template<typename type>
     class vec3
     {
     public:
@@ -62,6 +90,8 @@ namespace mth
 
       type operator!( void ) const
       {
+        type a;
+        a = sqrt(X * X + Y * Y + Z * Z);
         return sqrt(X * X + Y * Y + Z * Z);
       }
 
@@ -78,6 +108,11 @@ namespace mth
       }
       vec3 Normalize( void ) const
       { 
+        float l = !*this;
+        vec3 a;
+      
+        a = *this/ !*this;
+        a = *this/ !(*this);
         if (!*this != 0)
           return *this/ !*this;
         else 
@@ -349,7 +384,9 @@ namespace mth
 
 namespace dlgl
 {
+  typedef mth::vec2<float> vec2;
   typedef mth::vec3<float> vec3;
+  typedef mth::vec4<float> vec4;
   typedef mth::matr<float> matr;
 }
 

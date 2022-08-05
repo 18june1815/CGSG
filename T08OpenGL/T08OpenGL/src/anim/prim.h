@@ -8,52 +8,64 @@ namespace rnd
 {
   struct vertex
   {
-    dlgl::vec3 P;
+    dlgl::vec3 P; // Position
+    dlgl::vec2 T; // Texture coordinate
+    dlgl::vec3 N; //Normal
+    dlgl::vec4 C; //Color
   };
 
   class prim : public object
   {
   public:
-    vertex *V;   // Vertex attributes array
-    int NumOfV;  // Number of vertices                           
-    int *I;      // Index array (for trimesh - by 3 ones)
-    int NumOfI;  // Number of indices
+    //OpenGL specific data
+    UINT 
+      VA, VBuf, //Vertex array and vertex bubber number
+      IBuf;     //Index buffer number
+    int NumOfElements; //Number of elements (indexes or vertexes)
+
     dlgl::matr MatrWorld;  //World tranformation matrix
     const char *FileName; //File name to Load prim
 
     dlgl::vec3 MinBB, MaxBB; // Bound box
 
     prim( const char *FN ) :
-      V(nullptr), I(nullptr), NumOfV(0), NumOfI(0),
+      VA(0), VBuf(0), NumOfElements(0),
       MatrWorld(dlgl::matr::Identity()), FileName(FN)
     {
       Load(FileName);
-      SetBB();
     }
 
     prim( void ) :
-      V(nullptr), I(nullptr), NumOfV(0), NumOfI(0),
+      VA(0), VBuf(0), NumOfElements(0),
       MatrWorld(dlgl::matr::Identity()), FileName("")
     {
- 
     }
+
     ~prim( void )
     {
-      if (V != nullptr)
-        delete[] V;
-      if (I != nullptr)
-        delete[] I;
+      if (VA != 0)
+      {
+        glBindVertexArray(VA);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        if (VBuf != 0)
+          glDeleteBuffers(1, &VBuf);
+        glBindVertexArray(0);
+        glDeleteVertexArrays(1, &VA);
+      }
+      if (IBuf != 0)
+        glDeleteBuffers(1, &IBuf);
     }
 
-    bool Create( int NoofV, int NoofI );
-    void Response( void ) override;
-    void Render( void ) override;
-    void SetWorldTransormation( dlgl::matr MatrWorld );
-    void EvalBB( void );
-    void SetBB( void );
-    bool Load( const char *FileName );
 
+    void Create( vertex *V, int NoofV, int *Ind, int NoofI );
+    void Response( void ) override;
+    void Draw( void ) override;
+    void SetWorldTransormation( dlgl::matr MatrWorld );
+    void EvalBB( vertex *V, int NoofV );
+    void SetBB( vertex *V, int NoofV );
+    bool Load( const char *FileName );
+    void Autonormals( vertex *V, int NoofV, int *Ind, int NoofI );
    
   };  // end of class "prim"
 }
-#endif /* __RNDPRIM_H_*/
+#endif  /* __RNDPRIM_H_*/

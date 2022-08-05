@@ -1,13 +1,21 @@
 #ifndef __RND_H_
 #define __RND_H_
 
+#define GLEW_STATIC
+#include <GL\glew.h>
+#include <GL\wglew.h>
+#include <GL\wglext.h>
+#include <GL\freeglut.h>
+
 #include "def.h"
 #include "timer.h"
+
 
 namespace rnd
 {
   extern HWND hWnd;
-  extern HDC hDC;
+  extern HDC hDC;      
+  extern HGLRC hGLRC; //OpenGL rendering context
   extern int FrameW, FrameH;
   extern HFONT hFnt;
   extern PAINTSTRUCT ps;
@@ -33,13 +41,13 @@ namespace rnd
   extern INT StoredProjPointsSize;
     
   void ProjSet( void );
-  void Init( HWND hWnd, WPARAM wp );
-  void Resize( int W, int H );
-  void CopyFrame( void );
-  void Start( void );
-  void Close( void );
-  void MouseWheel( WPARAM wp );
-  void MouseMove( LPARAM lp );
+  void RenderInit( HWND hWnd, WPARAM wp );
+  void RenderResize( int W, int H );
+  void RenderCopyFrame( void );
+  void RenderStart( void );
+  void RenderClose( void );
+  void RenderMouseWheel( WPARAM wp );
+  void RenderMouseMove( LPARAM lp );
 }
 
 

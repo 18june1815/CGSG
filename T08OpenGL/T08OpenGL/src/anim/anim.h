@@ -9,7 +9,7 @@ namespace rnd
   class object
   {
   public:
-    virtual void Render( void )
+    virtual void Draw( void )
     {
     } /* End of 'Render' function */
 
@@ -48,13 +48,18 @@ namespace rnd
       {
         delete Objects[i];
       }       
-      Close();
+      RenderClose();
     }
  
     void Init( HWND hWnd, WPARAM wp )
     {  
-      Init(hWnd, wp);
+      RenderInit(hWnd, wp);
       SetScene();
+    }
+
+    void CopyFrame( void )
+    {
+      RenderCopyFrame();
     }
 
     anim & operator<<( object *Obj )
@@ -66,31 +71,39 @@ namespace rnd
 
     void Render( void )
     {
+
       for (int i = 0; i < NumOfObjects; i++)
       {
         Objects[i]->Response();
       }
-      Start();
+      RenderStart();
       for (int i = 0; i < NumOfObjects; i++)
       {
-        Objects[i]->Render();
+        Objects[i]->Draw();
       }
+     
+      static char buf[100];
+      sprintf(buf, "T08OpenGL, FPS: %.5f", T.FPS);
+      SetWindowText(rnd::hWnd, buf);
+     
     }
 
     void Resize( int W, int H )
     {
-      Resize(W, H);
+      RenderResize(W, H);
+
     }
-    void MouseWheel( void )
+    void MouseWheel( WPARAM wp )
     {
+      RenderMouseWheel(wp);
       for (int i = 0; i < NumOfObjects; i++)
       {
         Objects[i]->MouseWheel();
       }
     }
-
-    void MouseMove( void )
+    void MouseMove( LPARAM lp )
     {
+      RenderMouseMove(lp);
       for (int i = 0; i < NumOfObjects; i++)
       {
         Objects[i]->MouseMove();

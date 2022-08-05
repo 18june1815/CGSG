@@ -4,29 +4,104 @@
 
 #include "prim.h"
 
-bool rnd::prim::Create( int NoofV, int NoofI )
+void rnd::prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
 {
-  if (V != nullptr)
-    delete[] V;
-  if (I != nullptr)
-    delete[] I;
-  V = new vertex[NumOfV = NoofV];
-  I = new int[NumOfI = NoofI];
+  dlgl::vec3 l(1, 2, 3);
+  l = l.Normalize();
+  dlgl::vec4 *C = new dlgl::vec4[NoofV];
+  for (int i = 0; i < NoofV; i++)
+  {
+    V[i].C = dlgl::vec4(0.5, 1.0, 0.5, 0);
+    V[i].N = dlgl::vec3(l.X, l.Y, l.Z);
+    V[i].T = dlgl::vec2(0, 0);
+    C[i] = V[i].C;
+  }
+     //V[i].C = dlgl::vec4(V[i].N.X, V[i].N.Y, V[i].N.Z, 0);
+    
+
+  glGenBuffers(1, &VBuf);
+  glGenVertexArrays(1, &VA);
+
+  glBindVertexArray(VA);
+  glBindBuffer(GL_ARRAY_BUFFER, VBuf);
+
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertex) * NoofV, V, GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, FALSE, sizeof(vertex), (VOID *)0);
+  glVertexAttribPointer(1, 2, GL_FLOAT, FALSE, sizeof(vertex), (VOID *)sizeof(dlgl::vec3));
+  glVertexAttribPointer(2, 3, GL_FLOAT, FALSE, sizeof(vertex), 
+                        (VOID *)(sizeof(dlgl::vec3) + sizeof(dlgl::vec2)));
+  glVertexAttribPointer(3, 4, GL_FLOAT, FALSE, sizeof(vertex), 
+                        (VOID *)(sizeof(dlgl::vec3) * 2 + sizeof(dlgl::vec2)));
+
+  //glColorPointer(4, GL_FLOAT, 0, C);
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
+  glEnableVertexAttribArray(3);
+  glBindVertexArray(0);
+
+
+  if (NoofI != 0)
+  {
+    glGenBuffers(1, &IBuf);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBuf);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * NoofI, Ind, GL_STATIC_DRAW);
+    NumOfElements = NoofI;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  }
+  else
+    NumOfElements = NoofV;
+  
+
   MatrWorld = dlgl::matr::Identity();          
-  return true;
+
 } // end of 'Create' function
 
-void rnd::prim::Render( void ) 
+void rnd::prim::Autonormals( vertex *V, int NoofV, int *Ind, int NoofI )
+{
+  for (int i = 0; i < NoofV; i++)
+    V[i].N = dlgl::vec3(0, 0, 0);
+  for (int i = 0; i < NoofI; i += 3)
+  {
+    dlgl::vec3
+      p0 = V[Ind[i]].P,
+      p1 = V[Ind[i + 1]].P,
+      p2 = V[Ind[i + 2]].P,
+      N = ((p0 - p1).Cross(p2 - p0)).Normalize();
+    
+    V[Ind[i]].N = V[Ind[i]].N + N;
+    V[Ind[i + 1]].N = V[Ind[i + 1]].N + N;
+    V[Ind[i + 2]].N = V[Ind[i + 2]].N + N;
+  }
+  for (int i = 0; i < NoofV; i++)
+    V[i].N = (V[i].N).Normalize();
+}
+
+void rnd::prim::Draw( void ) 
 {
   dlgl::matr wvp = MatrWorld * MatrVP;
    
+ //glColor4f(0.5, 1.0, 0.5, 0);
+  glLoadMatrixf(wvp.M[0]);
   // Draw triangles
-  for (int i = 0; i < NumOfI; i += 3)
-  {
-   /* */
-  } 
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glColorMaterial(GL_FRONT_AND_BACK, GL_FILL);
+  glEnable(GL_COLOR_MATERIAL);
+  
+  glBindVertexArray(VA);
 
-} // end of Render function
+  if(IBuf == 0)
+    glDrawArrays(GL_TRIANGLES, 0, NumOfElements);
+  else
+  {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBuf);
+    glDrawElements(GL_TRIANGLES, NumOfElements, GL_UNSIGNED_INT, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  }
+  glBindVertexArray(0);
+    //glDisableClientState(GL_COLOR_ARRAY);
+  //glDisableClientState(GL_VERTEX_ARRAY);
+} // end of Draw function
 
  void rnd::prim::SetWorldTransormation( dlgl::matr MW )
  {
@@ -36,6 +111,8 @@ void rnd::prim::Render( void )
  bool rnd::prim::Load( const char *FileName )
  {
    FILE *F;
+   vertex *V;
+   int *Ind;
    int nv = 0, ni = 0;
    static char Buf[1000];
 
@@ -57,17 +134,11 @@ void rnd::prim::Render( void )
      }
    }
 
+   V = new vertex[nv];
+   Ind = new int[ni * 3];
 
-   if (!Create(nv, ni * 3))
-   {
-     fclose(F);
-     return false;
-   }
-   else 
-     Create(nv, ni * 3);
- 
    // Read model data
-   rewind(F);
+     rewind(F);
    nv = 0;
    ni = 0;
    while (fgets(Buf, sizeof(Buf) - 1, F) != NULL)
@@ -96,9 +167,9 @@ void rnd::prim::Render( void )
              n1 = nc;
            else
            {
-             I[ni++] = n0 - 1;
-             I[ni++] = n1 - 1;
-             I[ni++] = nc - 1;
+             Ind[ni++] = n0 - 1;
+             Ind[ni++] = n1 - 1;
+             Ind[ni++] = nc - 1;
              n1 = nc;
            }
            n++;
@@ -108,17 +179,24 @@ void rnd::prim::Render( void )
      }
    }
   fclose(F);
-  return true;
- }
- void rnd::prim::EvalBB( void )
- {
-   int i;
 
-   if (V == 0 && NumOfV == 0)
+
+  Autonormals(V, nv, Ind, ni);
+  Create(V, nv, Ind, ni);
+  SetBB(V, nv);
+
+  return true;
+      
+ }
+ void rnd::prim::EvalBB( vertex *V, int NoofV )
+ {
+  int i;
+
+   if (V == 0 && NumOfElements == 0)
      return;
    MinBB = MaxBB = V[0].P;
 
-   for (i = 0; i < NumOfV; i++)
+   for (i = 0; i < NoofV; i++)
    {
      if (MinBB.X > V[i].P.X)
        MinBB.X = V[i].P.X;
@@ -135,12 +213,13 @@ void rnd::prim::Render( void )
      if (MaxBB.Z < V[i].P.Z)
        MaxBB.Z = V[i].P.Z;
    }
+   
  }
 
-void rnd::prim::SetBB( void )
+void rnd::prim::SetBB( vertex *V, int NoofV )
 {
-  EvalBB();
-  if(NumOfV > 0)
+  EvalBB(V, NoofV);
+  if(NoofV > 0)
   {
     dlgl::vec3 B = MaxBB - MinBB;
     SetWorldTransormation( dlgl::matr::Translate(-MaxBB));
@@ -153,8 +232,9 @@ void rnd::prim::SetBB( void )
 
     SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3(1 / sc, 1 / sc, 1 / sc)));
   }
+  
 }
-
+ 
 void rnd::prim::Response( void )
 {
 }

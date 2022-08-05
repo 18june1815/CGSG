@@ -1,7 +1,5 @@
 #include <Windows.h>
 #include "dl1.h"
-
-//rnd::timer T; 
 /* Window class name */
 #define WND_CLASS_NAME "My Window Class Name"
 
@@ -68,12 +66,12 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
     minmax->ptMinTrackSize.y = 400;
     return 0;
   case WM_CREATE:
+    rnd::RenderInit(hWnd, wParam);
     MyAnim.Init( hWnd, wParam );
 
     return 0;
   case WM_SIZE:
     MyAnim.Resize(LOWORD(lParam), HIWORD(lParam));
-   
     SendMessage(hWnd, WM_TIMER, 0, 0);
     return 0;
   case WM_KEYDOWN:
@@ -83,8 +81,9 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
     return 0;
   case WM_TIMER:
     MyAnim.Render();
-
-    InvalidateRect(hWnd, NULL, FALSE);
+  
+    MyAnim.CopyFrame();
+   
     PostMessage(hWnd, WM_PAINT, 0, 0);
     return 0;
   case WM_ERASEBKGND:
@@ -92,14 +91,14 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
   case WM_LBUTTONDOWN:
     return 0;
   case WM_MOUSEWHEEL:
-    rnd::MouseWheel(wParam);
+    MyAnim.MouseWheel(wParam);
   case WM_MOUSEMOVE:
     if (wParam & MK_LBUTTON)
-      rnd::MouseMove(lParam);
+      MyAnim.MouseMove(lParam);
     return 0;
   case WM_PAINT:
     rnd::hDC = BeginPaint(rnd::hWnd, &ps);
-
+    MyAnim.CopyFrame();
     EndPaint(rnd::hWnd, &ps); 
     return 0;
   case WM_CLOSE:
@@ -108,7 +107,7 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
       DestroyWindow(hWnd);
     return 0;
   case WM_DESTROY:
-    rnd::Close();    
+    rnd::RenderClose();    
     PostMessage(hWnd, WM_QUIT, 0, 0);
     KillTimer(hWnd, 30);
     return 0;
