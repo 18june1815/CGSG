@@ -6,19 +6,11 @@
 
 void rnd::prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
 {
-  dlgl::vec3 l(1, 2, 3);
-  l = l.Normalize();
-  dlgl::vec4 *C = new dlgl::vec4[NoofV];
+  
   for (int i = 0; i < NoofV; i++)
-  {
-    V[i].C = dlgl::vec4(0.5, 1.0, 0.5, 0);
-    V[i].N = dlgl::vec3(l.X, l.Y, l.Z);
-    V[i].T = dlgl::vec2(0, 0);
-    C[i] = V[i].C;
-  }
-     //V[i].C = dlgl::vec4(V[i].N.X, V[i].N.Y, V[i].N.Z, 0);
-    
+    V[i].C = dlgl::vec4(V[i].N.X, V[i].N.Y, V[i].N.Z, 0);
 
+     
   glGenBuffers(1, &VBuf);
   glGenVertexArrays(1, &VA);
 
@@ -79,14 +71,20 @@ void rnd::prim::Autonormals( vertex *V, int NoofV, int *Ind, int NoofI )
 
 void rnd::prim::Draw( void ) 
 {
+  int loc;
+
   dlgl::matr wvp = MatrWorld * MatrVP;
    
- //glColor4f(0.5, 1.0, 0.5, 0);
   glLoadMatrixf(wvp.M[0]);
   // Draw triangles
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  glColorMaterial(GL_FRONT_AND_BACK, GL_FILL);
-  glEnable(GL_COLOR_MATERIAL);
+  
+  glUseProgram(res.shd.ProgId);
+
+  if ((loc = glGetUniformLocation(res.shd.ProgId, "MatrWVP")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, wvp.M[0]);
+  if ((loc = glGetUniformLocation(res.shd.ProgId, "Time")) != -1)
+    glUniform1f(loc, T.Time);
   
   glBindVertexArray(VA);
 
@@ -99,6 +97,7 @@ void rnd::prim::Draw( void )
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
   glBindVertexArray(0);
+  glUseProgram(0);
     //glDisableClientState(GL_COLOR_ARRAY);
   //glDisableClientState(GL_VERTEX_ARRAY);
 } // end of Draw function
@@ -182,9 +181,13 @@ void rnd::prim::Draw( void )
 
 
   Autonormals(V, nv, Ind, ni);
+  
   Create(V, nv, Ind, ni);
   SetBB(V, nv);
+  SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3(3, 3, 3)));
 
+  delete[] V;
+  delete[] Ind;
   return true;
       
  }

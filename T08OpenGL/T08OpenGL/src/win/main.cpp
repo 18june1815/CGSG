@@ -66,7 +66,7 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
     minmax->ptMinTrackSize.y = 400;
     return 0;
   case WM_CREATE:
-    rnd::RenderInit(hWnd, wParam);
+    //rnd::RenderInit(hWnd, wParam);
     MyAnim.Init( hWnd, wParam );
 
     return 0;

@@ -1,0 +1,32 @@
+WinterCamp 2022
+
+Изменение проекта под OpenGL. Удаление двойной буфферизации
+CGSG'2022'WinterCamp 2022 01 17 17 36 47
+https://www.youtube.com/watch?v=8T4TFSXxyOM&list=PLVUORnTMqLVkHlw1okrI_0zWBqpPrBMDx&index=30
+
+Теория по OpenGl
+CGSG'2022'WinterCamp 2022 01 17 18 20 35
+https://www.youtube.com/watch?v=WnFFl4zlCU8&list=PLVUORnTMqLVkHlw1okrI_0zWBqpPrBMDx&index=31
+
+Добавление OpenGl в проект
+CGSG'2022'WinterCamp 2022 01 17 19 33 08
+https://www.youtube.com/watch?v=plGrSSvTxRA&list=PLVUORnTMqLVkHlw1okrI_0zWBqpPrBMDx&index=32
+
+
+Вершинные буффера. Примитив в видеопамяти
+CGSG'2022'WinterCamp 2022 01 17 20 45 44
+https://www.youtube.com/watch?v=3bv5IYnkZkY&list=PLVUORnTMqLVkHlw1okrI_0zWBqpPrBMDx&index=33
+
+Автонормали
+CGSG'2022'WinterCamp 2022 01 21 18 04 40
+https://www.youtube.com/watch?v=t189QGvVKOI&list=PLVUORnTMqLVkHlw1okrI_0zWBqpPrBMDx&index=34
+
+Шейдера начало
+CGSG'2022'WinterCamp 2022 01 21 18 48 19
+https://www.youtube.com/watch?v=S8CB3jOQc7g&list=PLVUORnTMqLVkHlw1okrI_0zWBqpPrBMDx&index=35
+
+Шейдера интеграция в проект
+CGSG'2022'WinterCamp 2022 01 26 18 33 49
+https://www.youtube.com/watch?v=Eg9cnEZg0tM&list=PLVUORnTMqLVkHlw1okrI_0zWBqpPrBMDx&index=37
+
+

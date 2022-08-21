@@ -76,6 +76,7 @@ namespace rnd
       {
         Objects[i]->Response();
       }
+     
       RenderStart();
       for (int i = 0; i < NumOfObjects; i++)
       {

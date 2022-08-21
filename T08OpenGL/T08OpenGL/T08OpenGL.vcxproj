@@ -31,7 +31,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -75,12 +75,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>./src;C:\GL\glew\include;C:\GL\freeglut\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\GL\glew\lib\Release\Win32;C:\GL\freeglut\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeglut.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -135,6 +138,8 @@
     <ClInclude Include="src\anim\Globe.h" />
     <ClInclude Include="src\anim\prim.h" />
     <ClInclude Include="src\anim\rnd\camera.h" />
+    <ClInclude Include="src\anim\rnd\glew.h" />
+    <ClInclude Include="src\anim\rnd\res\rndres.h" />
     <ClInclude Include="src\anim\rnd\rnd.h" />
     <ClInclude Include="src\anim\rnd\timer.h" />
     <ClInclude Include="src\def.h" />
@@ -153,6 +158,9 @@
   <ItemGroup>
     <ClCompile Include="src\anim\anim.cpp" />
     <ClCompile Include="src\anim\prim.cpp" />
+    <ClCompile Include="src\anim\rnd\glew.c" />
+    <ClCompile Include="src\anim\rnd\res\rndres.cpp" />
+    <ClCompile Include="src\anim\rnd\res\rndshd.cpp" />
     <ClCompile Include="src\anim\rnd\rndbase.cpp" />
     <ClCompile Include="src\anim\rnd\rnddata.cpp" />
     <ClCompile Include="src\win\main.cpp" />

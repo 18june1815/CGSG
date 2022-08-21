@@ -1,5 +1,6 @@
 #include <windows.h>
 #include "rnd.h"
+#include "res/rndres.h"
 
 namespace rnd
 {
@@ -24,4 +25,5 @@ namespace rnd
     ProjFarClip = 300;
 
   timer T;
+  Res res;
 }

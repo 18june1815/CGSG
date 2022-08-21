@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\anim">
+      <UniqueIdentifier>{b3126d56-2bd5-4d08-8128-351f2e3e2a78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\anim\rnd">
+      <UniqueIdentifier>{7c96add9-173e-4689-8f6a-0a372a1801d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mth">
+      <UniqueIdentifier>{7346a644-75ef-4b11-ae6c-1a5228035100}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\win">
+      <UniqueIdentifier>{ccb39554-0d00-4f73-a4cb-93b74b35566f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\anim\rnd\res">
+      <UniqueIdentifier>{2e54297c-9251-4815-97cc-310e409e1d1b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="T09Shaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\def.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dl1.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mth\mth.h">
+      <Filter>Source Files\mth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\anim\rnd\res\rndres.h">
+      <Filter>Source Files\anim\rnd\res</Filter>
+    </ClInclude>
+    <ClInclude Include="src\anim\rnd\rnd.h">
+      <Filter>Source Files\anim\rnd</Filter>
+    </ClInclude>
+    <ClInclude Include="src\anim\rnd\timer.h">
+      <Filter>Source Files\anim\rnd</Filter>
+    </ClInclude>
+    <ClInclude Include="src\anim\rnd\camera.h">
+      <Filter>Source Files\anim\rnd</Filter>
+    </ClInclude>
+    <ClInclude Include="src\anim\anim.h">
+      <Filter>Source Files\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="src\anim\Globe.h">
+      <Filter>Source Files\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="src\anim\prim.h">
+      <Filter>Source Files\anim</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="T09Shaders.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="T09Shaders.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\win\main.cpp">
+      <Filter>Source Files\win</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\rnd\res\rndres.cpp">
+      <Filter>Source Files\anim\rnd\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\rnd\res\rndshd.cpp">
+      <Filter>Source Files\anim\rnd\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\rnd\glew.c">
+      <Filter>Source Files\anim\rnd</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\anim.cpp">
+      <Filter>Source Files\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\prim.cpp">
+      <Filter>Source Files\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\rnd\rndbase.cpp">
+      <Filter>Source Files\anim\rnd</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

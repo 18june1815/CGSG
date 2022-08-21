@@ -1,5 +1,5 @@
 #include "rnd.h"
-      
+#include "res/rndres.h"     
 
 void rnd::RenderInit( HWND hWnd, WPARAM wp )
 {
@@ -83,11 +83,13 @@ void rnd::RenderInit( HWND hWnd, WPARAM wp )
    static char buf[100];
    sprintf(buf, "T08OpenGL, FPS: %.5f", T.FPS);
    SetWindowText(rnd::hWnd, buf);
-                                                          
+    
+   res.Init();
 }
 
 void rnd::RenderClose()
 {
+  res.Close();
   //OpenGL deinit
   wglMakeCurrent(NULL, NULL);
   wglDeleteContext(hGLRC);
@@ -107,8 +109,20 @@ void rnd::RenderResize( int W, int H )
 
 void rnd::RenderStart( void )
 {
+  static double ReloadTime = 0;
+
+  T.Response();
+  if (T.GlobalTime - ReloadTime > 3)
+  {
+    ReloadTime = T.GlobalTime;
+    res.shd.Delete(res.shd.ProgId);
+    res.shd.ProgId = res.shd.Load("default");
+  }
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  T.Response();                  
+  
+
+  
   
 }
 

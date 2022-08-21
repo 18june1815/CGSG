@@ -4,11 +4,12 @@
 #define GLEW_STATIC
 #include <GL\glew.h>
 #include <GL\wglew.h>
-#include <GL\wglext.h>
-#include <GL\freeglut.h>
+//#include <GL\wglext.h>
+//#include <GL\freeglut.h>
 
 #include "def.h"
 #include "timer.h"
+#include "res/rndres.h"
 
 
 namespace rnd
@@ -21,6 +22,8 @@ namespace rnd
   extern PAINTSTRUCT ps;
   extern WPARAM wParam;
   extern LPARAM lParam;
+  extern Res res;
+
 
   extern timer T;
   
