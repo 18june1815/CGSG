@@ -2,7 +2,7 @@
 #include "prim.h"
 #include "Globe.h"
 
-render rnd;
+
 void anim::SetScene( void )
 {
   *this << new prim("bin/models/cow.obj");

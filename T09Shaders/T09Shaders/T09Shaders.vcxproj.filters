@@ -66,10 +66,10 @@
     <ClInclude Include="src\anim\anim.h">
       <Filter>Source Files\anim</Filter>
     </ClInclude>
-    <ClInclude Include="src\anim\Globe.h">
+    <ClInclude Include="src\anim\prim.h">
       <Filter>Source Files\anim</Filter>
     </ClInclude>
-    <ClInclude Include="src\anim\prim.h">
+    <ClInclude Include="src\anim\Globe.h">
       <Filter>Source Files\anim</Filter>
     </ClInclude>
   </ItemGroup>
@@ -107,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="src\anim\rnd\rndbase.cpp">
       <Filter>Source Files\anim\rnd</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\rnd\res\rndtex.cpp">
+      <Filter>Source Files\anim\rnd\res</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

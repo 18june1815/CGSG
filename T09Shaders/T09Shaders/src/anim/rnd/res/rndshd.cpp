@@ -18,7 +18,7 @@ char *shader::LoadTextFromFile( const char *FileName )
   return txt;
 }
 
-void shader::Log( const char *Prefix, const char *Type, const char *Text )
+void shader::Log( const char *ShaderName, const char *Prefix, const char *Type, const char *Text )
 {
   FILE *F;
 

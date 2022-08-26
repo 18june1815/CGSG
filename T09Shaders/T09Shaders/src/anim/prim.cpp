@@ -3,11 +3,20 @@
 #include <cctype>
 
 #include "prim.h"
+#include "rnd/rnd.h"
 
 void prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
 {
+  dlgl::vec3 L(0.5, 1, 1);
+  L = L.Normalize();
+
   for (int i = 0; i < NoofV; i++)
-      V[i].C = dlgl::vec4(V[i].N.X, V[i].N.Y, V[i].N.Z, 0);
+  {
+    float nl = (V[i].N & L);
+
+    V[i].C = dlgl::vec4(nl * 0.8 + V[i].N.X, nl * 0.3 + V[i].N.Y, nl * 0.60 + V[i].N.Z, 0);
+  }
+  
      
   glGenBuffers(1, &VBuf);
   glGenVertexArrays(1, &VA);

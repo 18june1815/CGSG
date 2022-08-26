@@ -37,7 +37,7 @@ public:
 
     GeomSet(0.2);
     GlobeSet(V, Ind);
-    Create(V, NumOfV,Ind, NumOfI);
+    Create(V, NumOfV, Ind, NumOfI);
 
     float Rx = (float) rand()/RAND_MAX - 0.5;
     float Ry = (float) rand()/RAND_MAX - 0.5;

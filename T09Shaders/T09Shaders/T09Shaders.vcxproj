@@ -158,6 +158,7 @@
     <ClCompile Include="src\anim\rnd\glew.c" />
     <ClCompile Include="src\anim\rnd\res\rndres.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndshd.cpp" />
+    <ClCompile Include="src\anim\rnd\res\rndtex.cpp" />
     <ClCompile Include="src\anim\rnd\rndbase.cpp" />
     <ClCompile Include="src\win\main.cpp" />
   </ItemGroup>
