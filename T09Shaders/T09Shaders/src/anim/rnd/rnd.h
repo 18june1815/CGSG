@@ -9,6 +9,7 @@
 #include "def.h"
 #include "anim/rnd/timer.h"
 #include "res/rndres.h"
+#include "camera.h"
   
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")
@@ -24,7 +25,7 @@ public:
   HGLRC hGLRC; //OpenGL rendering context
   WPARAM wParam;
   LPARAM lParam;
-  Res res;
+  resources resources;
   timer T;
  
   int FrameW, FrameH;
@@ -39,6 +40,7 @@ public:
     ProjDist = 0.1,
     ProjFarClip = 300;
 
+    camera cam;
   render( void )
   {
   }

@@ -14,7 +14,9 @@ void prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
   {
     float nl = (V[i].N & L);
 
-    V[i].C = dlgl::vec4(nl * 0.8 + V[i].N.X, nl * 0.3 + V[i].N.Y, nl * 0.60 + V[i].N.Z, 0);
+    V[i].C = dlgl::vec4(nl * 0.1 + V[i].N.X, nl * 0.3 + V[i].N.Y, nl * 0.60 + V[i].N.Z, 0);
+    V[i].C = dlgl::vec4(nl * 0.3 + 0.5, nl * 0.3 +0.2, nl * 0.60 + 0.3, 0);
+    //V[i].C = dlgl::vec4(V[i].N.X, V[i].N.Y, V[i].N.Z, 0);
   }
   
      
@@ -75,21 +77,41 @@ void prim::Autonormals( vertex *V, int NoofV, int *Ind, int NoofI )
 
 void prim::Draw( dlgl::matr MatrVP ) 
 {
-  int loc;
+  int loc, ProgId;
+  
+  dlgl::matr 
+    wvp = MatrWorld * MatrVP,
+    w = Trans * MatrWorld,
+    winv = w.Inverse();
 
-  dlgl::matr wvp = MatrWorld * MatrVP;
-   
   glLoadMatrixf(wvp.M[0]);
+     
+  // Pass render uniforms
+  ProgId = rnd.resources.ApplyMaterial(MtlNo);  
+   if ((loc = glGetUniformLocation(rnd.resources.shd[0]->ProgId, "Time")) != -1)
+    glUniform1f(loc, rnd.T.Time);
+  if ((loc = glGetUniformLocation(ProgId, "MatrWVP")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, wvp.M[0]);
+  if ((loc = glGetUniformLocation(ProgId, "MatrW")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, w.M[0]);
+  if ((loc = glGetUniformLocation(ProgId, "MatrWInv")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, winv.M[0]);
+  if ((loc = glGetUniformLocation(ProgId, "CamLoc")) != -1)
+    glUniformMatrix3fv(loc, 1, FALSE, &rnd.cam.Loc.X); 
+  
+    
   // Draw triangles
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   
-  glUseProgram(rnd.res.shd.ProgId);
+  glUseProgram(rnd.resources.shd[0]->ProgId);
 
-  if ((loc = glGetUniformLocation(rnd.res.shd.ProgId, "MatrWVP")) != -1)
+  /*
+  if ((loc = glGetUniformLocation(rnd.resources.shd[0]->ProgId, "MatrWVP")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, wvp.M[0]);
-  if ((loc = glGetUniformLocation(rnd.res.shd.ProgId, "Time")) != -1)
+  if ((loc = glGetUniformLocation(rnd.resources.shd[0]->ProgId, "Time")) != -1)
     glUniform1f(loc, rnd.T.Time);
 
+    */
   glBindVertexArray(VA);
 
   if(IBuf == 0)
@@ -109,90 +131,6 @@ void prim::SetWorldTransormation( dlgl::matr MW )
   MatrWorld = MatrWorld * MW;
 }
 
-
-bool prim::Load( const char *FileName )
-{
-  FILE *F;
-  vertex *V;
-  int *Ind;
-  int nv = 0, ni = 0;
-  static char Buf[1000];
-
-  if ((F = fopen(FileName, "r")) == nullptr)
-    return false;
-
-  while (fgets(Buf, sizeof(Buf) - 1, F) != NULL)
-  {
-    if (Buf[0] == 'v' && Buf[1] == ' ')
-      nv++;
-    else if (Buf[0] == 'f' && Buf[1] == ' ')
-    {
-      char *S = Buf + 2, oldc = ' ';
-      int cnt = 0;
-
-      while (*S != 0)
-        cnt += isspace((UCHAR)oldc) && !isspace((UCHAR)*S), oldc = *S++;
-      ni += cnt - 2;
-    }
-  }
-
-  V = new vertex[nv];
-  Ind = new int[ni * 3];
-
-  // Read model data
-    rewind(F);
-  nv = 0;
-  ni = 0;
-  while (fgets(Buf, sizeof(Buf) - 1, F) != NULL)
-  {
-    if (Buf[0] == 'v' && Buf[1] == ' ')
-    {
-      double x, y ,z;
-      sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
-      V[nv++].P = dlgl::vec3(x, y ,z);
-
-    }
-    else if (Buf[0] == 'f' && Buf[1] == ' ')
-    {
-      char *S = Buf + 2, oldc = ' ';
-      int n = 0, n0 = 0, n1 =0, nc;
-       
-      while (*S != 0)
-      {
-        if (isspace((UCHAR)oldc) && !isspace((UCHAR)*S))
-        {
-          sscanf(S, "%d", &nc);
-
-          if (n == 0)
-            n0 = nc;
-          else if (n == 1)
-            n1 = nc;
-          else
-          {
-            Ind[ni++] = n0 - 1;
-            Ind[ni++] = n1 - 1;
-            Ind[ni++] = nc - 1;
-            n1 = nc;
-          }
-          n++;
-        }
-        oldc = *S++;
-      }
-    }
-  }
-  fclose(F);
-
-
-  Autonormals(V, nv, Ind, ni);
-  Create(V, nv, Ind, ni);
-  SetBB(V, nv);
-
-  SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3(3, 3, 3)));
-
-  delete[] V;
-  delete[] Ind;
-  return true;      
-}
 
 void prim::EvalBB( vertex *V, int NoofV )
 {
@@ -278,3 +216,7 @@ bool prim::LoadTriangle( void )
  } 
  
 
+void prim::SetMaterial( void )
+{
+  MtlNo = 0;
+}

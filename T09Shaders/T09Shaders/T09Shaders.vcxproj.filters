@@ -72,6 +72,9 @@
     <ClInclude Include="src\anim\Globe.h">
       <Filter>Source Files\anim</Filter>
     </ClInclude>
+    <ClInclude Include="src\anim\ObjPrim.h">
+      <Filter>Source Files\anim</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="T09Shaders.rc">
@@ -109,6 +112,9 @@
       <Filter>Source Files\anim\rnd</Filter>
     </ClCompile>
     <ClCompile Include="src\anim\rnd\res\rndtex.cpp">
+      <Filter>Source Files\anim\rnd\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\rnd\res\rndmtl.cpp">
       <Filter>Source Files\anim\rnd\res</Filter>
     </ClCompile>
   </ItemGroup>

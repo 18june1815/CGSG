@@ -2,7 +2,7 @@
 #define __ANIM_H_
 
 #include "rnd/rnd.h"
-#include "rnd/camera.h"
+
 
 class anim;
 class object
@@ -38,7 +38,7 @@ public:
   object *Objects[MaxNumOfObjects] {};
   int NumOfObjects = 0;
 
-  camera cam;
+
   anim( void )
   {
   }
@@ -71,9 +71,10 @@ public:
     {
       Objects[i]->Response();
     }
+
     
     rnd.Start();
-    cam.Draw(rnd.MatrView, rnd.MatrVP, rnd.MatrProj);
+    rnd.cam.Draw(rnd.MatrView, rnd.MatrVP, rnd.MatrProj);
     for (int i = 0; i < NumOfObjects; i++)
       Objects[i]->Draw(rnd.MatrVP);
       
@@ -84,7 +85,7 @@ public:
   
   void MouseWheel( WPARAM wParam )
   {
-    cam.MouseWheel(wParam);
+    rnd.cam.MouseWheel(wParam);
     for (int i = 0; i < NumOfObjects; i++)
     {
       Objects[i]->MouseWheel();
@@ -92,7 +93,7 @@ public:
   }
   void MouseMove( WPARAM wParam, LPARAM lParam )
   {
-    cam.MouseMove(wParam, lParam, rnd.FrameW, rnd.FrameH, rnd.MatrView);
+    rnd.cam.MouseMove(wParam, lParam, rnd.FrameW, rnd.FrameH, rnd.MatrView);
     for (int i = 0; i < NumOfObjects; i++)
     {
       Objects[i]->MouseMove();

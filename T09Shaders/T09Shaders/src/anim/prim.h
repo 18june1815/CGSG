@@ -22,17 +22,14 @@ public:
     IBuf;     //Index buffer number
   int NumOfElements; //Number of elements (indexes or vertexes)
 
+  int MtlNo = 0;  //Material number in material array
+  dlgl::matr Trans;
+
   dlgl::matr MatrWorld;  //World tranformation matrix
   const char *FileName; //File name to Load prim
 
   dlgl::vec3 MinBB, MaxBB; // Bound box
 
-  prim( const char *FN ) :
-    VA(0), VBuf(0), NumOfElements(0),
-    MatrWorld(dlgl::matr::Identity()), FileName(FN)
-  {
-    Load(FN);
-  }
 
   prim( void ) :
     VA(0), VBuf(0), NumOfElements(0),
@@ -57,16 +54,14 @@ public:
   }
   void Create( vertex *V, int NoofV, int *Ind, int NoofI );
   void Response( void ) override;
-  void Draw( dlgl::matr MatrVP ) override;
+  virtual void Draw( dlgl::matr MatrVP );
+  virtual void SetMaterial( void );
   void SetWorldTransormation( dlgl::matr MatrWorld );
   void EvalBB( vertex *V, int NoofV );
   void SetBB( vertex *V, int NoofV );
   bool Load( const char *FileName );
   void Autonormals( vertex *V, int NoofV, int *Ind, int NoofI );
   bool LoadTriangle( void );
-   
-   
-    
 
 };
 #endif /* __PRIM_H_ */

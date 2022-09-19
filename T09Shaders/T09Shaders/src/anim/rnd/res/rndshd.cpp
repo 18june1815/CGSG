@@ -2,6 +2,7 @@
 //#include "../rnd.h"
 #include "rndres.h"
 
+
 char *shader::LoadTextFromFile( const char *FileName )
 {
   FILE *F;
@@ -18,13 +19,13 @@ char *shader::LoadTextFromFile( const char *FileName )
   return txt;
 }
 
-void shader::Log( const char *ShaderName, const char *Prefix, const char *Type, const char *Text )
+void shader::Log( const char *Type, const char *Text  )
 {
   FILE *F;
 
   if ((F = fopen("bin/shaders/Shader.LOG", "a")) == NULL)
     return;
-  fprintf(F, "%s/%s.GLSL: \n%s\n", Prefix, Type, Text);
+  fprintf(F, "%s/%s.GLSL: \n%s\n", FileNamePrefix, Type, Text);
   fclose(F);
 }
 
@@ -33,6 +34,7 @@ int shader::Load( const char *ShaderFileNamePrefix )
   char shdname[2][20], ErrText[200], TypeName[20];
   sprintf(shdname[0], "vert");
   sprintf(shdname[1], "frag");
+  
   struct
   {
     char *Name; //Shader file suffix name
@@ -43,8 +45,9 @@ int shader::Load( const char *ShaderFileNamePrefix )
     {shdname[0], GL_VERTEX_SHADER},
     {shdname[1], GL_FRAGMENT_SHADER}
   };
+  
 
-  int i, prg = 0, res, Ns = sizeof(shd) / sizeof(shd[0]);
+  int i, prg = 0, resources, Ns = sizeof(shd) / sizeof(shd[0]);
   char *txt;
   bool is_ok = true;
   static char Buf[3000];
@@ -52,11 +55,11 @@ int shader::Load( const char *ShaderFileNamePrefix )
   for(i = 0; is_ok && i < Ns; i++)
   {
     //Load shader text from file
-    sprintf(Buf, "bin/shaders/%s/%s.glsl", ShaderFileNamePrefix, shd[i].Name);
+    sprintf(Buf, "bin/shaders/%s/%s.glsl", FileNamePrefix, shd[i].Name);
     if ((txt = LoadTextFromFile(Buf)) == NULL)
     {
       sprintf(ErrText, "Error load file");
-      Log(ShaderFileNamePrefix, shd[i].Name, ErrText);
+      Log(shd[i].Name, ErrText);
       is_ok = false;
       break;
     }
@@ -64,7 +67,7 @@ int shader::Load( const char *ShaderFileNamePrefix )
     if ((shd[i].Id = glCreateShader(shd[i].Type)) == 0)
     {
       sprintf(ErrText, "Error create shader");
-      Log(ShaderFileNamePrefix, shd[i].Name, ErrText);
+      Log(shd[i].Name, ErrText);
       free(txt);
       is_ok = false;
       break;
@@ -75,11 +78,11 @@ int shader::Load( const char *ShaderFileNamePrefix )
 
     //Compile shader
     glCompileShader(shd[i].Id);
-    glGetShaderiv(shd[i].Id, GL_COMPILE_STATUS, &res);
-    if (res != 1)
+    glGetShaderiv(shd[i].Id, GL_COMPILE_STATUS, &resources);
+    if (resources != 1)
     {
-      glGetShaderInfoLog(shd[i].Id, sizeof(Buf), &res, Buf);
-      Log(ShaderFileNamePrefix, shd[i].Name, Buf);
+      glGetShaderInfoLog(shd[i].Id, sizeof(Buf), &resources, Buf);
+      Log(shd[i].Name, Buf);
       is_ok = false;
       break;
     }
@@ -91,7 +94,7 @@ int shader::Load( const char *ShaderFileNamePrefix )
       is_ok = false;
       sprintf(TypeName, "PROG");
       sprintf(ErrText, "Error create program");
-      Log(ShaderFileNamePrefix, TypeName, ErrText);
+      Log(TypeName, ErrText);
     }
     else
     {
@@ -101,12 +104,12 @@ int shader::Load( const char *ShaderFileNamePrefix )
           glAttachShader(prg, shd[i].Id);
       //Link shader program
       glLinkProgram(prg);
-      glGetProgramiv(prg, GL_LINK_STATUS, &res);
-      if (res != 1)
+      glGetProgramiv(prg, GL_LINK_STATUS, &resources);
+      if (resources != 1)
       {
         sprintf(ErrText, "Error create shader");
-        glGetProgramInfoLog(prg, sizeof(Buf), &res, Buf);
-        Log(ShaderFileNamePrefix, TypeName, Buf);
+        glGetProgramInfoLog(prg, sizeof(Buf), &resources, Buf);
+        Log(TypeName, Buf);
         is_ok = false;
       }
     }
@@ -132,7 +135,7 @@ int shader::Load( const char *ShaderFileNamePrefix )
 
 }
 
-void shader::Delete( int ProgId )
+void shader::Delete( void )
 {
   int n, i;
   UINT shdrs[5];

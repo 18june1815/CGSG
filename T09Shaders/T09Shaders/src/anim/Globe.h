@@ -35,14 +35,18 @@ public:
     V = new vertex[NumOfV];
     Ind = new int[NumOfI];
 
+    MtlNo = 0;
     GeomSet(0.2);
     GlobeSet(V, Ind);
+    //Autonormals(V, NumOfV, Ind, NumOfI);
     Create(V, NumOfV, Ind, NumOfI);
 
     float Rx = (float) rand()/RAND_MAX - 0.5;
     float Ry = (float) rand()/RAND_MAX - 0.5;
     pos = dlgl::vec3(3 * Rx, 0, 3 * Ry);
-    MatrWorld = dlgl::matr::Translate(pos);
+    MatrWorld = dlgl::matr::Translate(pos); 
+    SetMaterial();
+    
   }
 
   ~globe( void )
@@ -58,8 +62,7 @@ public:
       {
         V[i * GLOBE_W + j].P = Geom[i][j];
         V[i * GLOBE_W + j].N = Geom[i][j];
-        //V[i * GLOBE_W + j].C = Geom[i][j];
-
+      
         if (i != GLOBE_H - 1 && j != GLOBE_W - 1)
         {
           Ind[c]     = i * GLOBE_H + j;
@@ -80,7 +83,21 @@ public:
   {
     this->SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,0.05 * sin(rnd.T.Time * 3 - 30 * pos.X + pos.Y), 0)));
   }
-     
+
+  void SetMaterial( void )
+  {
+    material m = material::DefMaterial();
+    float
+      R1 = (float) rand()/RAND_MAX,
+      R2 = (float) rand()/RAND_MAX,
+      R3 = (float) rand()/RAND_MAX;
+    dlgl::vec3 color = dlgl::vec3(R1, R2, R3);
+    m.Ka = color * 0.1;
+    m.Kd = color * 0.8;
+    m.Ks = color * 0.9;
+    m.Ph = 50;
+    MtlNo = rnd.resources.AddMaterial(&m) - 1;
+  }
 };
 
 

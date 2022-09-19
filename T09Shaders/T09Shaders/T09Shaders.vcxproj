@@ -134,6 +134,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="src\anim\anim.h" />
     <ClInclude Include="src\anim\Globe.h" />
+    <ClInclude Include="src\anim\ObjPrim.h" />
     <ClInclude Include="src\anim\prim.h" />
     <ClInclude Include="src\anim\rnd\camera.h" />
     <ClInclude Include="src\anim\rnd\rnd.h" />
@@ -156,6 +157,7 @@
     <ClCompile Include="src\anim\anim.cpp" />
     <ClCompile Include="src\anim\prim.cpp" />
     <ClCompile Include="src\anim\rnd\glew.c" />
+    <ClCompile Include="src\anim\rnd\res\rndmtl.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndres.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndshd.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndtex.cpp" />

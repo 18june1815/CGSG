@@ -79,12 +79,12 @@ void render::Init( HWND hwnd, WPARAM wp, LPARAM lp )
   ProjSet();
 
   SetTimer(hWnd, 30, 2, NULL);
-  res.Init();
+  resources.Init();
 }
 
 void render::Close( void )
 {
-  res.Close();
+  resources.Close();
   wglMakeCurrent(NULL, NULL);
   wglDeleteContext(hGLRC);
 
@@ -98,13 +98,8 @@ void render::Start( void )
   static double ReloadTime = 0;
 
   T.Response();
-  /*if (T.GlobalTime - ReloadTime > 3)
-  {
-    ReloadTime = T.GlobalTime;
-    res.shd.Delete(res.shd.ProgId);
-    res.shd.ProgId = res.shd.Load("default");
-  }
-  */
+  resources.UpdateShader();
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

@@ -27,6 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR* CmdLine, 
   wc.lpszMenuName = NULL;
   wc.lpfnWndProc = WinFunc;
 
+
   /* Register window class */
   if (!RegisterClass(&wc))
   {
@@ -42,6 +43,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, CHAR* CmdLine, 
     NULL, NULL, hInstance, NULL);
 
   ShowWindow(hWnd, CmdShow);
+
 
  
   /* Message loop */
@@ -89,10 +91,10 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
   case WM_LBUTTONDOWN:
     return 0;
    case WM_MOUSEWHEEL:
-    MyAnim.MouseWheel(wParam);
+     MyAnim.MouseWheel(wParam);
   case WM_MOUSEMOVE:
     if (wParam & MK_LBUTTON)
-      MyAnim.MouseMove(wParam, lParam);
+     MyAnim.MouseMove(wParam, lParam);
     return 0;
  
   case WM_PAINT:

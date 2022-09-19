@@ -10,72 +10,91 @@
 #define STR_MAX 300
 #define MAX_SHADERS 30
 #define MAX_TEXTURES 30
+#define MAX_MATERIALS 300
 
-class ResObject
+class material
 {
 public:
-  virtual void Init( void );
-  virtual void Close( void );
-  virtual void Update( void );
-}; /* End of 'object' class */
+  char Name[STR_MAX] = ""; // Material name
+
+  // Illumination coefficients
+  dlgl::vec3 Ka, Kd, Ks;  // Ambient, diffuse, specular coefficients
+  float Ph;               // Phong power coefficient
+  float Trans;            // Transparency factor
+  int Tex[8];             // Texture references from texture table (or -1)
+  int ShdNo;              // Shader number in shader table
+
+  material ( void )
+  {
+  }
+  
+  static material DefMaterial( void );
+};
 
 
-class texture
+struct texture
 {
   char Name[STR_MAX]; // Texture name
   int W, H;        // Texture size in pixels
-  UINT TexId;      // OpenGl texture Id
-  void Init( void );
-  void Close( void );
-  int AddImg( char *Name, int W, int H, int C, void *Bits );
+  GLuint TexId;      // OpenGl texture Id
+
+  texture ( void )
+  {
+  }
 };
                                        
-class shader : public ResObject
+class shader 
 {
 public:
-  char Name[STR_MAX]; // Shader filename prefix
+  char Name[STR_MAX]; // Texture name
   int ProgId;         // Shader program Id
+  const char *FileNamePrefix;
 
   shader( void )
   {
-    Load("default");
+    ProgId = Load("default");
   }
   shader( const char *ShaderFileNamePrefix )
   {
-    Load(ShaderFileNamePrefix);
+    FileNamePrefix = ShaderFileNamePrefix;
+    ProgId = Load(FileNamePrefix);
+    strncpy(Name, FileNamePrefix, STR_MAX - 1);
   }
 
-  void Init( void ) override;
-  void Close( void ) override;
-  static char *LoadTextFromFile( const char *FileName );
-  static void Log( const char *ShaderName, const char *Prefix, const char *Type, const char *Text );
+  char *LoadTextFromFile( const char *FileName );
+  void Log( const char *Type, const char *Text  );
   int Load( const char *ShaderFileNamePrefix );
-  void Delete( int ProgId );
+  void Delete( void );
   
   void Update( void );
 };
 
 
-class Res
+class resources
 {
 public:
-  int ShadersSize;         // Shaders array store size
-  shader shd[MAX_SHADERS]; // Array of shaders
+  shader *shd[MAX_SHADERS] {}; // Array of shaders
+  int NumOfShaders = 0;                        
 
-  static const int MaxNumOfObjects = 100000;
-  ResObject *Objects[MaxNumOfObjects] {};
-  int NumOfObjects = 0;
-    
-  void Init( void );
-  void Close( void );
+  texture *tex[MAX_TEXTURES] {};
+  int NumOfTextures = 0;
+
+  material mtl[MAX_MATERIALS] {};
+  int NumOfMaterials = 0;
+
   int AddShader( const char *ShaderFileNamePrefix);
+  void UpdateShader( void );
 
-  Res & operator<<( ResObject *Obj )
-  {
-    if (NumOfObjects < MaxNumOfObjects)
-      Objects[NumOfObjects++] = Obj;
-    return *this;
-  } /* End of 'operator<<' function */
+  int AddImg( char *Name, int W, int H, DWORD *Bits );
+  int AddTexture( char *FileName );
+
+  int AddMaterial( material *Mtl );
+  int ApplyMaterial( int MtlNo );
+  
+
+  
+  void Init( void );
+  void Close( void ); 
 
 
 };
