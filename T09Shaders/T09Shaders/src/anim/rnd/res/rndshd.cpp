@@ -6,13 +6,13 @@
 char *shader::LoadTextFromFile( const char *FileName )
 {
   FILE *F;
-  char *txt = new char[1000];
   int flen;
   if ((F = fopen(FileName, "rb")) == NULL)
     return NULL;
   fseek(F, 0, SEEK_END);
   flen = ftell(F);
   rewind(F);
+  char *txt = new char[flen + 1];
   memset(txt, 0, flen + 1);
   fread(txt, 1, flen, F);
   fclose(F);
@@ -31,19 +31,17 @@ void shader::Log( const char *Type, const char *Text  )
 
 int shader::Load( const char *ShaderFileNamePrefix )
 {
-  char shdname[2][20], ErrText[200], TypeName[20];
-  sprintf(shdname[0], "vert");
-  sprintf(shdname[1], "frag");
+  char ErrText[200], TypeName[20];
   
   struct
   {
-    char *Name; //Shader file suffix name
+    const char *Name; //Shader file suffix name
     int Type;   //Shader OpenGL type
     int Id;     //Shader Id created by OpenGL
   } shd[] =
   {
-    {shdname[0], GL_VERTEX_SHADER},
-    {shdname[1], GL_FRAGMENT_SHADER}
+    {"vert", GL_VERTEX_SHADER},
+    {"frag", GL_FRAGMENT_SHADER}
   };
   
 

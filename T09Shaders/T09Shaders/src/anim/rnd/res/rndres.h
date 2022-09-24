@@ -41,6 +41,7 @@ struct texture
   texture ( void )
   {
   }
+
 };
                                        
 class shader 
@@ -76,7 +77,7 @@ public:
   shader *shd[MAX_SHADERS] {}; // Array of shaders
   int NumOfShaders = 0;                        
 
-  texture *tex[MAX_TEXTURES] {};
+  texture *tex = new texture[MAX_TEXTURES];
   int NumOfTextures = 0;
 
   material mtl[MAX_MATERIALS] {};
@@ -85,7 +86,7 @@ public:
   int AddShader( const char *ShaderFileNamePrefix);
   void UpdateShader( void );
 
-  int AddImg( char *Name, int W, int H, DWORD *Bits );
+  int AddImg( const char *Name, int W, int H, int C, BYTE *Bits );
   int AddTexture( char *FileName );
 
   int AddMaterial( material *Mtl );

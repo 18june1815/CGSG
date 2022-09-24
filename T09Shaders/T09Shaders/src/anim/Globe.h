@@ -36,6 +36,7 @@ public:
     Ind = new int[NumOfI];
 
     MtlNo = 0;
+
     GeomSet(0.2);
     GlobeSet(V, Ind);
     //Autonormals(V, NumOfV, Ind, NumOfI);
@@ -44,7 +45,8 @@ public:
     float Rx = (float) rand()/RAND_MAX - 0.5;
     float Ry = (float) rand()/RAND_MAX - 0.5;
     pos = dlgl::vec3(3 * Rx, 0, 3 * Ry);
-    MatrWorld = dlgl::matr::Translate(pos); 
+    //MatrWorld = MatrWorld * dlgl::matr::Translate(pos); 
+    MatrWorld =  MatrWorld * dlgl::matr::Translate(pos); 
     SetMaterial();
     
   }
@@ -62,6 +64,8 @@ public:
       {
         V[i * GLOBE_W + j].P = Geom[i][j];
         V[i * GLOBE_W + j].N = Geom[i][j];
+        V[i * GLOBE_W + j].T.X = j / (GLOBE_W - 1.0);
+        V[i * GLOBE_W + j].T.Y = i / (GLOBE_H - 1.0);
       
         if (i != GLOBE_H - 1 && j != GLOBE_W - 1)
         {
@@ -86,6 +90,7 @@ public:
 
   void SetMaterial( void )
   {
+    int TexNo = SetTexture();
     material m = material::DefMaterial();
     float
       R1 = (float) rand()/RAND_MAX,
@@ -96,7 +101,34 @@ public:
     m.Kd = color * 0.8;
     m.Ks = color * 0.9;
     m.Ph = 50;
+    m.Tex[0] = TexNo;
     MtlNo = rnd.resources.AddMaterial(&m) - 1;
+  }
+
+ int SetTexture( void )
+  {
+    FILE *F;
+    
+    static int TexNo = -1;
+    if (TexNo == -1)
+    {
+      if ((F = fopen("bin/textures/GLOBE.G24", "rb")) != NULL)
+      {
+        int w = 0, h = 0;
+        
+        fread(&w, 2, 1, F);
+        fread(&h, 2, 1, F);
+
+        BYTE  *mem = new BYTE[w * h * 3];
+        int n;
+        fread(mem, 3, w * h, F);
+        TexNo = rnd.resources.AddImg("Globe", w, h, 3, mem);
+
+        delete[] mem;
+      }
+      fclose(F);
+    }
+    return TexNo;
   }
 };
 

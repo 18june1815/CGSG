@@ -21,6 +21,7 @@ public:
     int nv = 0, ni = 0;
     static char Buf[1000];
 
+    Trans = dlgl::matr::Identity();
     if ((F = fopen(FileName, "r")) == nullptr)
       return false;
 

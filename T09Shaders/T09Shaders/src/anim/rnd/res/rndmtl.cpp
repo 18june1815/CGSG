@@ -59,8 +59,8 @@ int resources::ApplyMaterial( int MtlNo )
 
     if (m->Tex[i] != -1)
     {
-      glActiveTexture(GL_TEXTURE0+i);
-      glBindTexture(GL_TEXTURE_2D, tex[m->Tex[i]]->TexId);
+      glActiveTexture(GL_TEXTURE0 + i);
+      glBindTexture(GL_TEXTURE_2D, tex[m->Tex[i]].TexId);
     }
     if ((loc = glGetUniformLocation(prg, tname)) != -1)
       glUniform1i(loc, mtl->Tex[i] != -1);

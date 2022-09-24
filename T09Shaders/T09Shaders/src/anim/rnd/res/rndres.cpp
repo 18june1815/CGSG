@@ -10,9 +10,9 @@ void resources::Init( void )
   NumOfShaders = AddShader("default");
 
   // Init materials
-  //material m;
-  //m = m.DefMaterial(); 
-  //NumOfMaterials = AddMaterial(&m);
+  material m;
+  m = m.DefMaterial(); 
+  NumOfMaterials = AddMaterial(&m);
 }
 
 void resources::Close( void )
@@ -21,9 +21,8 @@ void resources::Close( void )
   for (int i = 0; i < NumOfShaders; i++)
   {
     shd[i]->Delete();
-
   } 
-
+  delete[] tex;
 }
 
 int resources::AddShader( const char *ShaderFileNamePrefix)

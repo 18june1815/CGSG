@@ -81,7 +81,7 @@ void prim::Draw( dlgl::matr MatrVP )
   
   dlgl::matr 
     wvp = MatrWorld * MatrVP,
-    w = Trans * MatrWorld,
+    w = MatrWorld,
     winv = w.Inverse();
 
   glLoadMatrixf(wvp.M[0]);
@@ -105,13 +105,6 @@ void prim::Draw( dlgl::matr MatrVP )
   
   glUseProgram(rnd.resources.shd[0]->ProgId);
 
-  /*
-  if ((loc = glGetUniformLocation(rnd.resources.shd[0]->ProgId, "MatrWVP")) != -1)
-    glUniformMatrix4fv(loc, 1, FALSE, wvp.M[0]);
-  if ((loc = glGetUniformLocation(rnd.resources.shd[0]->ProgId, "Time")) != -1)
-    glUniform1f(loc, rnd.T.Time);
-
-    */
   glBindVertexArray(VA);
 
   if(IBuf == 0)
