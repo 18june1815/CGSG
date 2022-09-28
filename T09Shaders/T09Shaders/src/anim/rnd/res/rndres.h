@@ -3,10 +3,6 @@
 
 #include "def.h"
 
-#define GLEW_STATIC
-#include <GL\glew.h>
-#include <GL\wglew.h>
-
 #define STR_MAX 300
 #define MAX_SHADERS 30
 #define MAX_TEXTURES 30
@@ -41,30 +37,26 @@ struct texture
   texture ( void )
   {
   }
-
 };
-                                       
-class shader 
+
+class shader
 {
 public:
-  char Name[STR_MAX]; // Texture name
+  char Name[STR_MAX]; // Shader name
   int ProgId;         // Shader program Id
-  const char *FileNamePrefix;
 
   shader( void )
   {
-    ProgId = Load("default");
+    strncpy(Name, "default", STR_MAX - 1);
   }
   shader( const char *ShaderFileNamePrefix )
   {
-    FileNamePrefix = ShaderFileNamePrefix;
-    ProgId = Load(FileNamePrefix);
-    strncpy(Name, FileNamePrefix, STR_MAX - 1);
+    strncpy(Name, ShaderFileNamePrefix, STR_MAX - 1);
   }
 
-  char *LoadTextFromFile( const char *FileName );
+  std::string LoadTextFromFile( const char *FileName );
   void Log( const char *Type, const char *Text  );
-  int Load( const char *ShaderFileNamePrefix );
+  int Load( void );
   void Delete( void );
   
   void Update( void );
@@ -74,10 +66,10 @@ public:
 class resources
 {
 public:
-  shader *shd[MAX_SHADERS] {}; // Array of shaders
+  shader shd[MAX_SHADERS] {}; // Array of shaders
   int NumOfShaders = 0;                        
 
-  texture *tex = new texture[MAX_TEXTURES];
+  texture tex[MAX_TEXTURES];
   int NumOfTextures = 0;
 
   material mtl[MAX_MATERIALS] {};

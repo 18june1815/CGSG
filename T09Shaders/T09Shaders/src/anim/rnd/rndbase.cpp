@@ -13,6 +13,28 @@ void render::Init( HWND hwnd, WPARAM wp, LPARAM lp )
 
   hDC = GetDC(hWnd);
    
+  //OpenGL init: pixel format setup
+  pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+  pfd.nVersion = 1;
+  pfd.dwFlags = PFD_DOUBLEBUFFER | PFD_SUPPORT_OPENGL;
+  pfd.cColorBits = 32;
+  pfd.cDepthBits = 32;
+  i = ChoosePixelFormat(hDC, &pfd);
+  DescribePixelFormat(hDC, i, sizeof(pfd), &pfd);
+  SetPixelFormat(hDC, i, &pfd);
+
+  //OpenGL init: rendering context setup
+  hGLRC = wglCreateContext(hDC);
+  wglMakeCurrent(hDC, hGLRC);
+
+  //GLEW librrary init
+  if(glewInit() != GLEW_OK)
+  {
+    MessageBox(hWnd, "Error OpenGL initialization", "ERROR", MB_OK | MB_ICONERROR);
+      exit(0);
+  }
+
+  //Enable a new OpenGL profile support
   HGLRC hRC;
   int PixelAttribs[] = 
   {
@@ -31,30 +53,6 @@ void render::Init( HWND hwnd, WPARAM wp, LPARAM lp )
     WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
     0
   };
-
-  //OpenGL init: pixel format setup
-  pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-  pfd.nVersion = 1;
-  pfd.dwFlags = PFD_DOUBLEBUFFER | PFD_SUPPORT_OPENGL;
-  pfd.cColorBits = 32;
-  pfd.cDepthBits = 32;
-  i = ChoosePixelFormat(hDC, &pfd);
-  DescribePixelFormat(hDC, i, sizeof(pfd), &pfd);
-  SetPixelFormat(hDC, i, &pfd);
-
-  //OpenGL init: rendering context setup
-  hGLRC = wglCreateContext(hDC);
-  wglMakeCurrent(hDC, hGLRC);
-
-  //GLEW librrary init
-  if(glewInit() != GLEW_OK  ||
-    !(GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader))
-  {
-    MessageBox(hWnd, "Error OpenGL initialization", "ERROR", MB_OK | MB_ICONERROR);
-      exit(0);
-  }
-
-  //Enable a new OpenGL profile support
   wglChoosePixelFormatARB(hDC, PixelAttribs, NULL, 1, &i, &nums);
   hRC = wglCreateContextAttribsARB(hDC, NULL, ContextAttribs);
 
@@ -65,6 +63,7 @@ void render::Init( HWND hwnd, WPARAM wp, LPARAM lp )
   wglMakeCurrent(hDC, hGLRC);
 
   wglSwapIntervalEXT(1);
+
   // Render parameter setup
   glClearColor(0.30f, 0.47f, 0.8f, 1.f);
   glEnable(GL_DEPTH_TEST);
@@ -90,7 +89,6 @@ void render::Close( void )
 
   glFinish();
   ReleaseDC(hWnd, hDC); 
-
 }
 
 void render::Start( void )
@@ -98,7 +96,7 @@ void render::Start( void )
   static double ReloadTime = 0;
 
   T.Response();
-  resources.UpdateShader();
+  //resources.UpdateShader();
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

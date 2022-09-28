@@ -1,6 +1,7 @@
 #ifndef __GLOBE_H_
 #define __GLOBE_H_
 
+#include <vector>
 #include "anim/prim.h"
 
 class globe : public prim
@@ -26,21 +27,20 @@ class globe : public prim
 public:
   globe( void )
   {
-    vertex *V;
-    int *Ind, NumOfV, NumOfI;
+    //vertex *V;
+    int NumOfV, NumOfI;
   
     NumOfV = GLOBE_H * GLOBE_W;
     NumOfI = (GLOBE_H - 1) * (GLOBE_W - 1) * 6;
 
-    V = new vertex[NumOfV];
-    Ind = new int[NumOfI];
+
 
     MtlNo = 0;
 
     GeomSet(0.2);
-    GlobeSet(V, Ind);
+    GlobeSet();
     //Autonormals(V, NumOfV, Ind, NumOfI);
-    Create(V, NumOfV, Ind, NumOfI);
+    
 
     float Rx = (float) rand()/RAND_MAX - 0.5;
     float Ry = (float) rand()/RAND_MAX - 0.5;
@@ -48,39 +48,40 @@ public:
     //MatrWorld = MatrWorld * dlgl::matr::Translate(pos); 
     MatrWorld =  MatrWorld * dlgl::matr::Translate(pos); 
     SetMaterial();
-    
   }
 
   ~globe( void )
   {
-    delete[] Geom;
   }
-  void GlobeSet( vertex *V, int *Ind )
+  void GlobeSet( void )
   {
-    int c = 0;
+    std::vector<vertex> V;
+    std::vector<int> Ind;
+
+
+    float Tx, Ty;
     for (int i = 0; i < GLOBE_H; i++)
     {
       for (int j = 0; j < GLOBE_W; j++)
       {
-        V[i * GLOBE_W + j].P = Geom[i][j];
-        V[i * GLOBE_W + j].N = Geom[i][j];
-        V[i * GLOBE_W + j].T.X = j / (GLOBE_W - 1.0);
-        V[i * GLOBE_W + j].T.Y = i / (GLOBE_H - 1.0);
+        Tx = j / (GLOBE_W - 1.0);
+        Ty = i / (GLOBE_H - 1.0);
+        V.push_back({Geom[i][j], {Tx, Ty}, Geom[i][j], {1, 1, 1, 1}});
       
         if (i != GLOBE_H - 1 && j != GLOBE_W - 1)
         {
-          Ind[c]     = i * GLOBE_H + j;
-          Ind[c + 1] = i * GLOBE_H + j + 1;
-          Ind[c + 2] = (i + 1) * GLOBE_H + j + 1;
-
-          Ind[c + 3] = i * GLOBE_H + j;
-          Ind[c + 4] = (i + 1) * GLOBE_H + j + 1;
-          Ind[c + 5] = (i + 1) * GLOBE_H + j;
-          c += 6;
+          Ind.push_back(i * GLOBE_H + j);
+          Ind.push_back(i * GLOBE_H + j + 1);
+          Ind.push_back((i + 1) * GLOBE_H + j + 1);
+          Ind.push_back(i * GLOBE_H + j);
+          Ind.push_back((i + 1) * GLOBE_H + j + 1);
+          Ind.push_back((i + 1) * GLOBE_H + j);
+         
         }
       } //end for j
     } //end for i
 
+    Create(V.data(), V.size(), Ind.data(), Ind.size());
   } //End of "GlobeSet" function
 
   void Response( void ) override
@@ -120,7 +121,7 @@ public:
         fread(&h, 2, 1, F);
 
         BYTE  *mem = new BYTE[w * h * 3];
-        int n;
+        // int n;
         fread(mem, 3, w * h, F);
         TexNo = rnd.resources.AddImg("Globe", w, h, 3, mem);
 

@@ -1,6 +1,7 @@
 #include <string>
 #include <fstream>
 #include <cctype>
+#include <vector>
 
 #include "prim.h"
 #include "rnd/rnd.h"
@@ -18,7 +19,6 @@ void prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
     V[i].C = dlgl::vec4(nl * 0.3 + 0.5, nl * 0.3 +0.2, nl * 0.60 + 0.3, 0);
     //V[i].C = dlgl::vec4(V[i].N.X, V[i].N.Y, V[i].N.Z, 0);
   }
-  
      
   glGenBuffers(1, &VBuf);
   glGenVertexArrays(1, &VA);
@@ -88,7 +88,7 @@ void prim::Draw( dlgl::matr MatrVP )
      
   // Pass render uniforms
   ProgId = rnd.resources.ApplyMaterial(MtlNo);  
-   if ((loc = glGetUniformLocation(rnd.resources.shd[0]->ProgId, "Time")) != -1)
+   if ((loc = glGetUniformLocation(rnd.resources.shd[0].ProgId, "Time")) != -1)
     glUniform1f(loc, rnd.T.Time);
   if ((loc = glGetUniformLocation(ProgId, "MatrWVP")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, wvp.M[0]);
@@ -103,7 +103,7 @@ void prim::Draw( dlgl::matr MatrVP )
   // Draw triangles
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   
-  glUseProgram(rnd.resources.shd[0]->ProgId);
+  glUseProgram(rnd.resources.shd[0].ProgId);
 
   glBindVertexArray(VA);
 
@@ -179,33 +179,17 @@ void prim::Response( void )
 
 bool prim::LoadTriangle( void )
 {
-  vertex *V;
-  int *Ind;
-  int nv = 5, ni = 6;
-
-  V = new vertex[nv];
-  Ind = new int[ni * 3];
-
-  V[0].P = dlgl::vec3(-1,-1,0);
-  V[1].P = dlgl::vec3( 1,-1,0);
-  V[2].P = dlgl::vec3( -1,-1,1);
-  V[3].P = dlgl::vec3(1,-1,1);
-  V[4].P = dlgl::vec3( 0,1,0.5);
-
-  for(int i = 0; i < nv; i++)
-    V[i].C = dlgl::vec4(1, 0, 0, 0);
-
-  GLubyte I[] = {0,1,4,1,3,4,3,2,4,0,2,4,0,2,3,0,1,3};
-   
-  for(int i = 0; i < ni; i++)
-    Ind[i] = I[i];
-
-  Create(V, nv, Ind, ni);
- 
-  delete[] V;
-  delete[] Ind;
+  std::vector<vertex> VV
+  {
+    {dlgl::vec3(-1,-1,0)},
+    {dlgl::vec3( 1,-1,0)},
+    {dlgl::vec3( -1,-1,1)},
+    {dlgl::vec3(1,-1,1)},
+    {dlgl::vec3( 0,1,0.5)},
+  };
+  std::vector<int> I {0,1,4,1,3,4,3,2,4,0,2,4,0,2,3,0,1,3};
+  Create(VV.data(), VV.size(), I.data(), I.size());
   return true;
-      
  } 
  
 

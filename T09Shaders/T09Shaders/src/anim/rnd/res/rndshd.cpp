@@ -1,22 +1,22 @@
+#include <fstream>
+
 #include "def.h"
 //#include "../rnd.h"
 #include "rndres.h"
 
 
-char *shader::LoadTextFromFile( const char *FileName )
+std::string shader::LoadTextFromFile( const char *FileName )
 {
-  FILE *F;
-  int flen;
-  if ((F = fopen(FileName, "rb")) == NULL)
-    return NULL;
-  fseek(F, 0, SEEK_END);
-  flen = ftell(F);
-  rewind(F);
-  char *txt = new char[flen + 1];
-  memset(txt, 0, flen + 1);
-  fread(txt, 1, flen, F);
-  fclose(F);
-  return txt;
+  std::ifstream f(FileName);
+  if (!f)
+    return "";
+  f.seekg(0, std::fstream::end);
+  std::fpos_t flen = f.tellg();
+  f.seekg(0);
+
+  std::string s(flen, ' ');
+  f.read(s.data(), flen);
+  return s;
 }
 
 void shader::Log( const char *Type, const char *Text  )
@@ -25,11 +25,11 @@ void shader::Log( const char *Type, const char *Text  )
 
   if ((F = fopen("bin/shaders/Shader.LOG", "a")) == NULL)
     return;
-  fprintf(F, "%s/%s.GLSL: \n%s\n", FileNamePrefix, Type, Text);
+  fprintf(F, "%s/%s.GLSL: \n%s\n", Name, Type, Text);
   fclose(F);
 }
 
-int shader::Load( const char *ShaderFileNamePrefix )
+int shader::Load( void )
 {
   char ErrText[200], TypeName[20];
   
@@ -43,18 +43,16 @@ int shader::Load( const char *ShaderFileNamePrefix )
     {"vert", GL_VERTEX_SHADER},
     {"frag", GL_FRAGMENT_SHADER}
   };
-  
-
   int i, prg = 0, resources, Ns = sizeof(shd) / sizeof(shd[0]);
-  char *txt;
   bool is_ok = true;
   static char Buf[3000];
 
   for(i = 0; is_ok && i < Ns; i++)
   {
     //Load shader text from file
-    sprintf(Buf, "bin/shaders/%s/%s.glsl", FileNamePrefix, shd[i].Name);
-    if ((txt = LoadTextFromFile(Buf)) == NULL)
+    sprintf(Buf, "bin/shaders/%s/%s.glsl", Name, shd[i].Name);
+    std::string txt = LoadTextFromFile(Buf);
+    if (txt.length() == 0)
     {
       sprintf(ErrText, "Error load file");
       Log(shd[i].Name, ErrText);
@@ -66,13 +64,12 @@ int shader::Load( const char *ShaderFileNamePrefix )
     {
       sprintf(ErrText, "Error create shader");
       Log(shd[i].Name, ErrText);
-      free(txt);
       is_ok = false;
       break;
     }
     //Attach shader source code to shader
-    glShaderSource(shd[i].Id, 1, &txt, NULL);
-    free(txt);
+    const char *txt_ref = txt.c_str();
+    glShaderSource(shd[i].Id, 1, &txt_ref, NULL);
 
     //Compile shader
     glCompileShader(shd[i].Id);
@@ -129,8 +126,6 @@ int shader::Load( const char *ShaderFileNamePrefix )
     prg = 0;
   }
   return prg;
-  
-
 }
 
 void shader::Delete( void )

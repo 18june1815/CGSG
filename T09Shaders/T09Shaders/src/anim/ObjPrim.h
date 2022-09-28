@@ -1,6 +1,8 @@
 #ifndef __OBJPRIM_H_
 #define __OBJPRIM_H_
 
+#include <vector>
+
 #include "anim/prim.h"
 
 class objprim : public prim
@@ -16,8 +18,8 @@ public:
   bool Load( const char *FileName )
   {
     FILE *F;
-    vertex *V;
-    int *Ind;
+    std::vector<vertex> V;
+    std::vector<int> Ind;
     int nv = 0, ni = 0;
     static char Buf[1000];
 
@@ -25,26 +27,8 @@ public:
     if ((F = fopen(FileName, "r")) == nullptr)
       return false;
 
-    while (fgets(Buf, sizeof(Buf) - 1, F) != NULL)
-    {
-      if (Buf[0] == 'v' && Buf[1] == ' ')
-        nv++;
-      else if (Buf[0] == 'f' && Buf[1] == ' ')
-      {
-        char *S = Buf + 2, oldc = ' ';
-        int cnt = 0;
-
-        while (*S != 0)
-          cnt += isspace((UCHAR)oldc) && !isspace((UCHAR)*S), oldc = *S++;
-        ni += cnt - 2;
-      }
-    }
-
-    V = new vertex[nv];
-    Ind = new int[ni * 3];
-
     // Read model data
-      rewind(F);
+    rewind(F);
     nv = 0;
     ni = 0;
     while (fgets(Buf, sizeof(Buf) - 1, F) != NULL)
@@ -53,7 +37,7 @@ public:
       {
         double x, y ,z;
         sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
-        V[nv++].P = dlgl::vec3(x, y ,z);
+        V.push_back({dlgl::vec3(x, y, z), {0, 0}, {0, 0, 0}, {1, 1, 1, 1}});
 
       }
       else if (Buf[0] == 'f' && Buf[1] == ' ')
@@ -73,9 +57,9 @@ public:
               n1 = nc;
             else
             {
-              Ind[ni++] = n0 - 1;
-              Ind[ni++] = n1 - 1;
-              Ind[ni++] = nc - 1;
+              Ind.push_back(n0 - 1);
+              Ind.push_back(n1 - 1);
+              Ind.push_back(nc - 1);
               n1 = nc;
             }
             n++;
@@ -86,15 +70,13 @@ public:
     }
     fclose(F);
 
-    Autonormals(V, nv, Ind, ni);
-    Create(V, nv, Ind, ni);
-    SetBB(V, nv);
+    Autonormals(V.data(), V.size(), Ind.data(), Ind.size());
+    Create(V.data(), V.size(), Ind.data(), Ind.size());
+    SetBB(V.data(), V.size());
 
-    SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3(3, 3, 3)));
+    SetWorldTransormation(dlgl::matr::Scale({3, 3, 3}));
 
-    delete[] V;
-    delete[] Ind;
-    return true;      
+    return true;
   }
   void SetMaterial( void )
   {

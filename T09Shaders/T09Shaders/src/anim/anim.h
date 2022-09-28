@@ -2,7 +2,7 @@
 #define __ANIM_H_
 
 #include "rnd/rnd.h"
-
+#include <vector>
 
 class anim;
 class object
@@ -35,7 +35,8 @@ class anim
 {
 public:
   static const int MaxNumOfObjects = 100000;
-  object *Objects[MaxNumOfObjects] {};
+  //object *Objects[MaxNumOfObjects] {};
+  std::vector<object *> Objects; 
   int NumOfObjects = 0;
 
 
@@ -45,9 +46,7 @@ public:
   ~anim( void )
   {
     for (int i = 0; i < NumOfObjects; i++)
-    {
-      delete Objects[i];
-    }       
+      delete[] Objects[i];
     rnd.Close();
   }
 
@@ -104,7 +103,8 @@ public:
   anim & operator<<( object *Obj )
   {
     if (NumOfObjects < MaxNumOfObjects)
-      Objects[NumOfObjects++] = Obj;
+      Objects.push_back(Obj);
+    NumOfObjects++;
     return *this;
   } /* End of 'operator<<' function */
 

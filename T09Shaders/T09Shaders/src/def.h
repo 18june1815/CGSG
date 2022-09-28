@@ -1,6 +1,10 @@
 #ifndef __def_h_
 #define __def_h_
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <GL/wglew.h>
+
 #pragma warning(disable: 4244 4013 4018 4115 4761 4305)
 #pragma warning(1: 4087 4130 4189 4296 4701 4706 4702)
 

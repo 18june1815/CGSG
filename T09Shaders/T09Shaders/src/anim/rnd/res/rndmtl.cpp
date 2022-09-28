@@ -34,7 +34,7 @@ int resources::ApplyMaterial( int MtlNo )
   prg = mtl->ShdNo;
   if (prg < 0 || prg >= NumOfShaders)
     prg = 0;
-  prg = shd[prg]->ProgId;
+  prg = shd[prg].ProgId;
     glUseProgram(prg);
 
   if((loc = glGetUniformLocation(prg, "Time")) != -1)

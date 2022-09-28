@@ -1,4 +1,3 @@
-#pragma once
 #ifndef __MTH_h_
 #define __MTH_h_
 
@@ -108,15 +107,9 @@ namespace mth
       }
       vec3 Normalize( void ) const
       { 
-        float l = !*this;
-        vec3 a;
-      
-        a = *this/ !*this;
-        a = *this/ !(*this);
-        if (!*this != 0)
-          return *this/ !*this;
-        else 
-          return *this;
+        if (float len = *this & *this; len != 0 && len != 1)
+          return *this/ sqrt(len);
+        return *this;
       }
  
       type operator[]( int i ) const

@@ -3,9 +3,6 @@
 
 #include <Windows.h>
 
-#include <GL\glew.h>
-#include <GL\wglew.h>
-
 #include "def.h"
 #include "anim/rnd/timer.h"
 #include "res/rndres.h"

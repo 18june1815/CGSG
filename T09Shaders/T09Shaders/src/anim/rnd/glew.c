@@ -30,6 +30,7 @@
 ** THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define GLEW_STATIC
 #ifndef GLEW_INCLUDE
 #include <GL/glew.h>
 #else
