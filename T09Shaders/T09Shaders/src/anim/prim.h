@@ -2,7 +2,7 @@
 #define __PRIM_H_
 
 #include "mth/mth.h"
-#include "anim.h"
+
 #include "rnd/rnd.h"
 
 struct vertex
@@ -13,7 +13,7 @@ struct vertex
   dlgl::vec4 C; //Color
 };
 
-class prim : public object
+class prim 
 {
 public:
   //OpenGL specific data
@@ -53,10 +53,9 @@ public:
       glDeleteBuffers(1, &IBuf);
   }
   void Create( vertex *V, int NoofV, int *Ind, int NoofI );
-  void Response( void ) override;
-  virtual void Draw( dlgl::matr MatrVP );
+  virtual void Draw( const dlgl::matr &MatrVP );
   virtual void SetMaterial( void );
-  void SetWorldTransormation( dlgl::matr MatrWorld );
+  void SetWorldTransormation( const dlgl::matr &MatrWorld );
   void EvalBB( vertex *V, int NoofV );
   void SetBB( vertex *V, int NoofV );
   bool Load( const char *FileName );

@@ -75,7 +75,7 @@ void prim::Autonormals( vertex *V, int NoofV, int *Ind, int NoofI )
     V[i].N = (V[i].N).Normalize();
 }
 
-void prim::Draw( dlgl::matr MatrVP ) 
+void prim::Draw( const dlgl::matr &MatrVP ) 
 {
   int loc, ProgId;
   
@@ -96,6 +96,8 @@ void prim::Draw( dlgl::matr MatrVP )
     glUniformMatrix4fv(loc, 1, FALSE, w.M[0]);
   if ((loc = glGetUniformLocation(ProgId, "MatrWInv")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, winv.M[0]);
+  if ((loc = glGetUniformLocation(ProgId, "CamLoc")) != -1)
+    glUniformMatrix3fv(loc, 1, FALSE, &rnd.cam.Loc.X); 
   if ((loc = glGetUniformLocation(ProgId, "CamLoc")) != -1)
     glUniformMatrix3fv(loc, 1, FALSE, &rnd.cam.Loc.X); 
   
@@ -119,7 +121,7 @@ void prim::Draw( dlgl::matr MatrVP )
   glUseProgram(0);
 } // end of Draw function
 
-void prim::SetWorldTransormation( dlgl::matr MW )
+void prim::SetWorldTransormation( const dlgl::matr &MW )
 {
   MatrWorld = MatrWorld * MW;
 }
@@ -172,10 +174,6 @@ void prim::SetBB( vertex *V, int NoofV )
   
 }
  
-
-void prim::Response( void )
-{
-}
 
 bool prim::LoadTriangle( void )
 {

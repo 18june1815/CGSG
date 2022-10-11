@@ -2,13 +2,16 @@
 #define __GLOBE_H_
 
 #include <vector>
+#include "anim.h"
 #include "anim/prim.h"
 
-class globe : public prim
+class globe : public object
 {
+  prim Prim;
   static const int GLOBE_H = 30, GLOBE_W = 30;
   dlgl::vec3 Geom[GLOBE_H][GLOBE_W];
   dlgl::vec3 pos;
+  
 
   void GeomSet( double R )
   {
@@ -33,20 +36,17 @@ public:
     NumOfV = GLOBE_H * GLOBE_W;
     NumOfI = (GLOBE_H - 1) * (GLOBE_W - 1) * 6;
 
-
-
-    MtlNo = 0;
+    Prim.MtlNo = 0;
 
     GeomSet(0.2);
     GlobeSet();
     //Autonormals(V, NumOfV, Ind, NumOfI);
     
-
     float Rx = (float) rand()/RAND_MAX - 0.5;
     float Ry = (float) rand()/RAND_MAX - 0.5;
     pos = dlgl::vec3(3 * Rx, 0, 3 * Ry);
-    //MatrWorld = MatrWorld * dlgl::matr::Translate(pos); 
-    MatrWorld =  MatrWorld * dlgl::matr::Translate(pos); 
+    
+    Prim.MatrWorld =  Prim.MatrWorld * dlgl::matr::Translate(pos); 
     SetMaterial();
   }
 
@@ -57,7 +57,6 @@ public:
   {
     std::vector<vertex> V;
     std::vector<int> Ind;
-
 
     float Tx, Ty;
     for (int i = 0; i < GLOBE_H; i++)
@@ -81,12 +80,12 @@ public:
       } //end for j
     } //end for i
 
-    Create(V.data(), V.size(), Ind.data(), Ind.size());
+    Prim.Create(V.data(), V.size(), Ind.data(), Ind.size());
   } //End of "GlobeSet" function
 
   void Response( void ) override
   {
-    this->SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,0.05 * sin(rnd.T.Time * 3 - 30 * pos.X + pos.Y), 0)));
+    Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,0.05 * sin(rnd.T.Time * 3 - 30 * pos.X + pos.Y), 0)));
   }
 
   void SetMaterial( void )
@@ -103,7 +102,7 @@ public:
     m.Ks = color * 0.9;
     m.Ph = 50;
     m.Tex[0] = TexNo;
-    MtlNo = rnd.resources.AddMaterial(&m) - 1;
+    Prim.MtlNo = rnd.resources.AddMaterial(&m) - 1;
   }
 
  int SetTexture( void )
@@ -131,7 +130,15 @@ public:
     }
     return TexNo;
   }
+
+  void Draw( dlgl::matr MatrVP  ) override
+  {
+     Prim.Draw(MatrVP);
+  }
+ 
 };
+
+
 
 
 #endif /* __GLOBE_H_ */

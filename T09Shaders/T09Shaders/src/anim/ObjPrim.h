@@ -3,14 +3,16 @@
 
 #include <vector>
 
+#include "anim/anim.h"
 #include "anim/prim.h"
 
-class objprim : public prim
+class objprim : public object
 {
 public:
+  prim Prim;
   objprim ( const char *FN )
   {
-    MtlNo = 0;
+    Prim.MtlNo = 0;
     Load(FN);
     SetMaterial();
   }
@@ -23,7 +25,7 @@ public:
     int nv = 0, ni = 0;
     static char Buf[1000];
 
-    Trans = dlgl::matr::Identity();
+    Prim.Trans = dlgl::matr::Identity();
     if ((F = fopen(FileName, "r")) == nullptr)
       return false;
 
@@ -70,11 +72,11 @@ public:
     }
     fclose(F);
 
-    Autonormals(V.data(), V.size(), Ind.data(), Ind.size());
-    Create(V.data(), V.size(), Ind.data(), Ind.size());
-    SetBB(V.data(), V.size());
+    Prim.Autonormals(V.data(), V.size(), Ind.data(), Ind.size());
+    Prim.Create(V.data(), V.size(), Ind.data(), Ind.size());
+    Prim.SetBB(V.data(), V.size());
 
-    SetWorldTransormation(dlgl::matr::Scale({3, 3, 3}));
+    Prim.SetWorldTransormation(dlgl::matr::Scale({3, 3, 3}));
 
     return true;
   }
@@ -85,9 +87,14 @@ public:
     m.Kd = dlgl::vec3(0.5, 0.5, 0.8);
     m.Ks = dlgl::vec3(0., 0., 1);
     m.Ph = 50;
-    MtlNo = rnd.resources.AddMaterial(&m) - 1;
+    Prim.MtlNo = rnd.resources.AddMaterial(&m) - 1;
   }
 
+  void Draw( dlgl::matr MatrVP  ) override
+  {
+    Prim.Draw(MatrVP);
+  }
+ 
 };
 
 #endif /* __OBJPRIM_H_ */

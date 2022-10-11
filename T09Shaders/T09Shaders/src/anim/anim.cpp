@@ -1,5 +1,4 @@
 #include "anim.h"
-#include "prim.h"
 #include "Globe.h"
 #include "ObjPrim.h"
 

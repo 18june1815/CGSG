@@ -47,23 +47,24 @@ int resources::ApplyMaterial( int MtlNo )
     glUniform3fv(loc, 1, &m->Kd.X);
   if((loc = glGetUniformLocation(prg, "Ks")) != -1)
     glUniform3fv(loc, 1, &m->Ks.X);
-  if((loc = glGetUniformLocation(prg, "Ph")) != -1)
-    glUniform1f(loc, m->Ph);
-  if((loc = glGetUniformLocation(prg, "Trans")) != -1)
-    glUniform1f(loc, m->Trans);
+  //if((loc = glGetUniformLocation(prg, "Ph")) != -1)
+    //glUniform1f(loc, m->Ph);
+  //if((loc = glGetUniformLocation(prg, "Trans")) != -1)
+    //glUniform1f(loc, m->Trans);
 
   //Set textures
   for (int i = 0; i < 8; i++)
   {
     char tname[] = "IsTexture0";  
 
+    tname[9] = '0' + i;
     if (m->Tex[i] != -1)
     {
       glActiveTexture(GL_TEXTURE0 + i);
       glBindTexture(GL_TEXTURE_2D, tex[m->Tex[i]].TexId);
     }
     if ((loc = glGetUniformLocation(prg, tname)) != -1)
-      glUniform1i(loc, mtl->Tex[i] != -1);
+        glUniform1i(loc, m->Tex[i] != -1);
   }
 
   

@@ -93,10 +93,14 @@ void render::Close( void )
 
 void render::Start( void )
 {
-  static double ReloadTime = 0;
-
   T.Response();
-  //resources.UpdateShader();
+
+  static double ReloadTime = 0;
+  if (T.GlobalTime - ReloadTime > 3)
+  {
+    ReloadTime = T.GlobalTime;
+    resources.UpdateShader();
+  }
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
