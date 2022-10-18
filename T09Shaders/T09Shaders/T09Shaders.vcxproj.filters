@@ -28,6 +28,9 @@
     <Filter Include="Source Files\anim\rnd\res">
       <UniqueIdentifier>{2e54297c-9251-4815-97cc-310e409e1d1b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\anim\units">
+      <UniqueIdentifier>{3a9e0589-e1d6-49e4-9792-d6eac7c27193}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -69,11 +72,11 @@
     <ClInclude Include="src\anim\prim.h">
       <Filter>Source Files\anim</Filter>
     </ClInclude>
-    <ClInclude Include="src\anim\Globe.h">
-      <Filter>Source Files\anim</Filter>
+    <ClInclude Include="WiredPrim.h">
+      <Filter>Source Files\anim\units</Filter>
     </ClInclude>
-    <ClInclude Include="src\anim\ObjPrim.h">
-      <Filter>Source Files\anim</Filter>
+    <ClInclude Include="src\anim\units\Units.h">
+      <Filter>Source Files\anim\units</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -105,9 +108,6 @@
     <ClCompile Include="src\anim\anim.cpp">
       <Filter>Source Files\anim</Filter>
     </ClCompile>
-    <ClCompile Include="src\anim\prim.cpp">
-      <Filter>Source Files\anim</Filter>
-    </ClCompile>
     <ClCompile Include="src\anim\rnd\rndbase.cpp">
       <Filter>Source Files\anim\rnd</Filter>
     </ClCompile>
@@ -116,6 +116,15 @@
     </ClCompile>
     <ClCompile Include="src\anim\rnd\res\rndmtl.cpp">
       <Filter>Source Files\anim\rnd\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\prim.cpp">
+      <Filter>Source Files\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\Globe.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\ObjPrim.cpp">
+      <Filter>Source Files\anim\units</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

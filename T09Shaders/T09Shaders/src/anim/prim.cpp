@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "prim.h"
-#include "rnd/rnd.h"
+//#include "rnd/rnd.h"
 
 void prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
 {

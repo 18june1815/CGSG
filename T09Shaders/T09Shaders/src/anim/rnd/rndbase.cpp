@@ -96,7 +96,7 @@ void render::Start( void )
   T.Response();
 
   static double ReloadTime = 0;
-  if (T.GlobalTime - ReloadTime > 3)
+  if (T.GlobalTime - ReloadTime > 6)
   {
     ReloadTime = T.GlobalTime;
     resources.UpdateShader();
