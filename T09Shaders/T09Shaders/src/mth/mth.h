@@ -26,6 +26,23 @@ namespace mth
       vec2( type x, type y) : X(x), Y(y)
       {
       }
+
+      vec2 &operator=( const vec2 &v2 ) 
+      {
+        X = v2.X; Y = v2.Y; 
+        return *this;
+      }
+       
+      type operator[]( int i ) const
+      {
+        return *(&X + i);
+      }
+
+      type & operator[]( int i )
+      {
+        return *(&X + i);
+      }
+
     };
 
   template<typename type>
@@ -50,10 +67,17 @@ namespace mth
 
       vec3( void )
       {
+        X = 0; Y = 0; Z = 0;
       }
 
       vec3( type x, type y, type z ) : X(x), Y(y), Z(z)
       {
+      }
+
+     vec3 &operator=( const vec3 &v2 ) 
+      {
+        X = v2.X; Y = v2.Y; Z = v2.Z;
+        return *this;
       }
 
       vec3 operator+( const vec3 &v2 ) const
@@ -131,6 +155,10 @@ namespace mth
 
       matr( void )
       {
+        M[0][0] = 1; M[0][1] = 0; M[0][2] = 0; M[0][3] = 0;
+        M[1][0] = 0; M[1][1] = 1; M[1][2] = 0; M[1][3] = 0;
+        M[2][0] = 0; M[2][1] = 0; M[2][2] = 1; M[2][3] = 0;
+        M[3][0] = 0; M[3][1] = 0; M[3][2] = 0; M[3][3] = 1;
       }
 
       vec3<type> PointTransform( const vec3<type> &V ) const //V * M4x3

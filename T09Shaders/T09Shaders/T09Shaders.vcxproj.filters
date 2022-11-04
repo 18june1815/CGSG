@@ -72,11 +72,11 @@
     <ClInclude Include="src\anim\prim.h">
       <Filter>Source Files\anim</Filter>
     </ClInclude>
-    <ClInclude Include="WiredPrim.h">
-      <Filter>Source Files\anim\units</Filter>
-    </ClInclude>
     <ClInclude Include="src\anim\units\Units.h">
       <Filter>Source Files\anim\units</Filter>
+    </ClInclude>
+    <ClInclude Include="src\anim\rnd\grid.h">
+      <Filter>Source Files\anim\rnd</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +90,9 @@
     </Image>
     <Image Include="T09Shaders.ico">
       <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\anim\units\test.bmp">
+      <Filter>Source Files\anim\units</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +127,15 @@
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
     <ClCompile Include="src\anim\units\ObjPrim.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\rnd\grid.cpp">
+      <Filter>Source Files\anim\rnd</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\u_grid.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\u_mounts.cpp">
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
   </ItemGroup>

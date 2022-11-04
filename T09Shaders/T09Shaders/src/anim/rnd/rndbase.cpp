@@ -69,6 +69,9 @@ void render::Init( HWND hwnd, WPARAM wp, LPARAM lp )
   glEnable(GL_DEPTH_TEST);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  glEnable(GL_PRIMITIVE_RESTART);
+  glPrimitiveRestartIndex(-1);
+
   ProjSize = 0.1;
   ProjDist = 0.1;
   ProjFarClip = 300;

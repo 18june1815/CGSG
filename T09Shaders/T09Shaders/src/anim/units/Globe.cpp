@@ -35,13 +35,7 @@ void globe::GeomSet( double R )
     }
 } // End of 'GeomSet' function
 
- /*
-globe::~globe( void )
-{
-}
-*/
 void globe::GlobeSet( void )
-
 {
   std::vector<vertex> V;
   std::vector<int> Ind;
@@ -53,7 +47,7 @@ void globe::GlobeSet( void )
     {
       Tx = j / (GLOBE_W - 1.0);
       Ty = i / (GLOBE_H - 1.0);
-      V.push_back({Geom[i][j], {Tx, Ty}, Geom[i][j], {1, 1, 1, 1}});
+      V.push_back({Geom[i][j], {Tx, Ty}, Geom[i][j].Normalize(), {1, 1, 1, 1}});
       
       if (i != GLOBE_H - 1 && j != GLOBE_W - 1)
       {
@@ -86,11 +80,8 @@ void globe::SetMaterial( void )
     R2 = (float) rand()/RAND_MAX,
     R3 = (float) rand()/RAND_MAX;
   dlgl::vec3 color = dlgl::vec3(R1, R2, R3);
-  m.Ka = color * 0.1;
-  m.Kd = color * 0.8;
-  m.Ks = color * 0.9;
-  m.Ph = 50;
-  m.Tex[0] = TexNo;
+  m.Tex[0] = TexNo; 
+  m.Name = "Globe";
   Prim.MtlNo = rnd.resources.AddMaterial(&m) - 1;
 }
 
@@ -122,5 +113,5 @@ int globe::SetTexture( void )
 
 void globe::Draw( dlgl::matr MatrVP  )
 {
-    Prim.Draw(MatrVP);
+    Prim.Draw(GL_FILL, GL_TRIANGLES, MatrVP);
 }

@@ -136,6 +136,7 @@
     <ClInclude Include="src\anim\anim.h" />
     <ClInclude Include="src\anim\prim.h" />
     <ClInclude Include="src\anim\rnd\camera.h" />
+    <ClInclude Include="src\anim\rnd\grid.h" />
     <ClInclude Include="src\anim\rnd\rnd.h" />
     <ClInclude Include="src\anim\rnd\res\rndres.h" />
     <ClInclude Include="src\anim\rnd\timer.h" />
@@ -145,19 +146,20 @@
     <ClInclude Include="src\mth\mth.h" />
     <ClInclude Include="T09Shaders.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="WiredPrim.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="T09Shaders.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico" />
+    <Image Include="src\anim\units\test.bmp" />
     <Image Include="T09Shaders.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\anim\anim.cpp" />
     <ClCompile Include="src\anim\prim.cpp" />
     <ClCompile Include="src\anim\rnd\glew.c" />
+    <ClCompile Include="src\anim\rnd\grid.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndmtl.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndres.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndshd.cpp" />
@@ -165,6 +167,8 @@
     <ClCompile Include="src\anim\rnd\rndbase.cpp" />
     <ClCompile Include="src\anim\units\Globe.cpp" />
     <ClCompile Include="src\anim\units\ObjPrim.cpp" />
+    <ClCompile Include="src\anim\units\u_grid.cpp" />
+    <ClCompile Include="src\anim\units\u_mounts.cpp" />
     <ClCompile Include="src\win\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

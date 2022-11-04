@@ -2,9 +2,13 @@
 
 void anim::SetScene( void )
 {
- *this << new objprim("bin/models/cow.obj");
+  
+  *this << new objprim("bin/models/cow.obj");
   for (int i = 0; i < 5; i++ )
     *this << new globe();
+  
+  //*this << new u_grid();
+  *this << new u_mounts();
 }
 
 anim::~anim( void )

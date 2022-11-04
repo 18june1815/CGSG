@@ -61,7 +61,6 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
   MINMAXINFO* minmax;
   PAINTSTRUCT ps;
 
-
   switch (Msg)
   {
   case WM_GETMINMAXINFO:

@@ -52,8 +52,9 @@ public:
     if (IBuf != 0)
       glDeleteBuffers(1, &IBuf);
   }
+
   void Create( vertex *V, int NoofV, int *Ind, int NoofI );
-  virtual void Draw( const dlgl::matr &MatrVP );
+  virtual void Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP );
   virtual void SetMaterial( void );
   void SetWorldTransormation( const dlgl::matr &MatrWorld );
   void EvalBB( vertex *V, int NoofV );
@@ -61,6 +62,6 @@ public:
   bool Load( const char *FileName );
   void Autonormals( vertex *V, int NoofV, int *Ind, int NoofI );
   bool LoadTriangle( void );
-
 };
+
 #endif /* __PRIM_H_ */

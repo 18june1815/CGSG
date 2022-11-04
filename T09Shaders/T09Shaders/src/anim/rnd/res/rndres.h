@@ -2,6 +2,7 @@
 #define __RNDRES_H_ 
 
 #include "def.h"
+#include <string>
 
 #define STR_MAX 300
 #define MAX_SHADERS 30
@@ -11,8 +12,8 @@
 class material
 {
 public:
-  char Name[STR_MAX] = ""; // Material name
-
+  //char Name[STR_MAX] = ""; // Material name
+  std::string Name;
   // Illumination coefficients
   dlgl::vec3 Ka, Kd, Ks;  // Ambient, diffuse, specular coefficients
   float Ph;               // Phong power coefficient
@@ -22,8 +23,17 @@ public:
 
   material ( void )
   {
+    //strcpy(Name, "Default");
+    Name = "Default";
+    Ka = dlgl::vec3(0.1, 0.1, 0.1);
+    Kd = dlgl::vec3(0.9, 0.9, 0.9);
+    Ks = dlgl::vec3(0.3, 0.3, 0.3);
+    Ph = 30;
+    Trans = 0;
+    ShdNo = 0;
+    for (int i = 0; i < 8; i++)
+      Tex[i] = -1; 
   }
-  
   static material DefMaterial( void );
 };
 
@@ -34,9 +44,6 @@ struct texture
   int W, H;        // Texture size in pixels
   GLuint TexId;      // OpenGl texture Id
 
-  texture ( void )
-  {
-  }
 };
 
 class shader
@@ -48,18 +55,20 @@ public:
   shader( void )
   {
     strncpy(Name, "default", STR_MAX - 1);
+    ProgId = 0;
   }
   shader( const char *ShaderFileNamePrefix )
   {
     strncpy(Name, ShaderFileNamePrefix, STR_MAX - 1);
+    ProgId = 0;
   }
 
   std::string LoadTextFromFile( const char *FileName );
   void Log( const char *Type, const char *Text  );
   int Load( void );
   void Delete( void );
-  
-  void Update( void );
+  //void Update( void );
+
 };
 
 
@@ -69,7 +78,7 @@ public:
   shader shd[MAX_SHADERS] {}; // Array of shaders
   int NumOfShaders = 0;                        
 
-  texture tex[MAX_TEXTURES];
+  texture tex[MAX_TEXTURES] {};
   int NumOfTextures = 0;
 
   material mtl[MAX_MATERIALS] {};
@@ -83,12 +92,9 @@ public:
 
   int AddMaterial( material *Mtl );
   int ApplyMaterial( int MtlNo );
-  
-
+  int FindMaterial( std::string name );
   
   void Init( void );
   void Close( void ); 
-
-
 };
 #endif /* __RNDRES_H_ */

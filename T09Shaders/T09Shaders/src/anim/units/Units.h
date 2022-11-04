@@ -9,6 +9,7 @@
 class object
 {
 public:
+  
   virtual void Draw( dlgl::matr MatrVP )
   {
   } /* End of 'Render' function */
@@ -61,6 +62,33 @@ public:
   bool Load( const char *FileName ); 
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
+  int SetTexture( void );
 };
 
+
+
+class u_grid: public object
+{
+public:
+  prim Prim;
+  u_grid();
+  ~u_grid();
+  void SetMaterial( void );
+  void Draw( dlgl::matr MatrVP  ) override;
+};
+
+
+
+
+class u_mounts: public object
+{
+public:
+  prim Prim;
+  u_mounts();
+  ~u_mounts();
+  void SetMaterial( void );
+  int SetTexture( void );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Response( void ) override;
+};
 #endif /* __UNITS_H_ */

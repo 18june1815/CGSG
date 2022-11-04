@@ -56,7 +56,7 @@ void prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
 } // end of 'Create' function
 
 void prim::Autonormals( vertex *V, int NoofV, int *Ind, int NoofI )
-{
+{                                   
   for (int i = 0; i < NoofV; i++)
     V[i].N = dlgl::vec3(0, 0, 0);
   for (int i = 0; i < NoofI; i += 3)
@@ -75,7 +75,7 @@ void prim::Autonormals( vertex *V, int NoofV, int *Ind, int NoofI )
     V[i].N = (V[i].N).Normalize();
 }
 
-void prim::Draw( const dlgl::matr &MatrVP ) 
+void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP ) 
 {
   int loc, ProgId;
   
@@ -103,7 +103,7 @@ void prim::Draw( const dlgl::matr &MatrVP )
   
     
   // Draw triangles
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glPolygonMode(GL_FRONT_AND_BACK, PolygonMode);
   
   glUseProgram(rnd.resources.shd[0].ProgId);
 
@@ -114,7 +114,7 @@ void prim::Draw( const dlgl::matr &MatrVP )
   else
   {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBuf);
-    glDrawElements(GL_TRIANGLES, NumOfElements, GL_UNSIGNED_INT, 0);
+    glDrawElements(ElementsMode, NumOfElements, GL_UNSIGNED_INT, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
   glBindVertexArray(0);

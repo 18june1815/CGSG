@@ -34,6 +34,11 @@ public:
     IsPause = FALSE;
     FPS = 10.0;
     PauseTime = 0;
+
+    GlobalTime = 0;
+    GlobalDeltaTime = 0; 
+    Time = 0;
+    DeltaTime = 0;
   }
   void Response( void )
   {
