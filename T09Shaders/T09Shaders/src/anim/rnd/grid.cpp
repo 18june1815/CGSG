@@ -61,6 +61,7 @@ bool grid::CreateSphere( float R )
 {
   int i, j, k;
   double theta = 0, phi = 0;
+
   for (i = 0, theta = 0, k = 0; i < H; i++, theta += mth::PI / (H - 1))
     for (j = 0, phi = 0; j < W; j++, phi += 2 * mth::PI / (W - 1))
     {
@@ -70,6 +71,9 @@ bool grid::CreateSphere( float R )
       V[k].N = dlgl::vec3(sin(theta) * sin(phi),
                           cos(theta),
                           cos(phi) * sin(theta));
+      V[k].T.X = j / (W - 1.0); 
+      V[k].T.Y = i / (H - 1.0); 
+
       k++;
     }
   

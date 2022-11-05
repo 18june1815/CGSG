@@ -74,6 +74,7 @@ public:
   u_grid();
   ~u_grid();
   void SetMaterial( void );
+  int SetTexture( void );
   void Draw( dlgl::matr MatrVP  ) override;
 };
 
