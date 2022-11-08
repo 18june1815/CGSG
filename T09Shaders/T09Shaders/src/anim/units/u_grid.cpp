@@ -1,8 +1,9 @@
 #include "Units.h"
 #include "../rnd/grid.h"  
 
-u_grid::u_grid()
+u_grid::u_grid( render *Rnd )
 {
+  rnd = Rnd;
   int W = 50, H = 50, R = 100.;
   grid g(W, H);
 
@@ -15,7 +16,7 @@ u_grid::u_grid()
 
 void u_grid::Draw( dlgl::matr MatrVP )
 {
-  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP);
+  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd);
 }
 
 
@@ -25,7 +26,8 @@ void u_grid::SetMaterial( void )
   int TexNo = SetTexture();
   dlgl::vec3 color = dlgl::vec3(0.5, 0.5, 0);
   m.Tex[0] = TexNo; 
-  Prim.MtlNo = rnd.resources.AddMaterial(&m) - 1;
+  m.Name = "Sky";
+  Prim.MtlNo = rnd->resources.AddMaterial(&m) - 1;
 }
 
 
@@ -43,7 +45,7 @@ int u_grid::SetTexture( void )
       GetObject(hBm, sizeof(bm), &bm);
 
       BYTE *mem = (BYTE *)bm.bmBits;
-      TexNo = rnd.resources.AddImg("Sky", bm.bmWidth, bm.bmHeight, 3, mem);
+      TexNo = rnd->resources.AddImg("Sky", bm.bmWidth, bm.bmHeight, 3, mem);
       DeleteObject(hBm);
     }
   }

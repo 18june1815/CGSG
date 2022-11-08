@@ -1,8 +1,9 @@
 #include "Units.h"
 #include "../rnd/grid.h"  
 
-u_mounts::u_mounts()
+u_mounts::u_mounts( render *R )
 {
+  rnd = R;
   float size = 300, h = 30;
   HBITMAP hBm;
 
@@ -36,7 +37,7 @@ u_mounts::u_mounts()
 
 void u_mounts::Draw( dlgl::matr MatrVP )
 {
-  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP);
+  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd);
 }
 
 
@@ -50,7 +51,8 @@ void u_mounts::SetMaterial( void )
   m.Ks = color * 0.9;
   m.Ph = 50;
   m.Tex[0] = TexNo; 
-  Prim.MtlNo = rnd.resources.AddMaterial(&m) - 1;
+  m.Name = "Mounts";
+  Prim.MtlNo = rnd->resources.AddMaterial(&m) - 1;
 }
 
 int u_mounts::SetTexture( void )
@@ -67,7 +69,7 @@ int u_mounts::SetTexture( void )
       GetObject(hBm, sizeof(bm), &bm);
 
       BYTE *mem = (BYTE *)bm.bmBits;
-      TexNo = rnd.resources.AddImg("Mounts", bm.bmWidth, bm.bmHeight, 3, mem);
+      TexNo = rnd->resources.AddImg("Mounts", bm.bmWidth, bm.bmHeight, 3, mem);
       DeleteObject(hBm);
     }
   }

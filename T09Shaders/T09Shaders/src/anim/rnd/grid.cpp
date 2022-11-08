@@ -80,34 +80,3 @@ bool grid::CreateSphere( float R )
   return true;
 }
 
-void grid::CreateMounts( void )
-{
-  float size = 3, h = 10;
-  HBITMAP hBm;
-
-  hBm = (HBITMAP)LoadImage(NULL, "bin/textures/hf.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-  if (hBm != NULL)
-  {
-    BITMAP bm;
-    GetObject(hBm, sizeof(bm), &bm);
-   
-    W = bm.bmWidth;
-    H = bm.bmHeight;
-
-    for (int y = 0; y < bm.bmHeight; y++)
-      for (int x = 0; x < bm.bmWidth; x++)
-      {
-        V.push_back({dlgl::vec3(float(-x/5.), -1, float(-y/5.)), 
-                      {float(x / (W - 1.0)),  float(y / (H - 1.0))},
-                      {0, 1, 0}, {1, 0, 0, 1}});
-
-        BYTE c = *((BYTE *)bm.bmBits + bm.bmWidthBytes * y + x);
-        V[y * W + x].P = 
-          dlgl::vec3(float(-x/5.),//x / (bm.bmWidth) - size /2,
-                     h * c / 255.0,
-                     float(-y/5.));//size * (1 - y / (bm.bmHeight - 1.0)) - size / 2);
-      }
-   // PrimFromGrid(Prim);
-    DeleteObject(hBm);
-  }
-}

@@ -12,12 +12,14 @@ public:
   std::vector<object *> Objects; 
   int NumOfObjects = 0;
 
+  render *rnd;
+
    anim( void )
    {
    }
   ~anim( void );
  
-  void Init( HWND hWnd, WPARAM wp, LPARAM lp );
+  void Init( HWND &hWnd );
   void Resize( int W, int H);
   void CopyFrame( void );
   void Draw( void );

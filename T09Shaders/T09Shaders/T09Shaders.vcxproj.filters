@@ -69,13 +69,13 @@
     <ClInclude Include="src\anim\anim.h">
       <Filter>Source Files\anim</Filter>
     </ClInclude>
-    <ClInclude Include="src\anim\prim.h">
-      <Filter>Source Files\anim</Filter>
-    </ClInclude>
     <ClInclude Include="src\anim\units\Units.h">
       <Filter>Source Files\anim\units</Filter>
     </ClInclude>
     <ClInclude Include="src\anim\rnd\grid.h">
+      <Filter>Source Files\anim\rnd</Filter>
+    </ClInclude>
+    <ClInclude Include="src\anim\rnd\prim.h">
       <Filter>Source Files\anim\rnd</Filter>
     </ClInclude>
   </ItemGroup>
@@ -120,17 +120,17 @@
     <ClCompile Include="src\anim\rnd\res\rndmtl.cpp">
       <Filter>Source Files\anim\rnd\res</Filter>
     </ClCompile>
-    <ClCompile Include="src\anim\prim.cpp">
-      <Filter>Source Files\anim</Filter>
-    </ClCompile>
     <ClCompile Include="src\anim\units\Globe.cpp">
-      <Filter>Source Files\anim\units</Filter>
-    </ClCompile>
-    <ClCompile Include="src\anim\units\ObjPrim.cpp">
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
     <ClCompile Include="src\anim\rnd\grid.cpp">
       <Filter>Source Files\anim\rnd</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\rnd\prim.cpp">
+      <Filter>Source Files\anim\rnd</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\ObjPrim.cpp">
+      <Filter>Source Files\anim\units</Filter>
     </ClCompile>
     <ClCompile Include="src\anim\units\u_grid.cpp">
       <Filter>Source Files\anim\units</Filter>

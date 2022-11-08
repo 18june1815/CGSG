@@ -4,12 +4,12 @@
 #include <vector>
                 
 //#include "def.h"
-#include "anim/prim.h"
+#include "anim/rnd/prim.h"
 
 class object
 {
 public:
-  
+  render *rnd;  
   virtual void Draw( dlgl::matr MatrVP )
   {
   } /* End of 'Render' function */
@@ -43,7 +43,7 @@ class globe : public object
   void GeomSet( double R );
 
 public:
-  globe( void );
+  globe( render *R );
 
   void GlobeSet( void );
   void Response( void ) override;
@@ -58,7 +58,7 @@ class objprim : public object
 {
 public:
   prim Prim;
-  objprim ( const char *FN );  
+  objprim ( const char *FN, render *R );  
   bool Load( const char *FileName ); 
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
@@ -71,7 +71,7 @@ class u_grid: public object
 {
 public:
   prim Prim;
-  u_grid();
+  u_grid( render *R );
   ~u_grid();
   void SetMaterial( void );
   int SetTexture( void );
@@ -85,7 +85,7 @@ class u_mounts: public object
 {
 public:
   prim Prim;
-  u_mounts();
+  u_mounts( render *R );
   ~u_mounts();
   void SetMaterial( void );
   int SetTexture( void );

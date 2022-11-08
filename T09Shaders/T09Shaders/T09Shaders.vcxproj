@@ -134,9 +134,9 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="src\anim\anim.h" />
-    <ClInclude Include="src\anim\prim.h" />
     <ClInclude Include="src\anim\rnd\camera.h" />
     <ClInclude Include="src\anim\rnd\grid.h" />
+    <ClInclude Include="src\anim\rnd\prim.h" />
     <ClInclude Include="src\anim\rnd\rnd.h" />
     <ClInclude Include="src\anim\rnd\res\rndres.h" />
     <ClInclude Include="src\anim\rnd\timer.h" />
@@ -157,9 +157,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\anim\anim.cpp" />
-    <ClCompile Include="src\anim\prim.cpp" />
     <ClCompile Include="src\anim\rnd\glew.c" />
     <ClCompile Include="src\anim\rnd\grid.cpp" />
+    <ClCompile Include="src\anim\rnd\prim.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndmtl.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndres.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndshd.cpp" />

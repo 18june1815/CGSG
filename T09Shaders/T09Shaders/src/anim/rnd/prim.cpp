@@ -75,7 +75,7 @@ void prim::Autonormals( vertex *V, int NoofV, int *Ind, int NoofI )
     V[i].N = (V[i].N).Normalize();
 }
 
-void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP ) 
+void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, render *rnd ) 
 {
   int loc, ProgId;
   
@@ -87,9 +87,9 @@ void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP )
   glLoadMatrixf(wvp.M[0]);
      
   // Pass render uniforms
-  ProgId = rnd.resources.ApplyMaterial(MtlNo);  
-   if ((loc = glGetUniformLocation(rnd.resources.shd[0].ProgId, "Time")) != -1)
-    glUniform1f(loc, rnd.T.Time);
+  ProgId = rnd->resources.ApplyMaterial(MtlNo, rnd->T.Time);  
+   if ((loc = glGetUniformLocation(rnd->resources.shd[0].ProgId, "Time")) != -1)
+    glUniform1f(loc, rnd->T.Time);
   if ((loc = glGetUniformLocation(ProgId, "MatrWVP")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, wvp.M[0]);
   if ((loc = glGetUniformLocation(ProgId, "MatrW")) != -1)
@@ -97,15 +97,15 @@ void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP )
   if ((loc = glGetUniformLocation(ProgId, "MatrWInv")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, winv.M[0]);
   if ((loc = glGetUniformLocation(ProgId, "CamLoc")) != -1)
-    glUniformMatrix3fv(loc, 1, FALSE, &rnd.cam.Loc.X); 
+    glUniformMatrix3fv(loc, 1, FALSE, &rnd->cam.Loc.X); 
   if ((loc = glGetUniformLocation(ProgId, "CamLoc")) != -1)
-    glUniformMatrix3fv(loc, 1, FALSE, &rnd.cam.Loc.X); 
+    glUniformMatrix3fv(loc, 1, FALSE, &rnd->cam.Loc.X); 
   
     
   // Draw triangles
   glPolygonMode(GL_FRONT_AND_BACK, PolygonMode);
   
-  glUseProgram(rnd.resources.shd[0].ProgId);
+  glUseProgram(rnd->resources.shd[0].ProgId);
 
   glBindVertexArray(VA);
 

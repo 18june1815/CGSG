@@ -9,8 +9,8 @@ static struct
   float Ph;
 } MatLib[] =
 {
-  {"Black Plastic", {0.0, 0.0, 0.0},             {0.01, 0.01, 0.01},           {0.5, 0.5, 0.5},               32},
-  {"Brass",         {0.329412,0.223529,0.027451}, {0.780392,0.568627,0.113725}, {0.992157,0.941176,0.807843}, 27.8974},
+  {"Black Plastic", {0.0, 0.0, 0.0},             {0.01, 0.01, 0.01},           {0.5, 0.5, 0.5},               32       },
+  {"Brass",         {0.329412,0.223529,0.027451}, {0.780392,0.568627,0.113725}, {0.992157,0.941176,0.807843}, 27.8974  },
   {"Bronze",        {0.2125,0.1275,0.054},       {0.714,0.4284,0.18144},       {0.393548,0.271906,0.166721},  25.6},
   {"Chrome",        {0.25, 0.25, 0.25},          {0.4, 0.4, 0.4},              {0.774597, 0.774597, 0.774597}, 76.8},
   {"Copper",        {0.19125,0.0735,0.0225},     {0.7038,0.27048,0.0828},      {0.256777,0.137622,0.086014},  12.8},
@@ -33,6 +33,30 @@ static struct
 #define MAT_N (sizeof(MatLib) / sizeof(MatLib[0]))
 
 
+material material::GetLibMaterial( std::string mtlName )
+{
+  material mtl;  
+  int mtl_n = -1;
+
+  for (int i = 0; i < MAT_N; i++)
+  {
+    if (mtlName == MatLib[i].Name)
+    {
+      mtl.Name = mtlName;
+      mtl.Ka = MatLib[i].Ka;
+      mtl.Kd = MatLib[i].Kd;
+      mtl.Ks = MatLib[i].Ks;
+      mtl.Ph = MatLib[i].Ph;
+      mtl.Trans = 0;
+      mtl.ShdNo = 0;
+      for (int i = 0; i < 8; i++)
+        mtl.Tex[i] = -1; 
+    } 
+  }
+   
+  return mtl;
+}
+
 material material::DefMaterial( void )
 {
   material def_mtl;                       
@@ -50,7 +74,9 @@ material material::DefMaterial( void )
   return def_mtl;
 }
 
-int resources::ApplyMaterial( int MtlNo )
+
+
+int resources::ApplyMaterial( int MtlNo, UINT64 Time )
 {
   material *m;
   int loc, prg;
@@ -69,7 +95,7 @@ int resources::ApplyMaterial( int MtlNo )
     glUseProgram(prg);
 
   if((loc = glGetUniformLocation(prg, "Time")) != -1)
-    glUniform1f(loc, rnd.T.Time);
+    glUniform1f(loc, Time);
 
   // Set shading parameters
   if((loc = glGetUniformLocation(prg, "Ka")) != -1)
@@ -104,7 +130,7 @@ int resources::ApplyMaterial( int MtlNo )
 
 int resources::FindMaterial( std::string name )
 {
-  int mtlNo;
+  int mtlNo = -1;
   for (int i = 0; i < NumOfMaterials; i++)
   {
     if (name == mtl[i].Name)

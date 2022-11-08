@@ -69,21 +69,21 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
     minmax->ptMinTrackSize.y = 400;
     return 0;
   case WM_CREATE: 
-    rnd.hWnd = hWnd;
-    MyAnim.Init(hWnd, wParam, lParam);
+    //MyAnim.rnd->hWnd = hWnd;
+    MyAnim.Init(hWnd);
    return 0;
   case WM_SIZE:
     MyAnim.Resize(LOWORD(lParam), HIWORD(lParam));
-    SendMessage(hWnd, WM_TIMER, 0, 0);
+    SendMessage(MyAnim.rnd->hWnd, WM_TIMER, 0, 0);
     return 0;
   case WM_KEYDOWN:
     if (wParam == VK_ESCAPE)
-      SendMessage(hWnd, WM_CLOSE, 0, 0);
+      SendMessage(MyAnim.rnd->hWnd, WM_CLOSE, 0, 0);
     return 0;
   case WM_TIMER:
     MyAnim.Draw();
     MyAnim.CopyFrame();
-    PostMessage(hWnd, WM_PAINT, 0, 0);
+    PostMessage(MyAnim.rnd->hWnd, WM_PAINT, 0, 0);
     return 0;
   case WM_ERASEBKGND:
     return 1;
@@ -97,9 +97,9 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
     return 0;
  
   case WM_PAINT:
-    rnd.hDC = BeginPaint(rnd.hWnd, &ps);
+    MyAnim.rnd->hDC = BeginPaint(MyAnim.rnd->hWnd, &ps);
     MyAnim.CopyFrame();
-    EndPaint(rnd.hWnd, &ps); 
+    EndPaint(MyAnim.rnd->hWnd, &ps); 
     return 0;
   case WM_CLOSE:
     if (MessageBox(hWnd, "Are you sure you want to close window?", "Close",
@@ -107,8 +107,8 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
       DestroyWindow(hWnd);
     return 0;
   case WM_DESTROY:
-    PostMessage(hWnd, WM_QUIT, 0, 0);
-    KillTimer(hWnd, 30);
+    PostMessage(MyAnim.rnd->hWnd, WM_QUIT, 0, 0);
+    KillTimer(MyAnim.rnd->hWnd, 30);
     return 0;
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);

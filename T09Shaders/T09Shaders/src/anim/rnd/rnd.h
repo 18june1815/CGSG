@@ -12,7 +12,7 @@
 #pragma comment(lib, "glu32")
 class render;
 
-extern render rnd;
+//extern render rnd;
 
 class render 
 {
@@ -20,12 +20,11 @@ public:
   HDC hDC;
   HWND hWnd;
   HGLRC hGLRC; //OpenGL rendering context
-  WPARAM wParam;
-  LPARAM lParam;
+ 
   resources resources;
   timer T;
  
-  int FrameW, FrameH;
+  int FrameW = 300, FrameH = 400;
 
   dlgl::matr 
     MatrView,  // View coordinate system matrix
@@ -40,13 +39,14 @@ public:
     camera cam;
   render( void )
   {
+    //Init();
   }
   ~render( void )
   {
-      ReleaseDC(hWnd, hDC); 
+    ReleaseDC(hWnd, hDC); 
   }
 
-  void Init( HWND hwnd, WPARAM wp, LPARAM lp );
+  void Init( HWND hWnd );
   void Close( void );
   void Start( void );
   void Resize ( int W, int H );

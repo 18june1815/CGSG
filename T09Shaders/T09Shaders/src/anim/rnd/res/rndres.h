@@ -35,6 +35,7 @@ public:
       Tex[i] = -1; 
   }
   static material DefMaterial( void );
+  static material GetLibMaterial( std::string mtlName );
 };
 
 
@@ -91,7 +92,7 @@ public:
   int AddTexture( char *FileName );
 
   int AddMaterial( material *Mtl );
-  int ApplyMaterial( int MtlNo );
+  int ApplyMaterial( int MtlNo, UINT64 Time );
   int FindMaterial( std::string name );
   
   void Init( void );

@@ -18,7 +18,7 @@ public:
   int LastMousePos[2];
 
 
-  camera ( void ): Loc(dlgl::vec3(10, 10, 2)), At(dlgl::vec3(0,0.1,0)), Up(dlgl::vec3(0,1,0)),
+  camera ( void ): Loc(dlgl::vec3(20, 1, 2)), At(dlgl::vec3(0,1,0)), Up(dlgl::vec3(0,1,0)),
                    MatrWorld(dlgl::matr::Identity())
   {
     LastMousePos[0] = 0; //Last X mouse position 

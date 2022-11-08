@@ -3,7 +3,7 @@
 
 #include "mth/mth.h"
 
-#include "rnd/rnd.h"
+#include "rnd.h"
 
 struct vertex
 {
@@ -54,7 +54,7 @@ public:
   }
 
   void Create( vertex *V, int NoofV, int *Ind, int NoofI );
-  virtual void Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP );
+  virtual void Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, render *rnd );
   virtual void SetMaterial( void );
   void SetWorldTransormation( const dlgl::matr &MatrWorld );
   void EvalBB( vertex *V, int NoofV );

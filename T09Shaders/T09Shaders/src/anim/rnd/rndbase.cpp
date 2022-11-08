@@ -1,15 +1,13 @@
 #include "rnd.h"
 
-render rnd;
-void render::Init( HWND hwnd, WPARAM wp, LPARAM lp )
+
+void render::Init( HWND hWnd )
 {
   int i;
   UINT nums;
   PIXELFORMATDESCRIPTOR pfd = {0};
 
-  hWnd = hwnd;
-  wParam = wp;
-  lParam = lp;
+  hWnd = hWnd;
 
   hDC = GetDC(hWnd);
    

@@ -1,7 +1,8 @@
 #include "Units.h"
 
-objprim::objprim( const char *FN )
+objprim::objprim( const char *FN, render *R )
 {
+  rnd = R;
   Prim.MtlNo = 0;
   Load(FN);
   SetMaterial();
@@ -78,7 +79,7 @@ void objprim::SetMaterial( void )
   m.Name = "ObjPrim";
   m.Ka = dlgl::vec3(0.9, 0.1, 0.5);
   m.Ks = dlgl::vec3(0.9, 0.1, 0.5);
-  Prim.MtlNo = rnd.resources.AddMaterial(&m) - 1;
+  Prim.MtlNo = rnd->resources.AddMaterial(&m) - 1;
 }
 
 
@@ -100,7 +101,7 @@ int objprim::SetTexture( void )
       BYTE  *mem = new BYTE[w * h * 3];
       // int n;
       fread(mem, 3, w * h, F);
-      TexNo = rnd.resources.AddImg("Cow", w, h, 3, mem);
+      TexNo = rnd->resources.AddImg("Cow", w, h, 3, mem);
 
       delete[] mem;
     }
@@ -112,5 +113,5 @@ int objprim::SetTexture( void )
 
 void objprim::Draw( dlgl::matr MatrVP  ) 
 {
-  Prim.Draw(GL_FILL, GL_TRIANGLES, MatrVP);
+  Prim.Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd);
 }

@@ -1,8 +1,9 @@
 #include "Units.h"
 #include "anim/anim.h"
  
-globe::globe( void )
+globe::globe( render *R )
 {
+  rnd = R;
   int NumOfV, NumOfI;
   
   NumOfV = GLOBE_H * GLOBE_W;
@@ -68,12 +69,12 @@ void globe::GlobeSet( void )
 
 void globe::Response( void ) 
 {
-  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,0.05 * sin(rnd.T.Time * 3 - 30 * pos.X + pos.Y), 0)));
+  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,0.05 * sin(rnd->T.Time * 3 - 30 * pos.X + pos.Y), 0)));
 }
 
 void globe::SetMaterial( void )
 {
-  int TexNo = SetTexture();
+ /* int TexNo = SetTexture();
   material m = material::DefMaterial();
   float
     R1 = (float) rand()/RAND_MAX,
@@ -82,7 +83,14 @@ void globe::SetMaterial( void )
   dlgl::vec3 color = dlgl::vec3(R1, R2, R3);
   m.Tex[0] = TexNo; 
   m.Name = "Globe";
-  Prim.MtlNo = rnd.resources.AddMaterial(&m) - 1;
+  */
+  if (rnd->resources.FindMaterial("Silver") == -1)
+  {
+    material m = material::GetLibMaterial("Silver");
+    Prim.MtlNo = rnd->resources.AddMaterial(&m) - 1;
+  }
+  else 
+    Prim.MtlNo = rnd->resources.FindMaterial("Silver");
 }
 
 int globe::SetTexture( void )
@@ -102,7 +110,7 @@ int globe::SetTexture( void )
       BYTE  *mem = new BYTE[w * h * 3];
       // int n;
       fread(mem, 3, w * h, F);
-      TexNo = rnd.resources.AddImg("Globe", w, h, 3, mem);
+      TexNo = rnd->resources.AddImg("Globe", w, h, 3, mem);
 
       delete[] mem;
     }
@@ -113,5 +121,5 @@ int globe::SetTexture( void )
 
 void globe::Draw( dlgl::matr MatrVP  )
 {
-    Prim.Draw(GL_FILL, GL_TRIANGLES, MatrVP);
+    Prim.Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd);
 }
