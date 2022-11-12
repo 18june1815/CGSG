@@ -166,8 +166,9 @@
     <ClCompile Include="src\anim\rnd\res\rndtex.cpp" />
     <ClCompile Include="src\anim\rnd\rndbase.cpp" />
     <ClCompile Include="src\anim\units\Globe.cpp" />
-    <ClCompile Include="src\anim\units\ObjPrim.cpp" />
-    <ClCompile Include="src\anim\units\u_grid.cpp" />
+    <ClCompile Include="src\anim\units\Helic.cpp" />
+    <ClCompile Include="src\anim\units\cow.cpp" />
+    <ClCompile Include="src\anim\units\sky.cpp" />
     <ClCompile Include="src\anim\units\u_mounts.cpp" />
     <ClCompile Include="src\win\main.cpp" />
   </ItemGroup>

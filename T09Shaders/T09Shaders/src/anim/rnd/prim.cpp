@@ -98,8 +98,6 @@ void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, re
     glUniformMatrix4fv(loc, 1, FALSE, winv.M[0]);
   if ((loc = glGetUniformLocation(ProgId, "CamLoc")) != -1)
     glUniformMatrix3fv(loc, 1, FALSE, &rnd->cam.Loc.X); 
-  if ((loc = glGetUniformLocation(ProgId, "CamLoc")) != -1)
-    glUniformMatrix3fv(loc, 1, FALSE, &rnd->cam.Loc.X); 
   
     
   // Draw triangles
@@ -170,8 +168,7 @@ void prim::SetBB( vertex *V, int NoofV )
       sc = B.Z;
 
     SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3(1 / sc, 1 / sc, 1 / sc)));
-  }
-  
+  }  
 }
  
 
@@ -194,4 +191,67 @@ bool prim::LoadTriangle( void )
 void prim::SetMaterial( void )
 {
   MtlNo = 0;
+}
+
+bool prim::Load( const char *FileName )
+{
+  FILE *F;
+  std::vector<vertex> V;
+  std::vector<int> Ind;
+  int nv = 0, ni = 0;
+  static char Buf[1000];
+
+  Trans = dlgl::matr::Identity();
+  if ((F = fopen(FileName, "r")) == nullptr)
+    return false;
+
+  // Read model data
+  rewind(F);
+  nv = 0;
+  ni = 0;
+  while (fgets(Buf, sizeof(Buf) - 1, F) != NULL)
+  {
+    if (Buf[0] == 'v' && Buf[1] == ' ')
+    {
+      double x, y ,z;
+      sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
+      V.push_back({dlgl::vec3(x, y, z), {0, 0}, {0, 0, 0}, {1, 1, 1, 1}});
+      
+
+    }
+    else if (Buf[0] == 'f' && Buf[1] == ' ')
+    {
+      char *S = Buf + 2, oldc = ' ';
+      int n = 0, n0 = 0, n1 =0, nc;
+       
+      while (*S != 0)
+      {
+        if (isspace((UCHAR)oldc) && !isspace((UCHAR)*S))
+        {
+          sscanf(S, "%d", &nc);
+
+          if (n == 0)
+            n0 = nc;
+          else if (n == 1)
+            n1 = nc;
+          else
+          {
+            Ind.push_back(n0 - 1);
+            Ind.push_back(n1 - 1);
+            Ind.push_back(nc - 1);
+            n1 = nc;
+          }
+          n++;
+        }
+        oldc = *S++;
+      }
+    }
+  }
+  fclose(F);
+
+  Autonormals(V.data(), V.size(), Ind.data(), Ind.size());
+  Create(V.data(), V.size(), Ind.data(), Ind.size());
+  SetBB(V.data(), V.size());
+
+  return true;
 }

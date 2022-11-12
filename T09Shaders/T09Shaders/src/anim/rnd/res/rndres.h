@@ -12,7 +12,6 @@
 class material
 {
 public:
-  //char Name[STR_MAX] = ""; // Material name
   std::string Name;
   // Illumination coefficients
   dlgl::vec3 Ka, Kd, Ks;  // Ambient, diffuse, specular coefficients
@@ -23,7 +22,6 @@ public:
 
   material ( void )
   {
-    //strcpy(Name, "Default");
     Name = "Default";
     Ka = dlgl::vec3(0.1, 0.1, 0.1);
     Kd = dlgl::vec3(0.9, 0.9, 0.9);
@@ -41,10 +39,9 @@ public:
 
 struct texture
 {
-  char Name[STR_MAX]; // Texture name
+  std::string Name;
   int W, H;        // Texture size in pixels
   GLuint TexId;      // OpenGl texture Id
-
 };
 
 class shader
@@ -68,8 +65,6 @@ public:
   void Log( const char *Type, const char *Text  );
   int Load( void );
   void Delete( void );
-  //void Update( void );
-
 };
 
 
@@ -88,8 +83,9 @@ public:
   int AddShader( const char *ShaderFileNamePrefix);
   void UpdateShader( void );
 
-  int AddImg( const char *Name, int W, int H, int C, BYTE *Bits );
-  int AddTexture( char *FileName );
+  int AddImg( std::string Name, int W, int H, int C, BYTE *Bits );
+  void AddTexture( material *Mtl, std::string TexName, const char *TexFile );
+  int FindTexture( std::string name );
 
   int AddMaterial( material *Mtl );
   int ApplyMaterial( int MtlNo, UINT64 Time );

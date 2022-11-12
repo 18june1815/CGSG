@@ -46,6 +46,10 @@ public:
     MatrVP = MatrView * MatrProj;
   }                   
 
+  void SetWorldTransormation( const dlgl::matr &MW )
+  {
+    MatrWorld = MatrWorld * MW;
+  }
   void MouseWheel( WPARAM wParam )
   {
     static int wheelDelta = 0;

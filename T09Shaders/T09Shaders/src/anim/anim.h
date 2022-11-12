@@ -25,6 +25,7 @@ public:
   void Draw( void );
   void MouseWheel( WPARAM wParam );
   void MouseMove( WPARAM wParam, LPARAM lParam );
+  void Keyboard( WPARAM wParam );
   anim & operator<<( object *Obj );
   void SetScene( void );
 };

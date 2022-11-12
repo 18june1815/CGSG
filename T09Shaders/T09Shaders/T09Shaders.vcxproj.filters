@@ -129,13 +129,16 @@
     <ClCompile Include="src\anim\rnd\prim.cpp">
       <Filter>Source Files\anim\rnd</Filter>
     </ClCompile>
-    <ClCompile Include="src\anim\units\ObjPrim.cpp">
+    <ClCompile Include="src\anim\units\cow.cpp">
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
-    <ClCompile Include="src\anim\units\u_grid.cpp">
+    <ClCompile Include="src\anim\units\sky.cpp">
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
     <ClCompile Include="src\anim\units\u_mounts.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\Helic.cpp">
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
   </ItemGroup>

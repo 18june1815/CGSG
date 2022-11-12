@@ -1,6 +1,6 @@
 #include "rndres.h"
 
-int resources::AddImg( const char *Name, int W, int H, int C, BYTE *Bits)
+int resources::AddImg( std::string Name, int W, int H, int C, BYTE *Bits)
 {
   int mips;
 
@@ -32,10 +32,50 @@ int resources::AddImg( const char *Name, int W, int H, int C, BYTE *Bits)
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // Add to stock
-  strncpy(tex[NumOfTextures].Name, Name, STR_MAX - 1);
+  //strncpy(tex[NumOfTextures].Name, Name, STR_MAX - 1);
+  tex[NumOfTextures].Name = Name;
   tex[NumOfTextures].W = W;
   tex[NumOfTextures].H = H;
 
   glBindTexture(GL_TEXTURE_2D, 0);
   return NumOfTextures++;
+}
+
+
+void resources::AddTexture( material *Mtl, std::string TexName, const char *TexFile )
+{
+  HBITMAP hBm;  
+  static int TexNo = -1;
+
+  TexNo = FindTexture(TexName); 
+
+  if (TexNo == -1)
+  {
+    hBm = (HBITMAP)LoadImage(NULL, TexFile, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+    if (hBm != NULL)
+    {
+      BITMAP bm;
+      GetObject(hBm, sizeof(bm), &bm);
+
+      BYTE *mem = (BYTE *)bm.bmBits;
+      TexNo = AddImg(TexName, bm.bmWidth, bm.bmHeight, 3, mem);
+      DeleteObject(hBm);
+    }
+  }
+  
+  Mtl->Tex[0] = TexNo; 
+}
+
+
+int resources::FindTexture( std::string name )
+{
+  int TexNo = -1;
+  for (int i = 0; i < NumOfTextures; i++)
+  {
+    if (name == tex[i].Name)
+    {
+      TexNo = i;
+    }
+  }
+  return TexNo;
 }

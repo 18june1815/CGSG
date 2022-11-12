@@ -31,7 +31,6 @@ u_mounts::u_mounts( render *R )
   }
   SetMaterial();
   Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0, -5, 0)));
-       
 }
 
 
@@ -43,39 +42,10 @@ void u_mounts::Draw( dlgl::matr MatrVP )
 
 void u_mounts::SetMaterial( void )
 {
-  material m = material::DefMaterial();
-  int TexNo = SetTexture();
-  dlgl::vec3 color = dlgl::vec3(0.5, 0.5, 0);
-  m.Ka = color * 0.1;
-  m.Kd = color * 0.8;
-  m.Ks = color * 0.9;
-  m.Ph = 50;
-  m.Tex[0] = TexNo; 
-  m.Name = "Mounts";
+  material m = material::GetLibMaterial("Mounts");
+  rnd->resources.AddTexture(&m, "Mounts", "bin/textures/hftex.bmp");
   Prim.MtlNo = rnd->resources.AddMaterial(&m) - 1;
 }
-
-int u_mounts::SetTexture( void )
-{
-  HBITMAP hBm;
-    
-  static int TexNo = -1;
-  if (TexNo == -1)
-  {
-    hBm = (HBITMAP)LoadImage(NULL, "bin/textures/hftex.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-    if (hBm != NULL)
-    {
-      BITMAP bm;
-      GetObject(hBm, sizeof(bm), &bm);
-
-      BYTE *mem = (BYTE *)bm.bmBits;
-      TexNo = rnd->resources.AddImg("Mounts", bm.bmWidth, bm.bmHeight, 3, mem);
-      DeleteObject(hBm);
-    }
-  }
-  return TexNo;
-}
-
 
 void u_mounts::Response( void ) 
 {
