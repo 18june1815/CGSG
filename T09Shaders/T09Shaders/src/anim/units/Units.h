@@ -71,9 +71,12 @@ class Helic : public object
 {
 public:
   dlgl::vec3 
-    Pos{0.0, 0., 0.},
-    dPos{0.0, 0., 0.};
+    Pos{0., 0., 0.},
+    dPos{0., 0., 0.},
+    Dir{0., 0., 1.},
+    OldDir{0., 0., 1.};
 
+  int Sign = 1;
   float CourseSpeed = 0, Speed = 0, SpeedS = 0, Course = 0;
 
   prim Prim;

@@ -1,7 +1,5 @@
 #include "Units.h"
 
-#define Pi 3.1415926536
-#define D2R(X) ((X) * Pi / 180)
 
 
 Helic::Helic( render *R )
@@ -13,7 +11,9 @@ Helic::Helic( render *R )
   Prim.SetWorldTransormation(dlgl::matr::Scale({5, 8, 5}));
   Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3{1.5, 1.7, 1.5}));
   
-  rnd->cam.Loc = Pos + dlgl::vec3{0.0, 3.0, -9.0};
+  rnd->cam.Loc = dlgl::vec3{0.0, 3.0, -9.0};
+  rnd->cam.At = Pos;
+  //rnd->cam.At = dlgl::vec3{0.0, 0.0, 7.0};
 }
 
 void Helic::SetMaterial( void )
@@ -34,45 +34,44 @@ void Helic::Response( void )
   float dt;
   dt = rnd->T.DeltaTime;
 
-  Course += CourseSpeed * dt;
-  CourseSpeed *= 1 - dt * 10;
-
-
-  dPos.X = sin(D2R(Course)) * Speed * dt;
-  dPos.Z = cos(D2R(Course)) * Speed * dt;
-  dPos.Y *= 1 - dt * 10;
+  dPos = Dir * Speed;
+  float a = Dir.Angle(OldDir);
+  OldDir = Dir;
 
   Prim.SetWorldTransormation(dlgl::matr::Translate(-Pos));
-  Prim.SetWorldTransormation(dlgl::matr::RotateY( -CourseSpeed * dt));
+  Prim.SetWorldTransormation(dlgl::matr::RotateY( Sign * a ));
   Prim.SetWorldTransormation(dlgl::matr::Translate(Pos + dPos));
 
+  rnd->cam.Loc -= Pos;
+  rnd->cam.Loc = dlgl::matr::RotateY(Sign * a).PointTransform(rnd->cam.Loc); 
+  rnd->cam.Loc += (Pos + dPos);
+
   Pos += dPos;
-  rnd->cam.Loc += dPos;
   rnd->cam.At = Pos;
-  
 }
 
 void Helic::Keyboard( WPARAM wParam )
 {
+  
   switch (wParam)
   {
   case VK_RIGHT:
-    CourseSpeed += 30;
-   
+    Sign = 1;
+    Dir = dlgl::matr::RotateY(5).PointTransform(Dir);    
     break;
 
   case VK_LEFT:
-     CourseSpeed -= 30;    
+     Sign = -1;
+     Dir = dlgl::matr::RotateY(-5).PointTransform(Dir);    
     break;
 
   case VK_UP:
-    Speed += 0.1;
-
+    Speed += 0.03;
     break;
 
   case VK_DOWN:
     if (Speed > 0)
-      Speed -= 0.3;
+      Speed -= 0.03;
     break;
 
   case VK_PRIOR:
@@ -81,6 +80,10 @@ void Helic::Keyboard( WPARAM wParam )
 
   case VK_NEXT:
     dPos.Y -= 0.05;
+    break;
+
+  case VK_SPACE:
+    Speed = 0;
     break;
   }
 }

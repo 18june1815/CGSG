@@ -3,6 +3,10 @@
 
 #include <cmath>
 
+//#define Pi 3.1415926536
+//#define D2R(X) ((X) * Pi / 180)
+//#define R2D(X) ((X) * 180 / Pi)
+
 namespace mth
 {
   const double PI = 3.14159265359;
@@ -11,6 +15,12 @@ namespace mth
     type D2R( type Angle )
     {
       return Angle * (PI / 180.0);
+    }
+
+  template<typename type>
+    type R2D( type Angle )
+    {
+      return Angle * (180.0 / PI);
     }
 
 
@@ -96,6 +106,12 @@ namespace mth
         return *this;
       }
 
+      vec3 &operator-=( const vec3 &v2 ) 
+      {
+        X -= v2.X; Y -= v2.Y; Z -= v2.Z;
+        return *this;
+      }
+
       vec3 operator*( type N ) const
       {
         return vec3(X * N, Y * N, Z * N);
@@ -136,6 +152,17 @@ namespace mth
         return *this;
       }
  
+      
+       type Angle( const vec3 &v2 ) const
+      { 
+        type a;
+        a = (*this & v2) / (!(*this) * (!v2));
+        if (a > 1) a = 1.;
+        if (a < -1) a = -1.;
+
+        return R2D(acos(a));
+      }
+
       type operator[]( int i ) const
       {
         return *(&X + i);

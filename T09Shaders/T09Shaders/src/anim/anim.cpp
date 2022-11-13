@@ -7,8 +7,8 @@ void anim::SetScene( void )
   /*for (int i = 0; i < 5; i++ )
     *this << new globe(rnd);                              
   */
-  *this << new sky(rnd);
-  *this << new u_mounts(rnd);
+  //*this << new sky(rnd);
+  //*this << new u_mounts(rnd);
 }
 
 anim::~anim( void )
