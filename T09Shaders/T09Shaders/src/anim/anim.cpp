@@ -9,7 +9,6 @@ void anim::SetScene( void )
   */
   *this << new sky(rnd);
   *this << new u_mounts(rnd);
- 
 }
 
 anim::~anim( void )

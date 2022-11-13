@@ -7,7 +7,7 @@ grid::grid( int w, int h ) : W(w), H(h)
     {
       V.push_back({dlgl::vec3(float(-j/5.), -1, float(-i/5.)), 
                       {float(j / (W - 1.0)),  float(i / (H - 1.0))},
-                      {0, 1, 0}, {1, 0, 0, 1}});
+                      {0, 0, 0}, {1, 0, 0, 1}});
     }
 }
 
@@ -30,7 +30,7 @@ void grid::AutoNormals( void )
       P11->N = P11->N + N;
       N = ((P11->P - P01->P).Cross(P00->P - P01->P)).Normalize();
       P00->N = P00->N + N;
-      P01->N = P10->N + N;
+      P01->N = P01->N + N;
       P11->N = P11->N + N;
     }
   for (int i = 0; i < W * H; i++)

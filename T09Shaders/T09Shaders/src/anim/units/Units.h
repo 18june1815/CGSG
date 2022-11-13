@@ -74,7 +74,7 @@ public:
     Pos{0.0, 0., 0.},
     dPos{0.0, 0., 0.};
 
-  float CourseSpeed = 0, Speed = 0, Course = 0;
+  float CourseSpeed = 0, Speed = 0, SpeedS = 0, Course = 0;
 
   prim Prim;
   Helic ( render *R );  

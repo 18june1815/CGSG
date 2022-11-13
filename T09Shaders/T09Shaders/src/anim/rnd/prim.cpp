@@ -97,7 +97,7 @@ void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, re
   if ((loc = glGetUniformLocation(ProgId, "MatrWInv")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, winv.M[0]);
   if ((loc = glGetUniformLocation(ProgId, "CamLoc")) != -1)
-    glUniformMatrix3fv(loc, 1, FALSE, &rnd->cam.Loc.X); 
+    glUniform3fv(loc, 1, &rnd->cam.Loc.X); 
   
     
   // Draw triangles

@@ -13,7 +13,7 @@ Helic::Helic( render *R )
   Prim.SetWorldTransormation(dlgl::matr::Scale({5, 8, 5}));
   Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3{1.5, 1.7, 1.5}));
   
-  rnd->cam.Loc = Pos + dlgl::vec3{0.0, 1.0, -9.0};
+  rnd->cam.Loc = Pos + dlgl::vec3{0.0, 3.0, -9.0};
 }
 
 void Helic::SetMaterial( void )
@@ -33,9 +33,10 @@ void Helic::Response( void )
 {
   float dt;
   dt = rnd->T.DeltaTime;
-  
+
   Course += CourseSpeed * dt;
   CourseSpeed *= 1 - dt * 10;
+
 
   dPos.X = sin(D2R(Course)) * Speed * dt;
   dPos.Z = cos(D2R(Course)) * Speed * dt;
@@ -46,9 +47,9 @@ void Helic::Response( void )
   Prim.SetWorldTransormation(dlgl::matr::Translate(Pos + dPos));
 
   Pos += dPos;
-  
   rnd->cam.Loc += dPos;
   rnd->cam.At = Pos;
+  
 }
 
 void Helic::Keyboard( WPARAM wParam )

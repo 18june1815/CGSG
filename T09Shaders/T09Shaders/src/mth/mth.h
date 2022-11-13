@@ -125,9 +125,9 @@ namespace mth
 
       vec3 Cross( const vec3 &v2 ) 
       {
-        return vec3(Z * v2.Y - Y * v2.Z,
-                    X * v2.Z - Z * v2.X,
-                    Y * v2.X - X * v2.Y);
+        return vec3(Y * v2.Z - Z * v2.Y,
+                    Z * v2.X - X * v2.Z,
+                    X * v2.Y - Y * v2.X);
       }
       vec3 Normalize( void ) const
       { 
