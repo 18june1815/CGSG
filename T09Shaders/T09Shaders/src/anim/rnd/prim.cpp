@@ -1,9 +1,13 @@
 #include <string>
 #include <fstream>
+#include <sstream>
 #include <cctype>
 #include <vector>
+#include <map>
+#include <tuple>
 
 #include "prim.h"
+
 //#include "rnd/rnd.h"
 
 void prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
@@ -216,9 +220,8 @@ bool prim::Load( const char *FileName )
       double x, y ,z;
       sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
       V.push_back({dlgl::vec3(x, y, z), {0, 0}, {0, 0, 0}, {1, 1, 1, 1}});
-      
-
     }
+ 
     else if (Buf[0] == 'f' && Buf[1] == ' ')
     {
       char *S = Buf + 2, oldc = ' ';
@@ -253,5 +256,114 @@ bool prim::Load( const char *FileName )
   Create(V.data(), V.size(), Ind.data(), Ind.size());
   SetBB(V.data(), V.size());
 
+  return true;
+}
+
+
+
+bool prim::LoadNew( const char *FileName )
+{
+  
+  std::ifstream F(FileName); 
+  std::vector<vertex> V;
+  std::vector<dlgl::vec3> v, vn;
+  std::vector<dlgl::vec2> vt;
+  std::vector<int> Ind;
+  std::map<std::string, int> Vmap;
+  int ni = 1;
+  static std::string Buf;
+
+  Trans = dlgl::matr::Identity();
+  
+  // Read model data
+  
+  ni = 0;
+
+   v.push_back(dlgl::vec3(0, 0, 0));
+   vt.push_back(dlgl::vec2(0, 0));
+   vn.push_back(dlgl::vec3(0, 0, 0));
+  while (!F.eof())
+  {
+    F >> Buf;
+    if (Buf == "v")
+    {
+      double x, y ,z;
+      F >> x >> y >> z;
+      v.push_back(dlgl::vec3(x, y, z));
+    }
+    if (Buf == "vt")
+    {
+      double x, y;
+      F >> x >> y;
+      vt.push_back(dlgl::vec2(x, y));
+    }
+    if (Buf == "vn")
+    {
+      double x, y ,z;
+      F >> x >> y >> z;    
+      vn.push_back(dlgl::vec3(x, y, z));
+    }
+
+    else if (Buf == "f")
+    {               
+      std::string Sstr, line;
+      int nc, nv, nt, nn;
+      int n = 0, n0 = 0, n1 =0;
+      const char *S;
+      char  oldc = ' ';
+      std::getline(F, line);
+      std::istringstream iss(line);
+     // std::tuple<int, int, int> t;
+  
+      while (iss >> Sstr)
+      {
+        if (Vmap.find(Sstr) == Vmap.end() )
+        {
+          S = Sstr.c_str();
+         
+          nn = nv = nt = 0;
+          while (*S != 0)
+          {
+             if (nv == 0)
+               sscanf(S, "%d", &nv);
+             else if (nt == 0 && size(vt) > 1 && oldc == 47)
+               sscanf(S, "%d", &nt);
+             else if (nn == 0 && oldc == 47)
+               sscanf(S, "%d", &nn);
+             oldc = *S++;
+          }
+          
+          V.push_back({v[nv], vt[nt], vn[nn], {1, 1, 1, 1}});
+          Vmap[Sstr] = (nc = ++ni); 
+
+          if ( nv != nn)
+            nv = nn;
+        }
+        else 
+        {
+          nc = Vmap[Sstr];
+        }    
+       
+         //Ind.push_back(nc);
+        if (n == 0)
+            n0 = nc;
+          else if (n == 1)
+            n1 = nc;
+          else
+          {
+            Ind.push_back(n0 - 1);
+            Ind.push_back(n1 - 1);
+            Ind.push_back(nc - 1);
+            n1 = nc;
+          }
+          n++;
+      }
+    }
+  }
+
+  F.close();
+
+  Create(V.data(), V.size(), Ind.data(), Ind.size());
+  SetBB(V.data(), V.size());
   return true;
 }

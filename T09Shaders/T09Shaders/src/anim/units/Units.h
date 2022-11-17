@@ -1,9 +1,7 @@
 #ifndef __UNITS_H_
 #define __UNITS_H_
 
-#include <vector>
-                
-//#include "def.h"
+#include <vector>                
 #include "anim/rnd/prim.h"
 
 class object

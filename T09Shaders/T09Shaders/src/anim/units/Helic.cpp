@@ -6,12 +6,13 @@ Helic::Helic( render *R )
 {
   rnd = R;
   Prim.MtlNo = 0;
-  Prim.Load("bin/models/Mi28.obj");
-  SetMaterial();
-  Prim.SetWorldTransormation(dlgl::matr::Scale({5, 8, 5}));
-  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3{1.5, 1.7, 1.5}));
+  Prim.LoadNew("bin/models/Mi28.obj");
+  //Prim.Load("bin/models/Mi28.obj");
+  //SetMaterial();
+  //Prim.SetWorldTransormation(dlgl::matr::Scale({5, 8, 5}));
+  //Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3{1.5, 1.7, 1.5}));
   
-  rnd->cam.Loc = dlgl::vec3{0.0, 3.0, -9.0};
+  rnd->cam.Loc = dlgl::vec3{0.0, 1.0, -3.0};
   rnd->cam.At = Pos;
   //rnd->cam.At = dlgl::vec3{0.0, 0.0, 7.0};
 }
@@ -31,7 +32,7 @@ void Helic::Draw( dlgl::matr MatrVP  )
 
 void Helic::Response( void )
 {
-  float dt;
+/*  float dt;
   dt = rnd->T.DeltaTime;
 
   dPos = Dir * Speed;
@@ -48,6 +49,7 @@ void Helic::Response( void )
 
   Pos += dPos;
   rnd->cam.At = Pos;
+  */
 }
 
 void Helic::Keyboard( WPARAM wParam )

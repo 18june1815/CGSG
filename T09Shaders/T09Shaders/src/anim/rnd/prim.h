@@ -60,6 +60,7 @@ public:
   void EvalBB( vertex *V, int NoofV );
   void SetBB( vertex *V, int NoofV );
   bool Load( const char *FileName );
+  bool LoadNew( const char *FileName );
   void Autonormals( vertex *V, int NoofV, int *Ind, int NoofI );
   bool LoadTriangle( void );
 };

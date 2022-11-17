@@ -4,9 +4,10 @@ cow::cow( render *R )
 {
   rnd = R;
   Prim.MtlNo = 0;
-  Prim.Load("bin/models/cow.obj");
-  Prim.SetWorldTransormation(dlgl::matr::Scale({5, 5, 5}));
-  SetMaterial();
+  //Prim.Load("bin/models/cow.obj");
+  Prim.LoadNew("bin/models/cow.obj");
+  Prim.SetWorldTransormation(dlgl::matr::Scale({15, 15, 15}));
+  //SetMaterial();
 }
 
 
