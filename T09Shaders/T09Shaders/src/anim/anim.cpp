@@ -1,29 +1,39 @@
 #include "anim.h"
 
+
 void anim::SetScene( void )
 {
-  *this << new Helic(rnd);                                                     
+  m = new u_mounts(rnd);
+  *this << m;
+  *this << new globe(rnd);                              
+  
+  *this << new Helic(rnd, m);                                                     
   //*this << new cow(rnd);
   /*for (int i = 0; i < 5; i++ )
     *this << new globe(rnd);                              
   */
   //*this << new sky(rnd);
-  //*this << new u_mounts(rnd);
+  //
 }
 
 anim::~anim( void )
 {
-  for (int i = 0; i < NumOfObjects; i++)
+  delete m;
+  for (int i = 1; i < NumOfObjects; i++)
+  {
+    Objects[i]->Delete();
     delete[] Objects[i];
+  }
+  
   rnd->Close();
   delete rnd;
 }
-
 void anim::Init( HWND &hWnd )
 {
   rnd = new render();
   rnd->hWnd = hWnd;
   rnd->Init(hWnd);
+
   SetScene();  
 }
 void anim::Resize( int W, int H)
@@ -55,7 +65,7 @@ void anim::Draw( void )
 
 void anim::Keyboard( WPARAM wParam )
 {
-  Objects[0]->Keyboard(wParam);
+  Objects[1]->Keyboard(wParam);
 }
  
 

@@ -10,6 +10,22 @@
 
 //#include "rnd/rnd.h"
 
+void prim::Delete( void )
+{
+  if (VA != 0)
+  {
+    glBindVertexArray(VA);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    if (VBuf != 0)
+      glDeleteBuffers(1, &VBuf);
+    glBindVertexArray(0);
+    glDeleteVertexArrays(1, &VA);
+  }
+  if (IBuf != 0)
+    glDeleteBuffers(1, &IBuf);
+}
+
+
 void prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
 {
   dlgl::vec3 L(0.5, 1, 1);
@@ -56,7 +72,6 @@ void prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
     NumOfElements = NoofV;
 
   MatrWorld = dlgl::matr::Identity();          
-  
 } // end of 'Create' function
 
 void prim::Autonormals( vertex *V, int NoofV, int *Ind, int NoofI )
@@ -155,6 +170,7 @@ int i;
       MaxBB.Z = V[i].P.Z;
   }
    
+  center = (MaxBB + MinBB) / 2; 
 }
 
 void prim::SetBB( vertex *V, int NoofV )
@@ -260,6 +276,76 @@ bool prim::Load( const char *FileName )
 }
 
 
+bool prim::Load( const char *FileName, int lineStart, int lineStop, int sum )
+{
+  FILE *F;
+  std::vector<vertex> V;
+  std::vector<int> Ind;
+  int nv = 0, ni = 0, lineN = lineStart;
+  static char Buf[1000];
+
+  Trans = dlgl::matr::Identity();
+
+  if ((F = fopen(FileName, "r")) == nullptr)
+    return false;
+
+  // Read model data
+  rewind(F);
+  nv = 0;
+  ni = 0;
+  NumOfV = 0;
+
+  for (int i = 0; i < lineStart; i++)
+    fgets(Buf, sizeof(Buf) - 1, F);
+
+  while (fgets(Buf, sizeof(Buf) - 1, F) != NULL && lineN < lineStop)
+  {
+    lineN++;
+    if (Buf[0] == 'v' && Buf[1] == ' ')
+    {
+      double x, y ,z;
+      sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
+      V.push_back({dlgl::vec3(x, y, z), {0, 0}, {0, 0, 0}, {1, 1, 1, 1}});
+      NumOfV++;
+    }
+ 
+    else if (Buf[0] == 'f' && Buf[1] == ' ')
+    {
+      char *S = Buf + 2, oldc = ' ';
+      int n = 0, n0 = 0, n1 =0, nc;
+       
+      while (*S != 0)
+      {
+        if (isspace((UCHAR)oldc) && !isspace((UCHAR)*S))
+        {
+          sscanf(S, "%d", &nc);
+          nc -= sum;
+
+          if (n == 0)
+            n0 = nc;
+          else if (n == 1)
+            n1 = nc;
+          else
+          {
+            Ind.push_back(n0 - 1);
+            Ind.push_back(n1 - 1);
+            Ind.push_back(nc - 1);
+            n1 = nc;
+          }
+          n++;
+        }
+        oldc = *S++;
+      }
+    }
+  }
+  fclose(F);
+
+  EvalBB(V.data(), V.size());
+  Autonormals(V.data(), V.size(), Ind.data(), Ind.size());
+  Create(V.data(), V.size(), Ind.data(), Ind.size());
+
+  return true;
+}
 
 bool prim::LoadNew( const char *FileName )
 {

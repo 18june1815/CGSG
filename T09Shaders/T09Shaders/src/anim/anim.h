@@ -13,10 +13,11 @@ public:
   int NumOfObjects = 0;
 
   render *rnd;
+  u_mounts *m;
 
-   anim( void )
-   {
-   }
+  anim( void )
+  {
+  }
   ~anim( void );
  
   void Init( HWND &hWnd );

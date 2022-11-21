@@ -23,9 +23,11 @@ u_mounts::u_mounts( render *R )
             dlgl::vec3(size * x / (bm.bmWidth - 1.0) - size /2.,
                        h * c / 255.0,
                        size * (1 - y / (bm.bmHeight - 1.0)) - size / 2.);
+        Pmounts.push_back(g.V[y * g.W + x].P);
       }
 
     g.AutoNormals();
+    
     g.PrimFromGrid(Prim);
     DeleteObject(hBm);
   }

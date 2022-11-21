@@ -3,6 +3,8 @@
 
 #include <vector>                
 #include "anim/rnd/prim.h"
+#include "anim/rnd/prims.h"
+
 
 class object
 {
@@ -28,6 +30,9 @@ public:
   {
   } /* End of 'MouseMove' function */
 
+  virtual void Delete( void )
+  {
+  }
 }; /* End of 'object' class */
 
 
@@ -50,7 +55,16 @@ public:
   void Draw( dlgl::matr MatrVP  ) override;
 };
 
-
+class u_mounts: public object
+{
+public:
+  prim Prim;
+  std::vector<dlgl::vec3> Pmounts;
+  u_mounts( render *R );
+  void SetMaterial( void );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Response( void ) override;
+};
 // Objects from .obj files
 class cow : public object
 {
@@ -69,21 +83,32 @@ class Helic : public object
 {
 public:
   dlgl::vec3 
+    Sc{0.05, 0.05, 0.05},
     Pos{0., 0., 0.},
     dPos{0., 0., 0.},
+
     Dir{0., 0., 1.},
     OldDir{0., 0., 1.};
 
+  dlgl::matr Scale = dlgl::matr::Scale(Sc);
   int Sign = 1;
   float CourseSpeed = 0, Speed = 0, SpeedS = 0, Course = 0;
 
+  u_mounts *Mounts;
+
   prim Prim;
+  prims Prims;
   Helic ( render *R );  
+  Helic ( render *R, u_mounts *mounts );  
   bool Load( const char *FileName ); 
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
   void Response( void ) override;
   void Keyboard( WPARAM wParam ) override;
+  void Delete( void ) override;
+  void BladesRotationX( void );
+  void BladesRotationY( void );
+  //void Collisions( void );
 };
 
 
@@ -96,14 +121,15 @@ public:
   void Draw( dlgl::matr MatrVP  ) override;
 };
 
-class u_mounts: public object
+
+class CenterPoint: public object
 {
 public:
   prim Prim;
-  u_mounts( render *R );
-  ~u_mounts();
+  CenterPoint( render *R );
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
-  void Response( void ) override;
 };
+
+
 #endif /* __UNITS_H_ */
