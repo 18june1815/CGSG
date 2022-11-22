@@ -3,6 +3,7 @@
 
 sky::sky( render *Rnd )
 {
+  name = "sky";
   rnd = Rnd;
   int W = 50, H = 50, R = 100.;
   grid g(W, H);

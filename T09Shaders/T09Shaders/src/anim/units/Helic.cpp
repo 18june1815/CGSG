@@ -9,8 +9,9 @@ void Helic::Delete( void )
 
 Helic::Helic( render *R, u_mounts *m )
 {
+  name = "Helic";
   rnd = R;
-
+  Mounts = m;
 
   Prim.MtlNo = 0;
   
@@ -142,4 +143,13 @@ void Helic::Keyboard( WPARAM wParam )
     Speed = 0;
     break;
   }
+}
+
+
+void Helic::Collisions( void )
+{
+  std::vector<dlgl::vec3> V;
+  V = Mounts->Pmounts;
+
+  //if (Pos.Y < )
 }

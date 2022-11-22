@@ -3,6 +3,7 @@
 
 u_mounts::u_mounts( render *R )
 {
+  name = "Mounts";
   rnd = R;
   float size = 300, h = 30;
   HBITMAP hBm;

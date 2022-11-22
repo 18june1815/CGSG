@@ -2,6 +2,7 @@
 
 cow::cow( render *R )
 {
+  name = "Cow";
   rnd = R;
   Prim.MtlNo = 0;
   //Prim.Load("bin/models/cow.obj");

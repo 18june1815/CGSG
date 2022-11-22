@@ -3,6 +3,7 @@
 
 CenterPoint::CenterPoint( render *Rnd )
 {
+  name = "CentralPoint";
   rnd = Rnd;
   int W = 10, H = 10;
   float R = 0.01;

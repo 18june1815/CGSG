@@ -22,7 +22,7 @@ anim::~anim( void )
   for (int i = 1; i < NumOfObjects; i++)
   {
     Objects[i]->Delete();
-    delete[] Objects[i];
+    delete Objects[i];
   }
   
   rnd->Close();
@@ -65,7 +65,12 @@ void anim::Draw( void )
 
 void anim::Keyboard( WPARAM wParam )
 {
-  Objects[1]->Keyboard(wParam);
+  for (int i = 0; i < NumOfObjects; i++)
+  {
+    bool a = Objects[i]->name == "Helic";
+      if (Objects[i]->name == "Helic")
+        Objects[i]->Keyboard(wParam);
+  }  
 }
  
 

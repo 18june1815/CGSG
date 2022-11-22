@@ -10,6 +10,7 @@ class object
 {
 public:
   render *rnd;  
+  std::string name;
   virtual void Draw( dlgl::matr MatrVP )
   {
   } /* End of 'Render' function */
@@ -69,6 +70,7 @@ public:
 class cow : public object
 {
 public:
+  std::string name = "Cow";
   prim Prim;
   cow ( render *R );  
   bool Load( const char *FileName ); 
@@ -108,7 +110,7 @@ public:
   void Delete( void ) override;
   void BladesRotationX( void );
   void BladesRotationY( void );
-  //void Collisions( void );
+  void Collisions( void );
 };
 
 
