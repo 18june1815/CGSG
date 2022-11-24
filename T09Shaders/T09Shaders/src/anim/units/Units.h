@@ -60,12 +60,15 @@ class u_mounts: public object
 {
 public:
   prim Prim;
-  std::vector<dlgl::vec3> Pmounts;
+  HBITMAP hBm;
+  //std::vector<dlgl::vec3> Pmounts;
   u_mounts( render *R );
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
   void Response( void ) override;
+  void Delete( void ) override;
 };
+
 // Objects from .obj files
 class cow : public object
 {
@@ -88,8 +91,8 @@ public:
     Sc{0.05, 0.05, 0.05},
     Pos{0., 0., 0.},
     dPos{0., 0., 0.},
-    Angles{0, 0, 0},
-    dAngles{0, 0, 0},
+    Angle{0, 0, 0},
+    dAngle{0, 0, 0},
 
     Dir{0., 0., 1.},
     OldDir{0., 0., 1.};
@@ -97,10 +100,9 @@ public:
   dlgl::matr Scale = dlgl::matr::Scale(Sc);
   int Sign = 1;
   float 
-    CourseSpeed = 0, Speed = 0, SpeedS = 0, Course = 0,
-    zAngle = 0, xAngle = 0;
+    CourseSpeed = 0, Speed = 0, xAngle = 0;
 
-  u_mounts *Mounts;
+  //u_mounts *Mounts;
 
   prim Prim;
   prims Prims;
@@ -114,7 +116,7 @@ public:
   void Delete( void ) override;
   void BladesRotationX( void );
   void BladesRotationY( void );
-  void Collisions( void );
+  //void Collisions( void );
 };
 
 

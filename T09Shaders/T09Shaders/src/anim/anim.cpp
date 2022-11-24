@@ -5,13 +5,14 @@ void anim::SetScene( void )
 {
   //m = new u_mounts(rnd);
   //*this << m;
-  *this << new globe(rnd);                              
+  *this << new u_mounts(rnd);
+  *this << new globe(rnd);
   
-  *this << new CenterPoint(rnd);                                                     
-  *this << new Helic(rnd);                                                     
+  *this << new CenterPoint(rnd);
+  *this << new Helic(rnd);
   //*this << new cow(rnd);
   /*for (int i = 0; i < 5; i++ )
-    *this << new globe(rnd);                              
+    *this << new globe(rnd);
   */
   //*this << new sky(rnd);
   //
