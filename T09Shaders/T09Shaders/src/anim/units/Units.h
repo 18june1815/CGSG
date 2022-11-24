@@ -88,13 +88,17 @@ public:
     Sc{0.05, 0.05, 0.05},
     Pos{0., 0., 0.},
     dPos{0., 0., 0.},
+    Angles{0, 0, 0},
+    dAngles{0, 0, 0},
 
     Dir{0., 0., 1.},
     OldDir{0., 0., 1.};
 
   dlgl::matr Scale = dlgl::matr::Scale(Sc);
   int Sign = 1;
-  float CourseSpeed = 0, Speed = 0, SpeedS = 0, Course = 0;
+  float 
+    CourseSpeed = 0, Speed = 0, SpeedS = 0, Course = 0,
+    zAngle = 0, xAngle = 0;
 
   u_mounts *Mounts;
 

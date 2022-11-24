@@ -3,11 +3,12 @@
 
 void anim::SetScene( void )
 {
-  m = new u_mounts(rnd);
-  *this << m;
+  //m = new u_mounts(rnd);
+  //*this << m;
   *this << new globe(rnd);                              
   
-  *this << new Helic(rnd, m);                                                     
+  *this << new CenterPoint(rnd);                                                     
+  *this << new Helic(rnd);                                                     
   //*this << new cow(rnd);
   /*for (int i = 0; i < 5; i++ )
     *this << new globe(rnd);                              
@@ -18,8 +19,8 @@ void anim::SetScene( void )
 
 anim::~anim( void )
 {
-  delete m;
-  for (int i = 1; i < NumOfObjects; i++)
+  //delete m;
+  for (int i = 0; i < NumOfObjects; i++)
   {
     Objects[i]->Delete();
     delete Objects[i];

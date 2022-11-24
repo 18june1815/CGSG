@@ -16,7 +16,7 @@ CenterPoint::CenterPoint( render *Rnd )
 
   //rnd->cam.Loc = dlgl::vec3(0., 0.2, 0.);
   //rnd->cam.At = dlgl::vec3(0., 0., 0.);
-  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,0.0,0)));
+  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,0.1,0)));
 }
 
 void CenterPoint::Draw( dlgl::matr MatrVP )
