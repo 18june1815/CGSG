@@ -5,8 +5,8 @@ u_mounts::u_mounts( render *R )
 {
   name = "Mounts";
   rnd = R;
-  float size = 300, h = 30;
-
+  
+  //HBITMAP hBm;
   hBm = (HBITMAP)LoadImage(NULL, "bin/textures/hf.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
   if (hBm != NULL)
   {
@@ -55,4 +55,18 @@ void u_mounts::SetMaterial( void )
 void u_mounts::Response( void ) 
 {
   //Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0, 0.05, 0)));
+}
+
+void u_mounts::ToPicCoors( dlgl::vec3 P, int &x, int &y, float &H )
+{
+  if (hBm != NULL)
+  {
+    BITMAP bm;
+    GetObject(hBm, sizeof(bm), &bm);
+
+    x = (bm.bmWidth - 1.0) / size * (P.X + size / 2.);
+    y = (bm.bmHeight - 1.) / size * (size / 2. - P.Z);
+    BYTE c = *((BYTE *)bm.bmBits + bm.bmWidthBytes * y + x);
+    H = h * c / 255.0 - 5;
+   }
 }

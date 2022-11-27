@@ -59,21 +59,21 @@ public:
 class u_mounts: public object
 {
 public:
+  float size = 300, h = 30;
   prim Prim;
   HBITMAP hBm;
-  //std::vector<dlgl::vec3> Pmounts;
   u_mounts( render *R );
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
   void Response( void ) override;
   void Delete( void ) override;
+  void ToPicCoors( dlgl::vec3 P, int &x, int &y, float &H );
 };
 
 // Objects from .obj files
 class cow : public object
 {
 public:
-  std::string name = "Cow";
   prim Prim;
   cow ( render *R );  
   bool Load( const char *FileName ); 
@@ -102,7 +102,7 @@ public:
   float 
     CourseSpeed = 0, Speed = 0, xAngle = 0;
 
-  //u_mounts *Mounts;
+  u_mounts *Mounts;
 
   prim Prim;
   prims Prims;
@@ -116,7 +116,7 @@ public:
   void Delete( void ) override;
   void BladesRotationX( void );
   void BladesRotationY( void );
-  //void Collisions( void );
+  void Collisions( void );
 };
 
 

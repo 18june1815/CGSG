@@ -3,13 +3,13 @@
 
 void anim::SetScene( void )
 {
-  //m = new u_mounts(rnd);
-  //*this << m;
-  *this << new u_mounts(rnd);
+  m = new u_mounts(rnd);
+  *this << m;
+  //*this << new u_mounts(rnd);
   *this << new globe(rnd);
   
   *this << new CenterPoint(rnd);
-  *this << new Helic(rnd);
+  *this << new Helic(rnd, m);
   //*this << new cow(rnd);
   /*for (int i = 0; i < 5; i++ )
     *this << new globe(rnd);
@@ -19,13 +19,16 @@ void anim::SetScene( void )
 }
 
 anim::~anim( void )
-{
-  //delete m;
+{ 
   for (int i = 0; i < NumOfObjects; i++)
   {
-    Objects[i]->Delete();
-    delete Objects[i];
+    if (Objects[i]->name != "Mounts")
+    {
+      Objects[i]->Delete();
+      delete Objects[i];
+    }
   }
+  delete m;
   
   rnd->Close();
   delete rnd;
@@ -69,9 +72,8 @@ void anim::Keyboard( WPARAM wParam )
 {
   for (int i = 0; i < NumOfObjects; i++)
   {
-    bool a = Objects[i]->name == "Helic";
-      if (Objects[i]->name == "Helic")
-        Objects[i]->Keyboard(wParam);
+    if (Objects[i]->name == "Helic")
+      Objects[i]->Keyboard(wParam);
   }  
 }
  

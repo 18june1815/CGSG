@@ -13,6 +13,7 @@ sky::sky( render *Rnd )
   g.PrimFromGrid(Prim);
   SetMaterial();
   Prim.SetWorldTransormation(dlgl::matr::Rotate(dlgl::vec3(1, 0, 0), 180));
+  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0, -5, 0)));
 }
 
 void sky::Draw( dlgl::matr MatrVP )

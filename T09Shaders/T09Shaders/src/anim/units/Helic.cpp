@@ -7,11 +7,11 @@ void Helic::Delete( void )
 }
 
 
-Helic::Helic( render *R )
+Helic::Helic( render *R, u_mounts *m )
 {
   name = "Helic";
   rnd = R;
-  //Mounts = m;
+  Mounts = m;
 
   Prim.MtlNo = 0;
   Prims.Load("bin/models/Mi28.obj");
@@ -19,6 +19,8 @@ Helic::Helic( render *R )
   dlgl::vec3 centr = dlgl::vec3(0, 0, 0.7);
   Prims.SetWorldTransormation(dlgl::matr::Translate(centr));
   Prims.SetWorldTransormation(Scale);
+
+  //Prims.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3{0, 5, 0}));
 
 
   //rnd->cam.Loc = dlgl::vec3{0.5, 0.0, 0.};
@@ -90,16 +92,6 @@ void Helic::Response( void )
     Angle.Z = Angle.Z / abs(Angle.Z) * 30;
   
 
-  /*
-  RotationX += (dPos & Dir) * 80;
-  RotationX -= 0.5 * xAngle;
-  xAngle += Sign * RotationX;
-  if (xAngle >= 10)
-  {
-    RotationX = 0;
-    xAngle = 10;
-  } */
-
   dlgl::matr M = Prims.MatrWorld;
   Prims.SetWorldTransormation( M.Inverse());
 
@@ -109,7 +101,6 @@ void Helic::Response( void )
   Prims.SetWorldTransormation(Scale);
   Prims.SetWorldTransormation(dlgl::matr::RotateZ( Angle.Z));
   Prims.SetWorldTransormation(dlgl::matr::RotateY( Angle.Y ));
-  //Prims.SetWorldTransormation(dlgl::matr::RotateX(-xAngle));
   Prims.SetWorldTransormation(dlgl::matr::Translate( Pos + dPos));
   
   rnd->cam.Loc -= Pos;
@@ -118,6 +109,9 @@ void Helic::Response( void )
   
   Pos += dPos;
   rnd->cam.At = Pos;
+
+  Collisions();
+
 }
 
 void Helic::Keyboard( WPARAM wParam )
@@ -158,11 +152,19 @@ void Helic::Keyboard( WPARAM wParam )
   }
 }
 
-/*
+
 void Helic::Collisions( void )
 {
-  std::vector<dlgl::vec3> V;
-  V = Mounts->Pmounts;
+  int x, y;
+  float H;
 
-  //if (Pos.Y < )
-} */
+  Mounts->ToPicCoors(Pos, x, y , H);
+
+  if (Pos.Y < H)
+  {
+    dPos.Y = 0;
+    Speed = 0;
+    Pos.Y = H + 0.1;
+    rnd->cam.Loc.Y = Pos.Y + 0.2;
+  }
+}

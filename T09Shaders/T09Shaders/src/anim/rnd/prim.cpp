@@ -348,8 +348,7 @@ bool prim::Load( const char *FileName, int lineStart, int lineStop, int sum )
 }
 
 bool prim::LoadNew( const char *FileName )
-{
-  
+{  
   std::ifstream F(FileName); 
   std::vector<vertex> V;
   std::vector<dlgl::vec3> v, vn;
@@ -448,7 +447,7 @@ bool prim::LoadNew( const char *FileName )
   }
 
   F.close();
-
+  
   Create(V.data(), V.size(), Ind.data(), Ind.size());
   SetBB(V.data(), V.size());
   return true;

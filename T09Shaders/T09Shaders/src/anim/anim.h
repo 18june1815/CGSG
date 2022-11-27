@@ -13,7 +13,7 @@ public:
   int NumOfObjects = 0;
 
   render *rnd;
-  //u_mounts *m;
+  u_mounts *m;
 
   anim( void )
   {
