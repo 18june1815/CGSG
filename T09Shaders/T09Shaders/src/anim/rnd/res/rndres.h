@@ -5,8 +5,8 @@
 #include <string>
 
 #define STR_MAX 300
-#define MAX_SHADERS 30
-#define MAX_TEXTURES 30
+#define MAX_SHADERS 300
+#define MAX_TEXTURES 300
 #define MAX_MATERIALS 300
 
 class material
@@ -90,6 +90,7 @@ public:
   int AddMaterial( material *Mtl );
   int ApplyMaterial( int MtlNo, UINT64 Time );
   int FindMaterial( std::string name );
+  
   
   void Init( void );
   void Close( void ); 

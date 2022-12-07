@@ -70,6 +70,10 @@ void render::Init( HWND hWnd )
   glEnable(GL_PRIMITIVE_RESTART);
   glPrimitiveRestartIndex(-1);
 
+  glEnable(GL_BLEND);
+  //glBlendFunc(GL_ONE, GL_ZERO);         
+
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   ProjSize = 0.1;
   ProjDist = 0.1;
   ProjFarClip = 300;

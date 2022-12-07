@@ -31,14 +31,7 @@ public:
   {
   }
 
-  void SetLoc( dlgl::vec3 L )
-  {
-    Loc = L;
-  }
-  void SetAt( dlgl::vec3 A )
-  {
-    At = A;
-  }
+
   void Draw( dlgl::matr &MatrView, dlgl::matr &MatrVP, dlgl::matr &MatrProj ) 
   {
     MatrView = dlgl::matr::View(Loc, At, Up);
@@ -72,22 +65,73 @@ public:
     l1 = LOWORD(lParam);
     l2 = HIWORD(lParam);
 
-    if (abs(l1 - LastMousePos[0]) > FrameW / 20)
-      LastMousePos[0] = l1;
-    if (abs(l2 - LastMousePos[1]) > FrameH / 20)
-      LastMousePos[1] = l2;
-   
-    dlgl::matr M = dlgl::matr::Rotate(Up, (l1 - LastMousePos[0]) * 0.1);
-    Dir = dlgl::matr::Rotate(Up, (- l1 + LastMousePos[0]) * 0.1).VecTransform(Dir);
-    Dir = dlgl::matr::Rotate(dlgl::vec3(1, 0, 0), ( - l2 + LastMousePos[1]) * 0.1).VecTransform(Dir);                                                                               
-                  
-    At = Dir + Loc;
-    MatrView = dlgl::matr::View(Loc, At, Up);
-   
-    LastMousePos[0] = l1;
-    LastMousePos[1] = l2;
-  }
+    
   
+  
+  }
+
+
+  /*
+  void Set ( render *rnd, int Keys[30], int Mdx, float Mdz )
+  {
+    float dT = 1;
+    float Dist, cosT, sinT, plen, cosP, sinP, Azimuth, Elevator;
+
+    rnd->MatrView = dlgl::matr::View(Loc, At, Up);
+    
+    Right = dlgl::vec3(rnd->MatrView.M[0][0], rnd->MatrView.M[1][0], rnd->MatrView.M[2][0]);
+    Up    = dlgl::vec3(rnd->MatrView.M[0][1], rnd->MatrView.M[1][1], rnd->MatrView.M[2][1]);
+    Dir   = dlgl::vec3(rnd->MatrView.M[0][2], rnd->MatrView.M[1][2], rnd->MatrView.M[2][2]);
+
+    rnd->MatrVP = rnd->MatrView * rnd->MatrProj;
+
+    Dist = !(At - Loc);
+
+    cosT = (Loc.Y - At.Y) / Dist;
+    sinT = sqrt(1 - cosT * cosT);
+
+    plen = Dist * sinT;
+    cosP = (Loc.Z - At.Z) / plen;
+    sinP = (Loc.X - At.X) / plen;
+
+    Azimuth = mth::R2D(atan2(sinP, cosP));
+    Elevator = mth::R2D(atan2(sinT, cosT));
+
+    Azimuth += dT *
+      (-30 * Keys[VK_LBUTTON] * Mdx +
+        47 * (Keys[VK_LEFT] - Keys[VK_RIGHT]));
+    
+    Elevator += rnd->T.GlobalDeltaTime * 
+      (-30 * Keys[VK_LBUTTON] * Mdx +
+        47 * (Keys[VK_UP] - Keys[VK_DOWN]));
+    if (Elevator < -89.90)
+      Elevator = -89.9;
+    else if (Elevator > 89.90)
+      Elevator = 89.9;
+
+    Dist +=  rnd->T.GlobalDeltaTime * 
+      (Mdz + (Keys[VK_NEXT] - Keys[VK_PRIOR]));
+
+    if (Dist < 0.1)
+      Dist = 0.1;
+
+    // Handle camera position
+    float Wp = rnd->ProjSize;
+    float Hp = rnd->ProjSize;
+    if (rnd->FrameW > rnd->FrameH)
+      Wp *= (float) rnd->FrameW / rnd->FrameH;
+    else
+      Hp *= (float) rnd->FrameH / rnd->FrameW;
+
+    float sx = Wp / rnd->FrameW * Dist / rnd->ProjDist;
+    float sy = Hp / rnd->FrameH * Dist / rnd->ProjDist;
+
+    dlgl::vec3 dv = Right * sx + Up * sy;
+    At = At + dv;
+    Loc = Loc + dv;
+
+  }
+    */
 };
 
 #endif /* __CAMERA_H_*/

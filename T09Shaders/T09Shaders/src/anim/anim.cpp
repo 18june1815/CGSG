@@ -3,13 +3,14 @@
 
 void anim::SetScene( void )
 {
-  m = new u_mounts(rnd);
-  *this << m;
+  //m = new u_mounts(rnd);
+  //*this << m;
   //*this << new u_mounts(rnd);
+  *this << new Toyota(rnd);
   *this << new globe(rnd);
   
-  *this << new CenterPoint(rnd);
-  *this << new Helic(rnd, m);
+  //*this << new CenterPoint(rnd);
+  //*this << new Helic(rnd, m);
   //*this << new cow(rnd);
   /*for (int i = 0; i < 5; i++ )
     *this << new globe(rnd);
@@ -37,10 +38,12 @@ void anim::Init( HWND &hWnd )
 {
   rnd = new render();
   rnd->hWnd = hWnd;
-  rnd->Init(hWnd);
-
+  rnd->Init(hWnd);                                                                                                
+  
+  SetKeys();
   SetScene();  
 }
+
 void anim::Resize( int W, int H)
 {
   rnd->Resize(W, H);
@@ -53,10 +56,13 @@ void anim::CopyFrame( void )
 
 void anim::Draw( void )
 {
-  for (int i = 0; i < NumOfObjects; i++)
-    Objects[i]->Response();
-    
+  if (!rnd->T.IsPause)
+  {
+    for (int i = 0; i < NumOfObjects; i++)
+      Objects[i]->Response();
+  } 
   rnd->Start();
+
   rnd->cam.Draw(rnd->MatrView, rnd->MatrVP, rnd->MatrProj);
   for (int i = 0; i < NumOfObjects; i++)
     Objects[i]->Draw(rnd->MatrVP);
@@ -67,6 +73,11 @@ void anim::Draw( void )
   
 }
 
+void anim::SetKeys( void )
+{
+  Keys[VK_RIGHT] = Keys[VK_LEFT] = 1;
+}
+
 
 void anim::Keyboard( WPARAM wParam )
 {
@@ -74,7 +85,42 @@ void anim::Keyboard( WPARAM wParam )
   {
     if (Objects[i]->name == "Helic")
       Objects[i]->Keyboard(wParam);
-  }  
+  }
+  switch (wParam)
+  {
+  case VK_RIGHT:
+    Keys[VK_RIGHT] *= -1;
+    break;
+
+  case VK_LEFT:
+    Keys[VK_RIGHT] *= -1;  
+    break;
+  case 'P':
+    rnd->T.IsPause = !rnd->T.IsPause;
+    break;
+     /*
+  case VK_UP:
+    Speed += 0.001;
+    break;
+
+  case VK_DOWN:
+    if (Speed > 0)
+      Speed -= 0.001;
+    break;
+
+  case VK_PRIOR:
+    dPos.Y += 0.1;
+    break;
+
+  case VK_NEXT:
+    dPos.Y -= 0.1;
+    break;
+
+  case VK_SPACE:
+    Speed = 0;
+    break;
+    */
+    }
 }
  
 

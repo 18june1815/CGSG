@@ -67,6 +67,7 @@ void resources::AddTexture( material *Mtl, std::string TexName, const char *TexF
 }
 
 
+
 int resources::FindTexture( std::string name )
 {
   int TexNo = -1;

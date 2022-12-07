@@ -1,34 +1,34 @@
 #include "Units.h"
 
-cow::cow( render *R )
+Toyota::Toyota( render *R )
 {
-  name = "Cow";
+  name = "Toyota";
   rnd = R;
   //Prim.MtlNo = 0;
-  //Prim.Load("bin/models/cow.obj");
-  //Prim.LoadNew("bin/models/cow.obj");
+  //Prim.Load("bin/models/Toyota.obj");
+  //Prim.LoadNew("bin/models/Toyota.obj");
   
-  Prims.LoadG3DM("bin/models/cow.g3dm");
+  Prims.LoadG3DM("bin/models/Toyota.g3dm");
   Prims.SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3{0.5, 0.5, 0.5}));
   //SetMaterial();
 }
 
-void cow::Delete( void )
+void Toyota::Delete( void )
 {
   Prims.Delete();
 }
 
-void cow::SetMaterial( void )
+void Toyota::SetMaterial( void )
 {
   /*
   material m = material::DefMaterial();
-  m.Name = "cow";
+  m.Name = "Toyota";
 
   Prim.MtlNo = rnd->resources.AddMaterial(&m) - 1;
   */
 }
 
-void cow::Draw( dlgl::matr MatrVP  ) 
+void Toyota::Draw( dlgl::matr MatrVP  ) 
 {
   for (int i = 0; i < Prims.NofElements; i++)
   {

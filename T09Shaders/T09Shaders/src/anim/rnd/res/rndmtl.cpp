@@ -106,8 +106,8 @@ int resources::ApplyMaterial( int MtlNo, UINT64 Time )
     glUniform3fv(loc, 1, &m->Ks.X);
   if((loc = glGetUniformLocation(prg, "Ph")) != -1)
     glUniform1f(loc, m->Ph);
-  //if((loc = glGetUniformLocation(prg, "Trans")) != -1)
-    //glUniform1f(loc, m->Trans);
+  if((loc = glGetUniformLocation(prg, "Trans")) != -1)
+    glUniform1f(loc, m->Trans);
 
   //Set textures
   for (int i = 0; i < 8; i++)

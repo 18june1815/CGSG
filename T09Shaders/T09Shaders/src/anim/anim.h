@@ -14,12 +14,14 @@ public:
 
   render *rnd;
   u_mounts *m;
+  int Keys[30];
 
   anim( void )
   {
   }
   ~anim( void );
  
+  void SetKeys( void );
   void Init( HWND &hWnd );
   void Resize( int W, int H);
   void CopyFrame( void );

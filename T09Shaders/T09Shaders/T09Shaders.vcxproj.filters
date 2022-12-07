@@ -94,9 +94,6 @@
     <Image Include="T09Shaders.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="src\anim\units\test.bmp">
-      <Filter>Source Files\anim\units</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\win\main.cpp">
@@ -148,6 +145,12 @@
       <Filter>Source Files\anim\rnd</Filter>
     </ClCompile>
     <ClCompile Include="src\anim\units\CenterPoint.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\rnd\camera.cpp">
+      <Filter>Source Files\anim\rnd</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\Toyota.cpp">
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
   </ItemGroup>

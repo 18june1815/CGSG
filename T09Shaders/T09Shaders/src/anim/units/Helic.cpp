@@ -20,9 +20,6 @@ Helic::Helic( render *R, u_mounts *m )
   Prims.SetWorldTransormation(dlgl::matr::Translate(centr));
   Prims.SetWorldTransormation(Scale);
 
-  //Prims.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3{0, 5, 0}));
-
-
   //rnd->cam.Loc = dlgl::vec3{0.5, 0.0, 0.};
   //rnd->cam.At = dlgl::vec3{0.0, 0.0, 0.0};
   //rnd->cam.Loc = dlgl::vec3{0., 1, -0.2};
@@ -46,7 +43,6 @@ void Helic::Draw( dlgl::matr MatrVP  )
   {
     Prims.primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd);
   }
-  // Prims.primitives[4]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd);
 }
 
 void Helic::BladesRotationY( void )

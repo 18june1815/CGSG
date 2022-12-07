@@ -75,13 +75,28 @@ class cow : public object
 {
 public:
   prim Prim;
+  prims Prims;
   cow ( render *R );  
   bool Load( const char *FileName ); 
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
   int SetTexture( void );
+  void Delete( void ) override;
 };
 
+
+class Toyota : public object
+{
+public:
+  prim Prim;
+  prims Prims;
+  Toyota ( render *R );  
+  bool Load( const char *FileName ); 
+  void SetMaterial( void );
+  void Draw( dlgl::matr MatrVP  ) override;
+  int SetTexture( void );
+  void Delete( void ) override;
+};
 
 
 class Helic : public object
