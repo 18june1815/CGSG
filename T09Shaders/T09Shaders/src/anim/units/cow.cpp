@@ -1,21 +1,22 @@
 #include "Units.h"
 
-cow::cow( render *R )
+cow::cow( render *R, camera *c )
 {
   name = "Cow";
   rnd = R;
+  cam = c;
   //Prim.MtlNo = 0;
   //Prim.Load("bin/models/cow.obj");
   //Prim.LoadNew("bin/models/cow.obj");
   
-  Prims.LoadG3DM("bin/models/cow.g3dm");
-  Prims.SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3{0.5, 0.5, 0.5}));
+  //Prims.LoadG3DM("bin/models/cow.g3dm");
+  Prim.SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3{50, 50, 50}));
   //SetMaterial();
 }
 
 void cow::Delete( void )
 {
-  Prims.Delete();
+  //Prims.Delete();
 }
 
 void cow::SetMaterial( void )
@@ -30,9 +31,7 @@ void cow::SetMaterial( void )
 
 void cow::Draw( dlgl::matr MatrVP  ) 
 {
-  for (int i = 0; i < Prims.NofElements; i++)
-  {
-    Prims.primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd);
-  }
+  Prim.Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
+
 }
 

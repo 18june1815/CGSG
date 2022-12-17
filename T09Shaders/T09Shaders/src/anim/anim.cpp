@@ -3,20 +3,17 @@
 
 void anim::SetScene( void )
 {
-  //m = new u_mounts(rnd);
-  //*this << m;
-  //*this << new u_mounts(rnd);
-  *this << new Toyota(rnd);
-  *this << new globe(rnd);
   
-  //*this << new CenterPoint(rnd);
-  //*this << new Helic(rnd, m);
-  //*this << new cow(rnd);
-  /*for (int i = 0; i < 5; i++ )
-    *this << new globe(rnd);
-  */
-  //*this << new sky(rnd);
-  //
+  m = new u_mounts(rnd, cam);
+  *this << m;
+  *this << new Toyota(rnd, cam);
+  *this << new globe(rnd, cam);
+  
+  *this << new CenterPoint(rnd, cam);
+  *this << new Helic(rnd, cam, m);
+  *this << new cow(rnd, cam);
+ 
+  *this << new sky(rnd, cam);
 }
 
 anim::~anim( void )
@@ -33,14 +30,18 @@ anim::~anim( void )
   
   rnd->Close();
   delete rnd;
+  delete cam;
+  delete Input;
 }
+
 void anim::Init( HWND &hWnd )
 {
   rnd = new render();
   rnd->hWnd = hWnd;
   rnd->Init(hWnd);                                                                                                
   
-  SetKeys();
+  Input = new input();
+  cam = new camera(rnd, Input);
   SetScene();  
 }
 
@@ -63,7 +64,11 @@ void anim::Draw( void )
   } 
   rnd->Start();
 
-  rnd->cam.Draw(rnd->MatrView, rnd->MatrVP, rnd->MatrProj);
+  cam->Draw(rnd->MatrView, rnd->MatrVP, rnd->MatrProj);
+  
+  if (rnd->T.IsPause)
+    cam->Control();
+
   for (int i = 0; i < NumOfObjects; i++)
     Objects[i]->Draw(rnd->MatrVP);
       
@@ -73,71 +78,31 @@ void anim::Draw( void )
   
 }
 
-void anim::SetKeys( void )
-{
-  Keys[VK_RIGHT] = Keys[VK_LEFT] = 1;
-}
 
-
-void anim::Keyboard( WPARAM wParam )
+void anim::Keyboard( bool IsDown )
 {
+  Input->KbdResponse();
+
+  if (Input->Keys['P'] != 0 && IsDown)
+    rnd->T.IsPause =! rnd->T.IsPause; 
+
   for (int i = 0; i < NumOfObjects; i++)
   {
-    if (Objects[i]->name == "Helic")
-      Objects[i]->Keyboard(wParam);
-  }
-  switch (wParam)
-  {
-  case VK_RIGHT:
-    Keys[VK_RIGHT] *= -1;
-    break;
-
-  case VK_LEFT:
-    Keys[VK_RIGHT] *= -1;  
-    break;
-  case 'P':
-    rnd->T.IsPause = !rnd->T.IsPause;
-    break;
-     /*
-  case VK_UP:
-    Speed += 0.001;
-    break;
-
-  case VK_DOWN:
-    if (Speed > 0)
-      Speed -= 0.001;
-    break;
-
-  case VK_PRIOR:
-    dPos.Y += 0.1;
-    break;
-
-  case VK_NEXT:
-    dPos.Y -= 0.1;
-    break;
-
-  case VK_SPACE:
-    Speed = 0;
-    break;
-    */
-    }
+    bool a = Objects[i]->name == "Helic";
+      if (Objects[i]->name == "Helic")
+        Objects[i]->Keyboard(Input->Keys);
+  }  
 }
  
 
 void anim::MouseWheel( WPARAM wParam )
 {
-/*  rnd->cam.MouseWheel(wParam);
-  for (int i = 0; i < NumOfObjects; i++)
-    Objects[i]->MouseWheel();
-    */
+  Input->MouseWResponse(wParam);
 }
 
-void anim::MouseMove( WPARAM wParam, LPARAM lParam )
+void anim::MouseMove( void )
 {
-/*  rnd->cam.MouseMove(wParam, lParam, rnd->FrameW, rnd->FrameH, rnd->MatrView);
-  for (int i = 0; i < NumOfObjects; i++)
-    Objects[i]->MouseMove();
-*/
+  Input->MouseClickResponse();
 }
 
 

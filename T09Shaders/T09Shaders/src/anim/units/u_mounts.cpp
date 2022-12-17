@@ -1,10 +1,11 @@
 #include "Units.h"
 #include "../rnd/grid.h"  
 
-u_mounts::u_mounts( render *R )
+u_mounts::u_mounts( render *R, camera *c )
 {
   name = "Mounts";
   rnd = R;
+  cam = c;
   
   //HBITMAP hBm;
   hBm = (HBITMAP)LoadImage(NULL, "bin/textures/hf.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
@@ -41,7 +42,7 @@ void u_mounts::Delete( void )
 
 void u_mounts::Draw( dlgl::matr MatrVP )
 {
-  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd);
+  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd, cam);
 }
 
 
@@ -57,10 +58,11 @@ void u_mounts::Response( void )
   //Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0, 0.05, 0)));
 }
 
-void u_mounts::ToPicCoors( dlgl::vec3 P, int &x, int &y, float &H )
+void u_mounts::ToPicCoors( dlgl::vec3 P, float &H )
 {
   if (hBm != NULL)
   {
+    int x, y;
     BITMAP bm;
     GetObject(hBm, sizeof(bm), &bm);
 

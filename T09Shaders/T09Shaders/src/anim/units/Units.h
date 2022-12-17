@@ -4,12 +4,13 @@
 #include <vector>                
 #include "anim/rnd/prim.h"
 #include "anim/rnd/prims.h"
-
+#include "anim/rnd/camera.h"
 
 class object
 {
 public:
   render *rnd;  
+  camera *cam;
   std::string name;
   virtual void Draw( dlgl::matr MatrVP )
   {
@@ -19,7 +20,7 @@ public:
   {
   } /* End of 'Response' function */
 
-  virtual void Keyboard( WPARAM wParam )
+  virtual void Keyboard( BYTE Keys[256] )
   {
   } /* End of 'Keyboard' function */
 
@@ -47,7 +48,7 @@ class globe : public object
   void GeomSet( double R );
 
 public:
-  globe( render *R );
+  globe( render *R, camera *cam );
 
   void GlobeSet( void );
   void Response( void ) override;
@@ -62,12 +63,12 @@ public:
   float size = 300, h = 30;
   prim Prim;
   HBITMAP hBm;
-  u_mounts( render *R );
+  u_mounts( render *R, camera *cam );
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
   void Response( void ) override;
   void Delete( void ) override;
-  void ToPicCoors( dlgl::vec3 P, int &x, int &y, float &H );
+  void ToPicCoors( dlgl::vec3 P, float &H );
 };
 
 // Objects from .obj files
@@ -76,7 +77,7 @@ class cow : public object
 public:
   prim Prim;
   prims Prims;
-  cow ( render *R );  
+  cow ( render *R, camera *cam );  
   bool Load( const char *FileName ); 
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
@@ -90,7 +91,7 @@ class Toyota : public object
 public:
   prim Prim;
   prims Prims;
-  Toyota ( render *R );  
+  Toyota ( render *R, camera *cam );  
   bool Load( const char *FileName ); 
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
@@ -121,13 +122,13 @@ public:
 
   prim Prim;
   prims Prims;
-  Helic ( render *R );  
-  Helic ( render *R, u_mounts *mounts );  
+  Helic ( render *R, camera *cam );  
+  Helic ( render *R, camera *cam, u_mounts *mounts );  
   bool Load( const char *FileName ); 
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
   void Response( void ) override;
-  void Keyboard( WPARAM wParam ) override;
+  void Keyboard( BYTE Keys[256] ) override;
   void Delete( void ) override;
   void BladesRotationX( void );
   void BladesRotationY( void );
@@ -139,7 +140,7 @@ class sky: public object
 {
 public:
   prim Prim;
-  sky( render *R );
+  sky( render *R, camera *cam );
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
 };
@@ -149,7 +150,7 @@ class CenterPoint: public object
 {
 public:
   prim Prim;
-  CenterPoint( render *R );
+  CenterPoint( render *R, camera *cam );
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
 };

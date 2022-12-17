@@ -138,6 +138,7 @@
     <ClInclude Include="src\anim\anim.h" />
     <ClInclude Include="src\anim\rnd\camera.h" />
     <ClInclude Include="src\anim\rnd\grid.h" />
+    <ClInclude Include="src\anim\rnd\Input.h" />
     <ClInclude Include="src\anim\rnd\prim.h" />
     <ClInclude Include="src\anim\rnd\prims.h" />
     <ClInclude Include="src\anim\rnd\rnd.h" />

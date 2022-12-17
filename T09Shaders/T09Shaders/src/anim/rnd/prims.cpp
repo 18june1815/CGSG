@@ -48,6 +48,21 @@ bool prims::Load( const char *FileName )
     primitives[i]->Load(FileName, lineNo[i], lineNo[i + 1], sum);
     sum += primitives[i]->NumOfV;
     NofElements++;
+
+    if (MinBB.X > primitives[i]->MinBB.X)
+      MinBB.X = primitives[i]->MinBB.X;
+    if (MaxBB.X < primitives[i]->MaxBB.X)
+      MaxBB.X = primitives[i]->MaxBB.X;
+
+    if (MinBB.Y > primitives[i]->MinBB.Y)
+      MinBB.Y = primitives[i]->MinBB.Y;
+    if (MaxBB.Y < primitives[i]->MaxBB.Y)
+      MaxBB.Y = primitives[i]->MaxBB.Y;
+
+    if (MinBB.Z > primitives[i]->MinBB.Z)
+      MinBB.Z = primitives[i]->MinBB.Z;
+    if (MaxBB.Z < primitives[i]->MaxBB.Z)
+      MaxBB.Z = primitives[i]->MaxBB.Z;
   }
   return true;
 }
@@ -144,11 +159,10 @@ bool prims::LoadG3DM( const char *FileName )
       ptr += 4;
     }
 
-   
     primitives[p] = new prim();
     primitives[p]->Create(V.data(), V.size(), Ind.data(), Ind.size());
     primitives[p]->MtlNo = MtlNo;
-    
+    EvalBB(V.data(), V.size());
     
   }
 
@@ -180,8 +194,7 @@ bool prims::LoadG3DM( const char *FileName )
     for (int t = 0; t < 8; t++)
     {
       if (fmat->Tex[t] != -1)
-        float a = 5;
-      mtl.Tex[t] = fmat->Tex[t] + rnd->resources.NumOfTextures;
+        mtl.Tex[t] = fmat->Tex[t] + rnd->resources.NumOfTextures;
     }
     MtlNo = rnd->resources.AddMaterial(&mtl) - 1;
   }
@@ -200,12 +213,7 @@ bool prims::LoadG3DM( const char *FileName )
     C = *(DWORD *)ptr;
     ptr += 4;
 
-   // BYTE *TextureImage = (BYTE *)malloc(W * H * C);
-    
-    //if (rnd->resources.FindTexture(Name) == -1)
-
     int TexNo = rnd->resources.AddImg(Name, W, H, C, ptr);
-    //rnd->resources.AddTexture(&mtl, mtl.Name, "bin/textures/sky_sphere.bmp");
     
     ptr += W * H * C;
    } 
@@ -232,7 +240,7 @@ void prims::Draw( dlgl::matr MatrVP )
     material *mtl = &(rnd->resources.mtl[MtlNo]);
     
     if (mtl->Trans != 1)
-      primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd);
+      primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
   }
 
   // Draw all front-face-culling 
@@ -243,7 +251,7 @@ void prims::Draw( dlgl::matr MatrVP )
     material *mtl = &(rnd->resources.mtl[MtlNo]);
     
     if (mtl->Trans == 1)
-      primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd);
+      primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
   }
 
   // Draw all back-face-culling 
@@ -254,8 +262,52 @@ void prims::Draw( dlgl::matr MatrVP )
     material *mtl = &(rnd->resources.mtl[MtlNo]);
     
     if (mtl->Trans == 1)
-      primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd);
+      primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
   }
   
   glDisable(GL_CULL_FACE);
 }
+
+
+void prims::EvalBB( vertex *V, int NoofV )
+{
+int i;
+
+  if (V == 0 && NoofV == 0)
+    return;
+
+  for (i = 0; i < NoofV; i++)
+  {
+    if (MinBB.X > V[i].P.X)
+      MinBB.X = V[i].P.X;
+    if (MaxBB.X < V[i].P.X)
+      MaxBB.X = V[i].P.X;
+
+    if (MinBB.Y > V[i].P.Y)
+      MinBB.Y = V[i].P.Y;
+    if (MaxBB.Y < V[i].P.Y)
+      MaxBB.Y = V[i].P.Y;
+
+    if (MinBB.Z > V[i].P.Z)
+      MinBB.Z = V[i].P.Z;
+    if (MaxBB.Z < V[i].P.Z)
+      MaxBB.Z = V[i].P.Z;
+  }
+  
+}
+
+void prims::SetBB( void )
+{
+  dlgl::vec3 B = MaxBB - MinBB;
+  SetWorldTransormation( dlgl::matr::Translate(-MaxBB));
+  double sc = B.X;
+
+  if (sc < B.Y)
+    sc = B.Y;
+  if (sc < B.Z)
+    sc = B.Z;
+
+  SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3(1 / sc, 1 / sc, 1 / sc)));
+  
+}
+ 

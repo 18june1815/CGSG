@@ -1,9 +1,10 @@
 #include "Units.h"
 #include "anim/anim.h"
  
-globe::globe( render *R )
+globe::globe( render *R, camera *c )
 {
   rnd = R;
+  cam = c;
   int NumOfV, NumOfI;
   
   NumOfV = GLOBE_H * GLOBE_W;
@@ -121,5 +122,5 @@ int globe::SetTexture( void )
 
 void globe::Draw( dlgl::matr MatrVP  )
 {
-    Prim.Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd);
+    Prim.Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
 }

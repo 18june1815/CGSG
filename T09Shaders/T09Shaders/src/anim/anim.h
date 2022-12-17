@@ -4,6 +4,9 @@
 #include "rnd/rnd.h"
 #include <vector>
 #include "units/Units.h"
+#include "rnd/Input.h"
+#include "rnd/camera.h"
+
 
 class anim
 {
@@ -14,21 +17,23 @@ public:
 
   render *rnd;
   u_mounts *m;
-  int Keys[30];
+  camera *cam;
+
+  input *Input; 
 
   anim( void )
   {
   }
   ~anim( void );
  
-  void SetKeys( void );
+ 
   void Init( HWND &hWnd );
   void Resize( int W, int H);
   void CopyFrame( void );
   void Draw( void );
   void MouseWheel( WPARAM wParam );
-  void MouseMove( WPARAM wParam, LPARAM lParam );
-  void Keyboard( WPARAM wParam );
+  void MouseMove( void );
+  void Keyboard( bool IsDown );
   anim & operator<<( object *Obj );
   void SetScene( void );
 };

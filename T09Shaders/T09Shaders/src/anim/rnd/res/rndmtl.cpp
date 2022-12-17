@@ -47,7 +47,7 @@ material material::GetLibMaterial( std::string mtlName )
       mtl.Kd = MatLib[i].Kd;
       mtl.Ks = MatLib[i].Ks;
       mtl.Ph = MatLib[i].Ph;
-      mtl.Trans = 0;
+      mtl.Trans = 1;
       mtl.ShdNo = 0;
       for (int i = 0; i < 8; i++)
         mtl.Tex[i] = -1; 
@@ -66,7 +66,7 @@ material material::DefMaterial( void )
   def_mtl.Kd = dlgl::vec3(0.9, 0.9, 0.9);
   def_mtl.Ks = dlgl::vec3(0.3, 0.3, 0.3);
   def_mtl.Ph = 30;
-  def_mtl.Trans = 0;
+  def_mtl.Trans = 1;
   def_mtl.ShdNo = 0;
   for (int i = 0; i < 8; i++)
     def_mtl.Tex[i] = -1; 

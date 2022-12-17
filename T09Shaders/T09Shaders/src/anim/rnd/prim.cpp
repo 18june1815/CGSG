@@ -94,7 +94,7 @@ void prim::Autonormals( vertex *V, int NoofV, int *Ind, int NoofI )
     V[i].N = (V[i].N).Normalize();
 }
 
-void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, render *rnd ) 
+void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, render *rnd, camera *cam ) 
 {
   int loc, ProgId;
   
@@ -116,7 +116,7 @@ void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, re
   if ((loc = glGetUniformLocation(ProgId, "MatrWInv")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, winv.M[0]);
   if ((loc = glGetUniformLocation(ProgId, "CamLoc")) != -1)
-    glUniform3fv(loc, 1, &rnd->cam.Loc.X); 
+    glUniform3fv(loc, 1, &cam->Loc.X); 
   
     
   // Draw triangles
@@ -318,7 +318,7 @@ bool prim::Load( const char *FileName, int lineStart, int lineStop, int sum )
       {
         if (isspace((UCHAR)oldc) && !isspace((UCHAR)*S))
         {
-          sscanf(S, "%d", &nc);
+          (void)sscanf(S, "%d", &nc);
           nc -= sum;
 
           if (n == 0)
@@ -349,104 +349,113 @@ bool prim::Load( const char *FileName, int lineStart, int lineStop, int sum )
 
 bool prim::LoadNew( const char *FileName )
 {  
-  std::ifstream F(FileName); 
+  FILE *F; 
   std::vector<vertex> V;
   std::vector<dlgl::vec3> v, vn;
   std::vector<dlgl::vec2> vt;
   std::vector<int> Ind;
-  std::map<std::string, int> Vmap;
+  std::map<std::tuple<int, int, int>, int> Vmap;
   int ni = 1;
-  static std::string Buf;
+  static char Buf[1000];
 
   Trans = dlgl::matr::Identity();
   
   // Read model data
-  
   ni = 0;
 
-   v.push_back(dlgl::vec3(0, 0, 0));
-   vt.push_back(dlgl::vec2(0, 0));
-   vn.push_back(dlgl::vec3(0, 0, 0));
-  while (!F.eof())
+  v.push_back(dlgl::vec3(0, 0, 0));
+  vt.push_back(dlgl::vec2(0, 0));
+  vn.push_back(dlgl::vec3(0, 0, 0));
+
+  if ((F = fopen(FileName, "r")) == nullptr)
+  return false;
+
+  // Read model data
+  rewind(F);
+  
+  while (fgets(Buf, sizeof(Buf) - 1, F) != NULL)
   {
-    F >> Buf;
-    if (Buf == "v")
+    if (Buf[0] == 'v' && Buf[1] == ' ')
     {
       double x, y ,z;
-      F >> x >> y >> z;
-      v.push_back(dlgl::vec3(x, y, z));
+      (void)sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
+      v.push_back({dlgl::vec3(x, y, z)});
     }
-    if (Buf == "vt")
+    else if (Buf[0] == 'v' && Buf[1] == 't')
     {
       double x, y;
-      F >> x >> y;
-      vt.push_back(dlgl::vec2(x, y));
+      (void)sscanf(Buf + 2, "%lf%lf", &x, &y);
+      vt.push_back({dlgl::vec2(x, y)});
     }
-    if (Buf == "vn")
+    else if (Buf[0] == 'v' && Buf[1] == 'n')
     {
       double x, y ,z;
-      F >> x >> y >> z;    
-      vn.push_back(dlgl::vec3(x, y, z));
+      (void)sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
+      vn.push_back({dlgl::vec3(x, y, z)});
     }
 
-    else if (Buf == "f")
+    else if (Buf[0] == 'f' && Buf[1] == ' ')
     {               
-      std::string Sstr, line;
-      int nc, nv, nt, nn;
-      int n = 0, n0 = 0, n1 =0;
-      const char *S;
-      char  oldc = ' ';
-      std::getline(F, line);
-      std::istringstream iss(line);
-     // std::tuple<int, int, int> t;
+      int nv, nt, nn;
+      std::tuple<int, int, int> t;
   
-      while (iss >> Sstr)
+       char *S = Buf + 2, oldc = ' ';
+      int n = 0, n0 = 0, n1 = 0, nc;
+       
+      nn = nv = nt = 0;
+      while (*S != 0)
       {
-        if (Vmap.find(Sstr) == Vmap.end() )
-        {
-          S = Sstr.c_str();
-         
-          nn = nv = nt = 0;
-          while (*S != 0)
-          {
-             if (nv == 0)
-               sscanf(S, "%d", &nv);
-             else if (nt == 0 && size(vt) > 1 && oldc == 47)
-               sscanf(S, "%d", &nt);
-             else if (nn == 0 && oldc == 47)
-               sscanf(S, "%d", &nn);
-             oldc = *S++;
-          }
-          
-          V.push_back({v[nv], vt[nt], vn[nn], {1, 1, 1, 1}});
-          Vmap[Sstr] = (nc = ++ni); 
+        nn = nv = nt = 0;
 
-          if ( nv != nn)
-            nv = nn;
+        while ((*S != 32) && (*S != 0))
+        {
+          if (nv == 0)
+            (void)sscanf(S, "%d", &nv);
+          else if (nt == 0 && size(vt) > 1 && oldc == 47)
+            (void)sscanf(S, "%d", &nt);
+          else if (nn == 0 && oldc == 47)
+            (void)sscanf(S, "%d", &nn);
+          oldc = *S++;
+        }
+        if (nn == 0) 
+        {
+          nn = nt;
+          nt = 0;
+        }
+
+        t = {nv, nt, nn};
+        if (Vmap.find(t) == Vmap.end() )
+        {
+          if (nv > v.size() || nt > vt.size() || nn > vn.size())
+            int a = 5;
+
+          V.push_back({v[nv], vt[nt], vn[nn], {1, 1, 1, 1}});
+          Vmap[t] = (nc = ++ni); 
+
+         /* if ( nv != nn)
+              nv = nn;*/
         }
         else 
-        {
-          nc = Vmap[Sstr];
-        }    
-       
-         //Ind.push_back(nc);
+          nc = Vmap[t];
+
         if (n == 0)
-            n0 = nc;
-          else if (n == 1)
-            n1 = nc;
-          else
-          {
-            Ind.push_back(n0 - 1);
-            Ind.push_back(n1 - 1);
-            Ind.push_back(nc - 1);
-            n1 = nc;
-          }
-          n++;
+          n0 = nc;
+        else if (n == 1)
+          n1 = nc;
+        else
+        {
+          Ind.push_back(n0 - 1);
+          Ind.push_back(n1 - 1);
+          Ind.push_back(nc - 1);
+          n1 = nc;
+        }
+        n++;
+        if (*S != 0) oldc = *S++;
       }
     }
   }
 
-  F.close();
+  fclose(F);
   
   Create(V.data(), V.size(), Ind.data(), Ind.size());
   SetBB(V.data(), V.size());

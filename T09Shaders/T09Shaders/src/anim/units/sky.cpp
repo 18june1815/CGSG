@@ -1,11 +1,12 @@
 #include "Units.h"
 #include "../rnd/grid.h"  
 
-sky::sky( render *Rnd )
+sky::sky( render *Rnd, camera *c )
 {
   name = "sky";
   rnd = Rnd;
-  int W = 50, H = 50, R = 100.;
+  cam = c;
+  int W = 50, H = 50, R = 200.;
   grid g(W, H);
 
   g.CreateSphere(R);
@@ -13,12 +14,12 @@ sky::sky( render *Rnd )
   g.PrimFromGrid(Prim);
   SetMaterial();
   Prim.SetWorldTransormation(dlgl::matr::Rotate(dlgl::vec3(1, 0, 0), 180));
-  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0, -5, 0)));
+  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0, -30, 0)));
 }
 
 void sky::Draw( dlgl::matr MatrVP )
 {
-  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd);
+  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd, cam);
 }
 
 

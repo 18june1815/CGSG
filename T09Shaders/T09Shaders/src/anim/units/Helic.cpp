@@ -7,26 +7,30 @@ void Helic::Delete( void )
 }
 
 
-Helic::Helic( render *R, u_mounts *m )
+Helic::Helic( render *R, camera *c )
 {
   name = "Helic";
   rnd = R;
-  Mounts = m;
+  cam = c;
 
   Prim.MtlNo = 0;
   Prims.Load("bin/models/Mi28.obj");
 
   dlgl::vec3 centr = dlgl::vec3(0, 0, 0.7);
   Prims.SetWorldTransormation(dlgl::matr::Translate(centr));
+  Prims.SetBB();
   Prims.SetWorldTransormation(Scale);
+  Prims.MinBB = Scale.PointTransform(Prims.MinBB); 
+  Prims.MaxBB = Scale.PointTransform(Prims.MaxBB); 
 
-  //rnd->cam.Loc = dlgl::vec3{0.5, 0.0, 0.};
-  //rnd->cam.At = dlgl::vec3{0.0, 0.0, 0.0};
-  //rnd->cam.Loc = dlgl::vec3{0., 1, -0.2};
-  //rnd->cam.At = dlgl::vec3{0.0, 0.0, 0.2};
- 
-  rnd->cam.At = Pos;
-  rnd->cam.Loc = dlgl::vec3{0.0, 0.2, -0.5};
+  cam->At = Pos;
+  cam->Loc = dlgl::vec3{0.0, 0.2, -0.5};
+  SetMaterial();
+}
+
+Helic::Helic( render *R, camera *c, u_mounts *m ) : Helic::Helic(R,c)
+{
+  Mounts = m;
 }
 
 void Helic::SetMaterial( void )
@@ -41,7 +45,7 @@ void Helic::Draw( dlgl::matr MatrVP  )
 {
   for (int i = 0; i < Prims.NofElements; i++)
   {
-    Prims.primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd);
+    Prims.primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
   }
 }
 
@@ -70,8 +74,12 @@ void Helic::BladesRotationX( void )
 
 void Helic::Response( void )
 {
+
   float dt = rnd->T.DeltaTime;
   float a = Dir.Angle(OldDir);
+
+  //cam->At = Pos;
+  //cam->Loc = dlgl::vec3{0.0, 0.2, -0.5};
 
   dPos.X = (Dir * Speed).X;
   dPos.Z = (Dir * Speed).Z;
@@ -99,68 +107,98 @@ void Helic::Response( void )
   Prims.SetWorldTransormation(dlgl::matr::RotateY( Angle.Y ));
   Prims.SetWorldTransormation(dlgl::matr::Translate( Pos + dPos));
   
-  rnd->cam.Loc -= Pos;
-  rnd->cam.Loc = dlgl::matr::RotateY(Sign * a).PointTransform(rnd->cam.Loc); 
-  rnd->cam.Loc += (Pos + dPos);
+  cam->Loc -= Pos;
+  cam->Loc = dlgl::matr::RotateY(Sign * a).PointTransform(cam->Loc); 
+  cam->Loc += (Pos + dPos);
   
   Pos += dPos;
-  rnd->cam.At = Pos;
-
+  cam->At = Pos;
+  cam->Up = {0, 1, 0};
   Collisions();
 
 }
 
-void Helic::Keyboard( WPARAM wParam )
+void Helic::Keyboard( BYTE Keys[256] )
 {
   
-  switch (wParam)
+  if (! rnd->T.IsPause)
   {
-  case VK_RIGHT:
-    Sign = 1;
-    Dir = dlgl::matr::RotateY(5).PointTransform(Dir);    
-    break;
+    if (Keys[VK_RIGHT])
+    {
+      Sign = 1;
+      Dir = dlgl::matr::RotateY(5).PointTransform(Dir);    
+    }
+    if (Keys[VK_LEFT])
+    {
+       Sign = -1;
+       Dir = dlgl::matr::RotateY(-5).PointTransform(Dir);    
+    }
 
-  case VK_LEFT:
-     Sign = -1;
-     Dir = dlgl::matr::RotateY(-5).PointTransform(Dir);    
-    break;
+    if (Keys[VK_UP])
+      Speed += 0.001;
 
-  case VK_UP:
-    Speed += 0.001;
-    break;
+    if (Keys[VK_DOWN])
+      if (Speed > 0)
+        Speed -= 0.001;
 
-  case VK_DOWN:
-    if (Speed > 0)
-      Speed -= 0.001;
-    break;
+    if (Keys[VK_PRIOR])
+      dPos.Y += 0.05;
+   
+    if (Keys[VK_NEXT])
+      dPos.Y -= 0.05;
 
-  case VK_PRIOR:
-    dPos.Y += 0.1;
-    break;
-
-  case VK_NEXT:
-    dPos.Y -= 0.1;
-    break;
-
-  case VK_SPACE:
-    Speed = 0;
-    break;
+    if (Keys[VK_SPACE])
+      Speed = 0;
+  }
+  
+  if (Keys['P'] && !rnd->T.IsPause)
+  {
+    float a = Dir.Angle(dlgl::vec3(0,0,1));
+    cam->At = Pos;
+    cam->Loc = dlgl::vec3{0.0, 0.2, -0.5};
+    cam->Loc = dlgl::matr::RotateY(Sign * a).PointTransform(cam->Loc); 
+    cam->Loc += Pos;
+    cam->Up = {0, 1, 0};
   }
 }
 
 
 void Helic::Collisions( void )
 {
-  int x, y;
-  float H;
+  float  Hf, Hb;
+  float AX, AZ;
+  dlgl::vec3 dir;
 
-  Mounts->ToPicCoors(Pos, x, y , H);
+  dir = Dir;
+  AX = dir.Angle(dlgl::vec3(1, 0, 0));
+  AZ = dir.Angle(dlgl::vec3(0, 0, 1));
 
-  if (Pos.Y < H)
+  if (AX > 90) AZ = -AZ;
+  dlgl::matr M = dlgl::matr::RotateY(AZ);
+  dir = M.PointTransform(dir);
+
+  M = M.Inverse(); 
+  dlgl::vec3
+   
+    Posf = Pos + Dir * Prims.MaxBB.Z * 1.2,
+    Posb = Pos + Dir * Prims.MinBB.Z * 1.2;
+
+  
+  Mounts->ToPicCoors(Posf, Hf);
+  Mounts->ToPicCoors(Posb, Hb);
+
+  if (Posf.Y - Prims.MaxBB.Y < Hf)
   {
     dPos.Y = 0;
     Speed = 0;
-    Pos.Y = H + 0.1;
-    rnd->cam.Loc.Y = Pos.Y + 0.2;
+    Pos.Y = Hf + 0.1;
+    cam->Loc.Y = Pos.Y + 0.2;
+  }
+  if (Posb.Y - Prims.MaxBB.Y < Hb)
+  {
+    dPos.Y = 0;
+    Speed = 0;
+    Pos.Y = Hb + 0.1;
+    cam->Loc.Y = Pos.Y + 0.2;
   }
 }

@@ -1,9 +1,10 @@
 #include "Units.h"
 #include "../rnd/grid.h"  
 
-CenterPoint::CenterPoint( render *Rnd )
+CenterPoint::CenterPoint( render *Rnd, camera *c )
 {
   name = "CentralPoint";
+  cam = c;
   rnd = Rnd;
   int W = 10, H = 10;
   float R = 0.01;
@@ -14,14 +15,12 @@ CenterPoint::CenterPoint( render *Rnd )
   g.PrimFromGrid(Prim);
   SetMaterial();
 
-  //rnd->cam.Loc = dlgl::vec3(0., 0.2, 0.);
-  //rnd->cam.At = dlgl::vec3(0., 0., 0.);
-  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,0.1,0)));
+  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,0,0)));
 }
 
 void CenterPoint::Draw( dlgl::matr MatrVP )
 {
-  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd);
+  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd, cam);
 }
 
 

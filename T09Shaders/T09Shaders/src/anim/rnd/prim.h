@@ -4,6 +4,7 @@
 #include "mth/mth.h"
 
 #include "rnd.h"
+#include "camera.h"
 
 struct vertex
 {
@@ -43,7 +44,7 @@ public:
   //~prim( void );
   void Create( vertex *V, int NoofV, int *Ind, int NoofI );
   void Delete( void );
-  virtual void Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, render *rnd );
+  virtual void Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, render *rnd, camera *cam );
   virtual void SetMaterial( void );
   void SetWorldTransormation( const dlgl::matr &MatrWorld );
   void EvalBB( vertex *V, int NoofV );

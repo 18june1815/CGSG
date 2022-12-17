@@ -77,9 +77,12 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
     SendMessage(MyAnim.rnd->hWnd, WM_TIMER, 0, 0);
     return 0;
   case WM_KEYDOWN:
-    MyAnim.Keyboard(wParam);
+    MyAnim.Keyboard(true);
     if (wParam == VK_ESCAPE)
       SendMessage(MyAnim.rnd->hWnd, WM_CLOSE, 0, 0);
+    return 0;
+  case WM_KEYUP:
+    MyAnim.Keyboard(false);
     return 0;
   case WM_TIMER:
     MyAnim.Draw();
@@ -94,8 +97,7 @@ LRESULT CALLBACK WinFunc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
      MyAnim.MouseWheel(wParam);
      return 0;
   case WM_MOUSEMOVE:
-    if (wParam & MK_LBUTTON)
-     MyAnim.MouseMove(wParam, lParam);
+     MyAnim.MouseMove();
     return 0;
   case WM_PAINT:
     MyAnim.rnd->hDC = BeginPaint(MyAnim.rnd->hWnd, &ps);

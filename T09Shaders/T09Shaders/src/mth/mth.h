@@ -95,11 +95,20 @@ namespace mth
         return vec3(X + v2.X, Y + v2.Y, Z + v2.Z);
       }
 
+      vec3 operator+( float C ) const
+      {
+        return vec3(X + C, Y + C, Z + C);
+      }
+
       vec3 operator-( const vec3 &v2 ) const
       {
         return vec3(X - v2.X, Y - v2.Y, Z - v2.Z);
       }
 
+      vec3 operator-( float C ) const
+      {
+        return vec3(X - C, Y - C, Z - C);
+      }
       vec3 &operator+=( const vec3 &v2 ) 
       {
         X += v2.X; Y += v2.Y; Z += v2.Z;
