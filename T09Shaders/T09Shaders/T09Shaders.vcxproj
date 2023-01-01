@@ -141,6 +141,7 @@
     <ClInclude Include="src\anim\rnd\Input.h" />
     <ClInclude Include="src\anim\rnd\prim.h" />
     <ClInclude Include="src\anim\rnd\prims.h" />
+    <ClInclude Include="src\anim\rnd\res\rndfnt.h" />
     <ClInclude Include="src\anim\rnd\rnd.h" />
     <ClInclude Include="src\anim\rnd\res\rndres.h" />
     <ClInclude Include="src\anim\rnd\timer.h" />

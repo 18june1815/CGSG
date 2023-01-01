@@ -84,6 +84,9 @@
     <ClInclude Include="src\anim\rnd\Input.h">
       <Filter>Source Files\anim\rnd</Filter>
     </ClInclude>
+    <ClInclude Include="src\anim\rnd\res\rndfnt.h">
+      <Filter>Source Files\anim\rnd\res</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="T09Shaders.rc">

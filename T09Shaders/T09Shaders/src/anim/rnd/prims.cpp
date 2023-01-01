@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "prims.h"
 #include "res/rndres.h"
 
@@ -75,32 +77,29 @@ void prims::SetWorldTransormation( const dlgl::matr &MW )
 
 bool prims::LoadG3DM( const char *FileName )
 {
- 
-  FILE *F;
   int flen;
-  BYTE *mem, *ptr;
-  
+  BYTE *ptr;
+  std::vector<BYTE> mem;
 
-  if ((F = fopen(FileName, "rb")) == NULL)
+  std::fstream F(FileName, std::ios::in | std::ios::binary);
+
+  if (!F)
     return false;
 
-  fseek(F, 0, SEEK_END);
-  flen = ftell(F);
-  rewind(F);
+  F.seekg(0, std::ios::end);
+  flen = (int)F.tellg();
+  F.seekg(0, std::ios::beg);
 
-  mem = (BYTE *)malloc(flen);
-  fread(mem, sizeof(BYTE), flen, F);
-  fclose(F);
+  mem.resize(flen);
+  F.read((char *)mem.data(), flen);
+  F.close();
  
   DWORD Sign, NumOfPrims, NumOfMaterials, NumOfTextures;
-  ptr = mem;
+  ptr = mem.data();
   Sign = *(DWORD *)ptr;
   ptr += 4;
   if (Sign != *(DWORD *)"G3DM")
-  {
-    delete mem;
     return false;
-  }
   NumOfPrims = *(DWORD *)ptr;
   NofElements = NumOfPrims;
   ptr += 4;
@@ -216,14 +215,9 @@ bool prims::LoadG3DM( const char *FileName )
     int TexNo = rnd->resources.AddImg(Name, W, H, C, ptr);
     
     ptr += W * H * C;
-   } 
+  } 
   
-
-  free(mem);
-
   return true;
-
-
 }
 
 
