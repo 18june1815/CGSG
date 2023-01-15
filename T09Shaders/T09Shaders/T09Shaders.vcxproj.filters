@@ -159,5 +159,17 @@
     <ClCompile Include="src\anim\units\Toyota.cpp">
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
+    <ClCompile Include="src\anim\units\snow.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\smoke.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\new_sky.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\Cessna.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

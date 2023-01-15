@@ -25,6 +25,7 @@ public:
   void Draw( dlgl::matr &MatrView, dlgl::matr &MatrVP, dlgl::matr &MatrProj );
   void SetWorldTransormation( const dlgl::matr &MW );
   void Control( void );
+  void SetDir( void );
 };
 
 #endif /* __CAMERA_H_*/

@@ -42,7 +42,7 @@ void u_mounts::Delete( void )
 
 void u_mounts::Draw( dlgl::matr MatrVP )
 {
-  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd, cam);
+  Prim.Draw(PolygonMode, GL_TRIANGLE_STRIP, MatrVP, rnd, cam);
 }
 
 

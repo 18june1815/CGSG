@@ -19,7 +19,7 @@ sky::sky( render *Rnd, camera *c )
 
 void sky::Draw( dlgl::matr MatrVP )
 {
-  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd, cam);
+  Prim.Draw(PolygonMode, GL_TRIANGLE_STRIP, MatrVP, rnd, cam);
 }
 
 
@@ -28,6 +28,10 @@ void sky::SetMaterial( void )
   material m = material::DefMaterial();
   m.Name = "Sky";
   rnd->resources.AddTexture(&m, m.Name, "bin/textures/sky_sphere.bmp");
+  //int TexNo = rnd->resources.AddTextureFromFile(&m, m.Name, "bin/textures/snowflake.bmp");
+  //m.Tex[0] = TexNo;
+  
+  m.ShdNo = rnd->resources.AddShader("sky") - 1;
   Prim.MtlNo = rnd->resources.AddMaterial(&m) - 1;
 }
 

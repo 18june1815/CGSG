@@ -24,7 +24,6 @@ public:
   int NumOfElements, //Number of elements (indexes or vertexes)
       NumOfV; // Number of vertexes
 
-
   int MtlNo = 0;  //Material number in material array
   dlgl::matr Trans;
 

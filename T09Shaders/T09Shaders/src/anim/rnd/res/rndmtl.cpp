@@ -88,7 +88,7 @@ int resources::ApplyMaterial( int MtlNo, UINT64 Time )
 
 
   // Set program Id
-  prg = mtl->ShdNo;
+  prg = m->ShdNo;
   if (prg < 0 || prg >= NumOfShaders)
     prg = 0;
   prg = shd[prg].ProgId;

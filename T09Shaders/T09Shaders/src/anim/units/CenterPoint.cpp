@@ -7,7 +7,7 @@ CenterPoint::CenterPoint( render *Rnd, camera *c )
   cam = c;
   rnd = Rnd;
   int W = 10, H = 10;
-  float R = 0.01;
+  float R = 0.1;
   grid g(W, H);
 
   g.CreateSphere(R);
@@ -16,11 +16,12 @@ CenterPoint::CenterPoint( render *Rnd, camera *c )
   SetMaterial();
 
   Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,0,0)));
+  //Prim.SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3(0,0,0)));
 }
 
 void CenterPoint::Draw( dlgl::matr MatrVP )
 {
-  Prim.Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd, cam);
+  Prim.Draw(PolygonMode, GL_TRIANGLE_STRIP, MatrVP, rnd, cam);
 }
 
 

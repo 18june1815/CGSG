@@ -14,9 +14,12 @@ Helic::Helic( render *R, camera *c )
   cam = c;
 
   Prim.MtlNo = 0;
-  Prims.Load("bin/models/Mi28.obj");
+  //Prims.Load("bin/models/Mi28.obj");
 
-  dlgl::vec3 centr = dlgl::vec3(0, 0, 0.7);
+  Prims.rnd = rnd;
+  Prims.cam = cam;
+  Prims.LoadG3DM("bin/models/Mi28.g3dm");
+  dlgl::vec3 centr = dlgl::vec3(0, 0, 0.7);   
   Prims.SetWorldTransormation(dlgl::matr::Translate(centr));
   Prims.SetBB();
   Prims.SetWorldTransormation(Scale);
@@ -26,6 +29,7 @@ Helic::Helic( render *R, camera *c )
   cam->At = Pos;
   cam->Loc = dlgl::vec3{0.0, 0.2, -0.5};
   SetMaterial();
+  
 }
 
 Helic::Helic( render *R, camera *c, u_mounts *m ) : Helic::Helic(R,c)
@@ -45,7 +49,7 @@ void Helic::Draw( dlgl::matr MatrVP  )
 {
   for (int i = 0; i < Prims.NofElements; i++)
   {
-    Prims.primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
+    Prims.primitives[i]->Draw(PolygonMode, GL_TRIANGLES, MatrVP, rnd, cam);
   }
 }
 
@@ -114,8 +118,8 @@ void Helic::Response( void )
   Pos += dPos;
   cam->At = Pos;
   cam->Up = {0, 1, 0};
-  Collisions();
 
+  Collisions();
 }
 
 void Helic::Keyboard( BYTE Keys[256] )
@@ -153,10 +157,13 @@ void Helic::Keyboard( BYTE Keys[256] )
   
   if (Keys['P'] && !rnd->T.IsPause)
   {
-    float a = Dir.Angle(dlgl::vec3(0,0,1));
+    float az = Dir.Angle(dlgl::vec3(0,0,1)),
+          ax = Dir.Angle(dlgl::vec3(1,0,0));
+    
+    Sign = cos(az) * sin(az);
     cam->At = Pos;
-    cam->Loc = dlgl::vec3{0.0, 0.2, -0.5};
-    cam->Loc = dlgl::matr::RotateY(Sign * a).PointTransform(cam->Loc); 
+    cam->Loc -= Pos;
+    cam->Loc = dlgl::matr::RotateY(Sign * az).PointTransform(cam->Loc); 
     cam->Loc += Pos;
     cam->Up = {0, 1, 0};
   }

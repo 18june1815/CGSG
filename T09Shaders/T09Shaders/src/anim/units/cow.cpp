@@ -31,7 +31,7 @@ void cow::SetMaterial( void )
 
 void cow::Draw( dlgl::matr MatrVP  ) 
 {
-  Prim.Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
+  Prim.Draw(PolygonMode, GL_TRIANGLES, MatrVP, rnd, cam);
 
 }
 

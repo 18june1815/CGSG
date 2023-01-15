@@ -29,7 +29,7 @@ namespace mth
     {
     public: 
       type X, Y;
-      vec2( void )
+      vec2( void ): X(0), Y(0)
       {
       }
 
@@ -60,7 +60,7 @@ namespace mth
     {
     public:
       type X, Y, Z, W;
-      vec4( void )
+      vec4( void ): X(0), Y(0), Z(0), W(0)
       {
       }
 
@@ -75,9 +75,8 @@ namespace mth
     public:
       type X, Y, Z;
 
-      vec3( void )
+      vec3( void ): X(0), Y(0), Z(0)
       {
-        X = 0; Y = 0; Z = 0;
       }
 
       vec3( type x, type y, type z ) : X(x), Y(y), Z(z)

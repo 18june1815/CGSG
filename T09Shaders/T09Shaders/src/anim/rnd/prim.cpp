@@ -28,38 +28,30 @@ void prim::Delete( void )
 
 void prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
 {
-  dlgl::vec3 L(0.5, 1, 1);
-  L = L.Normalize();
-
-  for (int i = 0; i < NoofV; i++)
+  
+  if (V != NULL)
   {
-    float nl = (V[i].N & L);
+    glGenVertexArrays(1, &VA);
+    glGenBuffers(1, &VBuf);
+    
+    glBindVertexArray(VA);
+    glBindBuffer(GL_ARRAY_BUFFER, VBuf);
 
-    V[i].C = dlgl::vec4(nl * 0.1 + V[i].N.X, nl * 0.3 + V[i].N.Y, nl * 0.60 + V[i].N.Z, 0);
-    V[i].C = dlgl::vec4(nl * 0.3 + 0.5, nl * 0.3 +0.2, nl * 0.60 + 0.3, 0);
-    //V[i].C = dlgl::vec4(V[i].N.X, V[i].N.Y, V[i].N.Z, 0);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex) * NoofV, V, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, FALSE, sizeof(vertex), (VOID *)0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, FALSE, sizeof(vertex), (VOID *)sizeof(dlgl::vec3));
+    glVertexAttribPointer(2, 3, GL_FLOAT, FALSE, sizeof(vertex), 
+                          (VOID *)(sizeof(dlgl::vec3) + sizeof(dlgl::vec2)));
+    glVertexAttribPointer(3, 4, GL_FLOAT, FALSE, sizeof(vertex), 
+                          (VOID *)(sizeof(dlgl::vec3) * 2 + sizeof(dlgl::vec2)));
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+    glBindVertexArray(0);
   }
-     
-  glGenBuffers(1, &VBuf);
-  glGenVertexArrays(1, &VA);
-
-  glBindVertexArray(VA);
-  glBindBuffer(GL_ARRAY_BUFFER, VBuf);
-
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertex) * NoofV, V, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, FALSE, sizeof(vertex), (VOID *)0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, FALSE, sizeof(vertex), (VOID *)sizeof(dlgl::vec3));
-  glVertexAttribPointer(2, 3, GL_FLOAT, FALSE, sizeof(vertex), 
-                        (VOID *)(sizeof(dlgl::vec3) + sizeof(dlgl::vec2)));
-  glVertexAttribPointer(3, 4, GL_FLOAT, FALSE, sizeof(vertex), 
-                        (VOID *)(sizeof(dlgl::vec3) * 2 + sizeof(dlgl::vec2)));
-
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
-  glEnableVertexAttribArray(2);
-  glEnableVertexAttribArray(3);
-  glBindVertexArray(0);
-
+  
   if (NoofI != 0)
   {
     glGenBuffers(1, &IBuf);
@@ -94,7 +86,7 @@ void prim::Autonormals( vertex *V, int NoofV, int *Ind, int NoofI )
     V[i].N = (V[i].N).Normalize();
 }
 
-void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, render *rnd, camera *cam ) 
+void prim::Draw(int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, render *rnd, camera *cam ) 
 {
   int loc, ProgId;
   
@@ -107,7 +99,7 @@ void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, re
      
   // Pass render uniforms
   ProgId = rnd->resources.ApplyMaterial(MtlNo, rnd->T.Time);  
-   if ((loc = glGetUniformLocation(rnd->resources.shd[0].ProgId, "Time")) != -1)
+   if ((loc = glGetUniformLocation(ProgId, "Time")) != -1)
     glUniform1f(loc, rnd->T.Time);
   if ((loc = glGetUniformLocation(ProgId, "MatrWVP")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, wvp.M[0]);
@@ -117,17 +109,29 @@ void prim::Draw( int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, re
     glUniformMatrix4fv(loc, 1, FALSE, winv.M[0]);
   if ((loc = glGetUniformLocation(ProgId, "CamLoc")) != -1)
     glUniform3fv(loc, 1, &cam->Loc.X); 
+  if ((loc = glGetUniformLocation(ProgId, "CamRight")) != -1)
+    glUniform3fv(loc, 1, &cam->Right.X); 
+  if ((loc = glGetUniformLocation(ProgId, "CamUp")) != -1)
+    glUniform3fv(loc, 1, &cam->Up.X); 
+  if ((loc = glGetUniformLocation(ProgId, "CamDir")) != -1)
+    glUniform3fv(loc, 1, &cam->Dir.X); 
+  if ((loc = glGetUniformLocation(ProgId, "FrameW")) != -1)
+    glUniform1f(loc, rnd->FrameW);
+  if ((loc = glGetUniformLocation(ProgId, "FrameH")) != -1)
+    glUniform1f(loc, rnd->FrameH);
+  if ((loc = glGetUniformLocation(ProgId, "ProjDist")) != -1)
+    glUniform1f(loc, rnd->ProjDist);
   
     
   // Draw triangles
   glPolygonMode(GL_FRONT_AND_BACK, PolygonMode);
   
-  glUseProgram(rnd->resources.shd[0].ProgId);
+  glUseProgram(ProgId);
 
   glBindVertexArray(VA);
 
   if(IBuf == 0)
-    glDrawArrays(GL_TRIANGLES, 0, NumOfElements);
+    glDrawArrays(GL_POINTS, 0, NumOfElements);
   else
   {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBuf);
@@ -146,13 +150,11 @@ void prim::SetWorldTransormation( const dlgl::matr &MW )
 
 void prim::EvalBB( vertex *V, int NoofV )
 {
-int i;
-
-  if (V == 0 && NumOfElements == 0)
+  if (V == NULL && NumOfElements == 0)
     return;
   MinBB = MaxBB = V[0].P;
 
-  for (i = 0; i < NoofV; i++)
+  for (int i = 0; i < NoofV; i++)
   {
     if (MinBB.X > V[i].P.X)
       MinBB.X = V[i].P.X;
@@ -234,7 +236,7 @@ bool prim::Load( const char *FileName )
     if (Buf[0] == 'v' && Buf[1] == ' ')
     {
       double x, y ,z;
-      sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
+      (void)sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
       V.push_back({dlgl::vec3(x, y, z), {0, 0}, {0, 0, 0}, {1, 1, 1, 1}});
     }
  
@@ -247,7 +249,7 @@ bool prim::Load( const char *FileName )
       {
         if (isspace((UCHAR)oldc) && !isspace((UCHAR)*S))
         {
-          sscanf(S, "%d", &nc);
+          (void)sscanf(S, "%d", &nc);
 
           if (n == 0)
             n0 = nc;
@@ -304,7 +306,7 @@ bool prim::Load( const char *FileName, int lineStart, int lineStop, int sum )
     if (Buf[0] == 'v' && Buf[1] == ' ')
     {
       double x, y ,z;
-      sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
+      (void)sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
       V.push_back({dlgl::vec3(x, y, z), {0, 0}, {0, 0, 0}, {1, 1, 1, 1}});
       NumOfV++;
     }
@@ -426,9 +428,6 @@ bool prim::LoadNew( const char *FileName )
         t = {nv, nt, nn};
         if (Vmap.find(t) == Vmap.end() )
         {
-          if (nv > v.size() || nt > vt.size() || nn > vn.size())
-            int a = 5;
-
           V.push_back({v[nv], vt[nt], vn[nn], {1, 1, 1, 1}});
           Vmap[t] = (nc = ++ni); 
 

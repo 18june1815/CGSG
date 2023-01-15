@@ -59,6 +59,7 @@ public:
   {
     strncpy(Name, ShaderFileNamePrefix, STR_MAX - 1);
     ProgId = 0;
+    ProgId = Load();
   }
 
   std::string LoadTextFromFile( const char *FileName );
@@ -85,6 +86,7 @@ public:
 
   int AddImg( std::string Name, int W, int H, int C, BYTE *Bits );
   void AddTexture( material *Mtl, std::string TexName, const char *TexFile );
+  int AddTextureFromFile( material *Mtl, std::string TexName, const char *FileName );
   int FindTexture( std::string name );
 
   int AddMaterial( material *Mtl );

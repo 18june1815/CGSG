@@ -41,7 +41,8 @@ int shader::Load( void )
   } shd[] =
   {
     {"vert", GL_VERTEX_SHADER},
-    {"frag", GL_FRAGMENT_SHADER}
+    {"frag", GL_FRAGMENT_SHADER},
+    {"geom", GL_GEOMETRY_SHADER}
   };
   int i, prg = 0, resources, Ns = sizeof(shd) / sizeof(shd[0]);
   bool is_ok = true;
@@ -54,6 +55,8 @@ int shader::Load( void )
     std::string txt = LoadTextFromFile(Buf);
     if (txt.length() == 0)
     {
+      if (i >= 2)
+        continue;
       sprintf(ErrText, "Error load file");
       Log(shd[i].Name, ErrText);
       is_ok = false;

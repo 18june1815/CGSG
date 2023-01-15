@@ -1,6 +1,6 @@
 #include "camera.h"
 
-camera::camera ( render *R, input *I ): Loc(dlgl::vec3(20, 1, 2)), At(dlgl::vec3(0,1,0)), Up(dlgl::vec3(0,1,0)),
+camera::camera ( render *R, input *I ): Loc(dlgl::vec3(20, 1, 2)), At(dlgl::vec3(0,0,0)), Up(dlgl::vec3(0,1,0)),
                   MatrWorld(dlgl::matr::Identity())
 {
   LastMousePos[0] = 0; //Last X mouse position 
@@ -14,10 +14,17 @@ camera::camera ( render *R, input *I ): Loc(dlgl::vec3(20, 1, 2)), At(dlgl::vec3
 
 void camera::Draw( dlgl::matr &MatrView, dlgl::matr &MatrVP, dlgl::matr &MatrProj ) 
 {
+  Up = dlgl::vec3{0, 1, 0};
   MatrView = dlgl::matr::View(Loc, At, Up);
   MatrView = MatrView * MatrWorld;
   MatrVP = MatrView * MatrProj;
+  Dir   = dlgl::vec3(MatrView.M[0][2], MatrView.M[1][2], MatrView.M[2][2]);
 }                   
+
+void camera::SetDir( void )
+{
+
+}
 
 void camera::SetWorldTransormation( const dlgl::matr &MW )
 {
@@ -37,7 +44,7 @@ void camera::Control( void )
 
   rnd->MatrVP = MatrWorld * rnd->MatrView * rnd->MatrProj;
 
-  if (Inp->Keys[VK_CONTROL] != 0)
+  if (Inp->Keys[VK_CONTROL] != 0 && rnd->T.IsPause)
   {
 
     Dist = !(At - Loc);
@@ -86,8 +93,8 @@ void camera::Control( void )
       dlgl::vec3 dv = Right * sx + Up * sy;
       At = At + dv;
       Loc = Loc + dv;
-  
     }
+
     dlgl::matr W = dlgl::matr::RotateZ(Elevator) *
                    dlgl::matr::RotateY(90 - Azimuth) *
                    dlgl::matr::Translate(At);

@@ -4,16 +4,22 @@
 void anim::SetScene( void )
 {
   
+  *this << new new_sky(rnd, cam);  
   m = new u_mounts(rnd, cam);
   *this << m;
-  *this << new Toyota(rnd, cam);
-  *this << new globe(rnd, cam);
+  //*this << new Toyota(rnd, cam);
+ // *this << new globe(rnd, cam);
   
-  *this << new CenterPoint(rnd, cam);
+  
+  *this << new cessna(rnd, cam);
   *this << new Helic(rnd, cam, m);
-  *this << new cow(rnd, cam);
+  //*this << new cow(rnd, cam);
+    
+  //*this << new sky(rnd, cam);
+  *this << new snow(rnd, cam);
+  *this << new smoke(rnd, cam);
+ // *this << new CenterPoint(rnd, cam);
  
-  *this << new sky(rnd, cam);
 }
 
 anim::~anim( void )
@@ -65,9 +71,7 @@ void anim::Draw( void )
   rnd->Start();
 
   cam->Draw(rnd->MatrView, rnd->MatrVP, rnd->MatrProj);
-  
-  if (rnd->T.IsPause)
-    cam->Control();
+  cam->Control();
 
   for (int i = 0; i < NumOfObjects; i++)
     Objects[i]->Draw(rnd->MatrVP);
@@ -88,10 +92,20 @@ void anim::Keyboard( bool IsDown )
 
   for (int i = 0; i < NumOfObjects; i++)
   {
-    bool a = Objects[i]->name == "Helic";
       if (Objects[i]->name == "Helic")
         Objects[i]->Keyboard(Input->Keys);
   }  
+
+  if (Input->Keys['W'] != 0 && IsDown)
+  {
+    for (int i = 0; i < NumOfObjects; i++)
+    {
+      if (Objects[i]->PolygonMode == GL_FILL)
+        Objects[i]->PolygonMode = GL_LINE;
+      else if (Objects[i]->PolygonMode == GL_LINE)
+        Objects[i]->PolygonMode = GL_FILL;
+    }
+  }
 }
  
 

@@ -6,12 +6,15 @@
 #include "anim/rnd/prims.h"
 #include "anim/rnd/camera.h"
 
+#define MAX_FLAKES 300
 class object
 {
 public:
   render *rnd;  
   camera *cam;
   std::string name;
+  int PolygonMode = GL_FILL;
+
   virtual void Draw( dlgl::matr MatrVP )
   {
   } /* End of 'Render' function */
@@ -100,6 +103,20 @@ public:
 };
 
 
+
+class cessna : public object
+{
+public:
+  prim Prim;
+  prims Prims;
+  cessna ( render *R, camera *cam );  
+  bool Load( const char *FileName ); 
+  void SetMaterial( void );
+  void Draw( dlgl::matr MatrVP  ) override;
+  int SetTexture( void );
+  void Delete( void ) override;
+};
+
 class Helic : public object
 {
 public:
@@ -155,5 +172,33 @@ public:
   void Draw( dlgl::matr MatrVP  ) override;
 };
 
+class snow: public object
+{
+public:
+  prim Prim;
+  vertex Flakes[MAX_FLAKES];
+
+  snow( render *R, camera *cam );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Response( void ) override;
+};
+
+class smoke: public object
+{
+public:
+  prim Prim;
+
+  smoke( render *R, camera *cam );
+  void Draw( dlgl::matr MatrVP  ) override;
+};
+
+class new_sky: public object
+{
+public:
+  prim Prim;
+
+  new_sky( render *R, camera *cam );
+  void Draw( dlgl::matr MatrVP  ) override;
+};
 
 #endif /* __UNITS_H_ */

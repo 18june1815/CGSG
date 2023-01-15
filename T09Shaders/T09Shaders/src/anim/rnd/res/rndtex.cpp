@@ -57,6 +57,7 @@ void resources::AddTexture( material *Mtl, std::string TexName, const char *TexF
       BITMAP bm;
       GetObject(hBm, sizeof(bm), &bm);
 
+
       BYTE *mem = (BYTE *)bm.bmBits;
       TexNo = AddImg(TexName, bm.bmWidth, bm.bmHeight, 3, mem);
       DeleteObject(hBm);
@@ -67,6 +68,61 @@ void resources::AddTexture( material *Mtl, std::string TexName, const char *TexF
 }
 
 
+int resources::AddTextureFromFile( material *Mtl, std::string TexName, const char *FileName)
+{
+  int res = -1;
+  HBITMAP hBm;  
+
+  res = FindTexture(TexName); 
+  if (res == -1)
+  {
+    //Load texture
+    hBm = (HBITMAP)LoadImage(NULL, FileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+    if(hBm != NULL)
+    { 
+      // Load texture from BMP
+      BITMAP bm;
+      GetObject(hBm, sizeof(bm), &bm);
+      res = AddImg(TexName, bm.bmWidth, bm.bmHeight, bm.bmBitsPixel / 8, (BYTE *)bm.bmBits);
+
+      DeleteObject(hBm);
+    }
+    else
+    {
+      // Load texture from G24/G32
+      FILE *F;
+
+      if ((F = fopen(FileName, "rb")) != NULL)
+      {
+        int W = 0, H = 0, flen, C = 0;
+        BYTE *mem;
+
+        fread(&W, 2, 1, F);
+        fread(&H, 2, 1, F);
+        fseek(F, 0, SEEK_END);
+        flen = ftell(F);
+        rewind(F);
+        if (flen == 4 + W * H * 3)
+          C = 3;
+        else if (flen == 4 + W * H * 4)
+          C = 4;
+        if (flen == 4 + W * H)
+          C = 1;
+        mem = new BYTE[W * H * C];
+        if (C != 0)
+        {
+          fread(mem, C, W * H, F);
+          res = AddImg(TexName, W, H, C, mem);
+
+          delete[] mem;
+        }
+        fclose(F);
+      }
+    }
+  }
+  
+  return res;
+}
 
 int resources::FindTexture( std::string name )
 {

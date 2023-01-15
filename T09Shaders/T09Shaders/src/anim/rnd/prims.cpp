@@ -212,41 +212,19 @@ bool prims::LoadG3DM( const char *FileName )
     C = *(DWORD *)ptr;
     ptr += 4;
 
-    int TexNo = rnd->resources.AddImg(Name, W, H, C, ptr);
+    (void)rnd->resources.AddImg(Name, W, H, C, ptr);
     
     ptr += W * H * C;
   } 
   
   return true;
 }
-
+  
 
 
 void prims::Draw( dlgl::matr MatrVP )
 {
   glEnable(GL_CULL_FACE);
-
-  //Draw all transparent primitives
-  for (int i = 0; i < NofElements; i++)
-  {
-    int MtlNo = primitives[i]->MtlNo;
- 
-    material *mtl = &(rnd->resources.mtl[MtlNo]);
-    
-    if (mtl->Trans != 1)
-      primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
-  }
-
-  // Draw all front-face-culling 
-  glCullFace(GL_FRONT);
-  for (int i = 0; i < NofElements; i++)
-  {
-    int MtlNo = primitives[i]->MtlNo;
-    material *mtl = &(rnd->resources.mtl[MtlNo]);
-    
-    if (mtl->Trans == 1)
-      primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
-  }
 
   // Draw all back-face-culling 
   glCullFace(GL_BACK);
@@ -258,19 +236,41 @@ void prims::Draw( dlgl::matr MatrVP )
     if (mtl->Trans == 1)
       primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
   }
-  
+
+    // Draw all front-face-culling 
+  glCullFace(GL_FRONT);
+  for (int i = 0; i < NofElements; i++)
+  {
+    int MtlNo = primitives[i]->MtlNo;
+    material *mtl = &(rnd->resources.mtl[MtlNo]);
+    
+    if (mtl->Trans == 1)
+      primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
+  }
+         
   glDisable(GL_CULL_FACE);
+  
+  //Draw all transparent primitives
+  for (int i = 0; i < NofElements; i++)
+  {
+    int MtlNo = primitives[i]->MtlNo;
+ 
+    material *mtl = &(rnd->resources.mtl[MtlNo]);
+    
+    if (mtl->Trans != 1)
+      primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
+  }
+ 
 }
+
 
 
 void prims::EvalBB( vertex *V, int NoofV )
 {
-int i;
-
-  if (V == 0 && NoofV == 0)
+  if (V == NULL && NoofV == 0)
     return;
 
-  for (i = 0; i < NoofV; i++)
+  for (int i = 0; i < NoofV; i++)
   {
     if (MinBB.X > V[i].P.X)
       MinBB.X = V[i].P.X;
