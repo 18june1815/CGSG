@@ -24,7 +24,7 @@ cessna::cessna( render *R, camera *c )
 
   Prims.SetWorldTransormation(dlgl::matr::RotateX(90));
   Prims.SetWorldTransormation(dlgl::matr::RotateY(-45));
-  Prims.SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3{2, 2, 2}));
+  Prims.SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3{0.4, 0.4, 0.4}));
   Prims.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3{0, -3, -5}));
 }
 

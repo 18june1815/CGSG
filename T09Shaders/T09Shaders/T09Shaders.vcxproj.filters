@@ -171,5 +171,8 @@
     <ClCompile Include="src\anim\units\Cessna.cpp">
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
+    <ClCompile Include="src\anim\units\CollisionFire.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

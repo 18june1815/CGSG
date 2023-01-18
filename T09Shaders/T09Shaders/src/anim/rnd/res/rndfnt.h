@@ -7,28 +7,35 @@
 #include "../prim.h"
 #include "../grid.h"
 
-#if 0
-struct fontStruct
+
+struct fontStruct 
 {
   DWORD LineH, BaseH;
   float AdvanceX[256];
 };
+
 class font 
 {
 public:
-  static fontStruct Fnt;
-  static prim FntChars[256];
-  static int FntMtlNo;
+  fontStruct Fnt;
+  int FntMtlNo;
   prim *primitives[256];
+  render *rnd;  
+  camera *cam;
 
-  font( void )
+  font( render *R, camera *c )
   {
-    Load("bin/fonts/book.g3df");
+    rnd = R;
+    cam = c;
+    Load("bin/fonts/Book.g3df");
   }
-  ~font ( void )
-  {
+  void Delete( void )
+  { 
     for (int i = 0; i < 256; i++)
-      FntChars[i].Delete();
+    {
+      primitives[i]->Delete();  
+      delete[] primitives[i];
+    }
   }
 
   bool Load( const char *FileName )
@@ -42,29 +49,30 @@ public:
       dlgl::vec4 C; //Char endpoint color (not used)
     } Chars[256][4];
 
-    material mtl;
-    //std::fstream F(FileName, std::ios::in | std::ios::binary);
-    //if (!F)
-    //  return false;
 
-  
-    //F.read((char *)Sign, 4);
-      FILE *F;
+    FILE *F;
+    if ((F = fopen(FileName, "rb")) == NULL)
+      return false;
+    fread(&Sign, 4, 1, F);
+ 
     if (Sign != *(DWORD *)"G3DF")
       return false;
     fread(&Fnt, sizeof(fontStruct), 1, F);
     fread(Chars, sizeof(Chars), 1, F);
     fread(&W, 4, 1, F);
     fread(&H, 4, 1, F);
+    //F.read(&Fnt, )
     
-    float *tex = new float(W * H * 4);     //?
+    tex = new DWORD[W * H * 4];     
     fread(tex, 4, W * H, F);
 
+    material mtl;
     mtl = material::DefMaterial();
     mtl.Name = FileName;
-    mtl.Tex[0] = rnd->resources.AddImg(FileName, W, H, 4, tex);
-    free(tex);
-    mtl.ShdNo = rnd->resources.AddShader("font");
+    mtl.Ka = dlgl::vec3(0, 0, 1);
+    mtl.Tex[0] = rnd->resources.AddImg(FileName, W, H, 4, (BYTE*)tex);
+    delete[] tex;
+    mtl.ShdNo = rnd->resources.AddShader("font") - 1;
 
     FntMtlNo = rnd->resources.AddMaterial(&mtl);
 
@@ -77,19 +85,25 @@ public:
         v[k].N = dlgl::vec3(0, 0, 1), v[k].C = dlgl::vec4(1, 1, 1, 1); 
 
       primitives[i] = new prim();
-      grid g(W, H);
-      g.PrimFromGrid(*primitives[i]);
+      //grid g(10, 10);
+      //g.PrimFromGrid(*primitives[i]);
+      int Ind[4] = {0, 1, 2, 3};
+      primitives[i]->Create(v, 4, Ind, 4);
   
-      primitives[i]->MtlNo = FntMtlNo;
+      primitives[i]->MtlNo = FntMtlNo - 1;
   
     }
     return true;
   }
   
-  void Draw( char *Str, dlgl::vec3 Pos, float Size )
+  void Draw( char *Str, dlgl::vec3 Pos, float Size, int PolygonMode )
   {
     dlgl::vec3 p = Pos;
 
+    dlgl::matr
+      Proj = dlgl::matr::Frustum(-10, 10, -10, 10, -1, 1),
+      View = dlgl::matr::Identity(),
+      MatrVP = View * Proj;
     while (*Str != 0)
     {
       if (*Str == '\n')
@@ -97,8 +111,11 @@ public:
       else
         if (Fnt.AdvanceX[(UCHAR)*Str] != 0)
         {
-          FntChars[(UCHAR)*Str].Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd, cam);
-
+          primitives[(UCHAR)*Str]->Draw(GL_FILL, GL_TRIANGLE_STRIP, MatrVP, rnd, cam);
+          dlgl::matr 
+            M = dlgl::matr::Scale({Size, Size, 1}) * dlgl::matr::Translate(Pos);
+          primitives[(UCHAR)*Str]->MatrWorld = M;
+          Pos.X += Fnt.AdvanceX[(UCHAR)*Str] * Size;
         }
       Str++;
 
@@ -106,6 +123,6 @@ public:
   }
 };
 
-#endif
+
 
 #endif /* __RNDFNT_H_ */

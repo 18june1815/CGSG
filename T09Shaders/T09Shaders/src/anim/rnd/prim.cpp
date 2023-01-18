@@ -121,7 +121,52 @@ void prim::Draw(int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, ren
     glUniform1f(loc, rnd->FrameH);
   if ((loc = glGetUniformLocation(ProgId, "ProjDist")) != -1)
     glUniform1f(loc, rnd->ProjDist);
+  if ((loc = glGetUniformLocation(ProgId, "ProjDist")) != -1)
+    glUniform1f(loc, rnd->ProjDist);
+
+    
+  // Draw triangles
+  glPolygonMode(GL_FRONT_AND_BACK, PolygonMode);
   
+  glUseProgram(ProgId);
+
+  glBindVertexArray(VA);
+
+  if(IBuf == 0)
+    glDrawArrays(GL_POINTS, 0, NumOfElements);
+  else
+  {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBuf);
+    glDrawElements(ElementsMode, NumOfElements, GL_UNSIGNED_INT, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  }
+  glBindVertexArray(0);
+  glUseProgram(0);
+} // end of Draw function
+
+/*
+void prim::Draw(int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, render *rnd) 
+{
+  int loc, ProgId;
+  
+  dlgl::matr 
+    wvp = MatrWorld * MatrVP,
+    w = MatrWorld,
+    winv = w.Inverse();
+
+  glLoadMatrixf(wvp.M[0]);
+     
+  // Pass render uniforms
+  ProgId = rnd->resources.ApplyMaterial(MtlNo, rnd->T.Time);  
+   if ((loc = glGetUniformLocation(ProgId, "Time")) != -1)
+    glUniform1f(loc, rnd->T.Time);
+  if ((loc = glGetUniformLocation(ProgId, "MatrWVP")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, wvp.M[0]);
+  if ((loc = glGetUniformLocation(ProgId, "MatrW")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, w.M[0]);
+  if ((loc = glGetUniformLocation(ProgId, "MatrWInv")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, winv.M[0]);
+
     
   // Draw triangles
   glPolygonMode(GL_FRONT_AND_BACK, PolygonMode);
@@ -146,7 +191,7 @@ void prim::SetWorldTransormation( const dlgl::matr &MW )
 {
   MatrWorld = MatrWorld * MW;
 }
-
+  */
 
 void prim::EvalBB( vertex *V, int NoofV )
 {

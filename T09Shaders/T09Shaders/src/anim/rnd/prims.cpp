@@ -213,7 +213,7 @@ bool prims::LoadG3DM( const char *FileName )
     ptr += 4;
 
     (void)rnd->resources.AddImg(Name, W, H, C, ptr);
-    
+                  \
     ptr += W * H * C;
   } 
   

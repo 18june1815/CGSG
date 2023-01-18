@@ -78,7 +78,7 @@ void Helic::BladesRotationX( void )
 
 void Helic::Response( void )
 {
-
+  //CollisionPoint = dlgl::vec3(0, 0, 0);
   float dt = rnd->T.DeltaTime;
   float a = Dir.Angle(OldDir);
 
@@ -157,8 +157,7 @@ void Helic::Keyboard( BYTE Keys[256] )
   
   if (Keys['P'] && !rnd->T.IsPause)
   {
-    float az = Dir.Angle(dlgl::vec3(0,0,1)),
-          ax = Dir.Angle(dlgl::vec3(1,0,0));
+    float az = Dir.Angle(dlgl::vec3(0,0,1));
     
     Sign = cos(az) * sin(az);
     cam->At = Pos;
@@ -200,6 +199,8 @@ void Helic::Collisions( void )
     Speed = 0;
     Pos.Y = Hf + 0.1;
     cam->Loc.Y = Pos.Y + 0.2;
+    IsCollision = 1;
+    CollisionPoint = Pos;
   }
   if (Posb.Y - Prims.MaxBB.Y < Hb)
   {
@@ -207,5 +208,15 @@ void Helic::Collisions( void )
     Speed = 0;
     Pos.Y = Hb + 0.1;
     cam->Loc.Y = Pos.Y + 0.2;
+    IsCollision = 1;
+    CollisionPoint = Pos;
   }
+
+
+}
+
+void Helic::GetCollision( int isCollision, dlgl::vec3 collisionPoint)
+{
+  isCollision = IsCollision;
+  collisionPoint = CollisionPoint;
 }

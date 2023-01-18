@@ -4,7 +4,9 @@
 void anim::SetScene( void )
 {
   
-  *this << new new_sky(rnd, cam);  
+  Fnt = new font(rnd, cam);
+  *this << new CenterPoint(rnd, cam);
+ /* *this << new new_sky(rnd, cam);  
   m = new u_mounts(rnd, cam);
   *this << m;
   //*this << new Toyota(rnd, cam);
@@ -12,27 +14,34 @@ void anim::SetScene( void )
   
   
   *this << new cessna(rnd, cam);
-  *this << new Helic(rnd, cam, m);
+ //*this << new Helic(rnd, cam, m);
+  Hel = new Helic(rnd, cam, m);
+  *this << Hel;
   //*this << new cow(rnd, cam);
     
   //*this << new sky(rnd, cam);
   *this << new snow(rnd, cam);
-  *this << new smoke(rnd, cam);
- // *this << new CenterPoint(rnd, cam);
+  //*this << new smoke(rnd, cam);
+  *this << new CollisionFire(rnd, cam);  
  
+   */
 }
 
 anim::~anim( void )
 { 
   for (int i = 0; i < NumOfObjects; i++)
   {
-    if (Objects[i]->name != "Mounts")
-    {
-      Objects[i]->Delete();
+    Objects[i]->Delete();
+
+    if (Objects[i]->name != "Mounts" && Objects[i]->name != "Helic")
       delete Objects[i];
-    }
   }
+  Fnt->Delete();
+  delete Fnt;
+
+  delete Hel;
   delete m;
+ 
   
   rnd->Close();
   delete rnd;
@@ -63,15 +72,41 @@ void anim::CopyFrame( void )
 
 void anim::Draw( void )
 {
+
   if (!rnd->T.IsPause)
   {
+    if (FindObject("Helic") != -1)
+    {
+      IsCollision = Hel->IsCollision;
+      CollisionPoint = Hel->CollisionPoint;
+      int FireN =  FindObject("CollisionFire");
+      if (FireN != -1)
+      {
+        CollisionFire *Fire = static_cast<CollisionFire*>(Objects[FireN]);
+    
+        if (IsCollision == 1)
+        {
+          Fire->IsFire = 1;
+          Fire->Loc[0].P = CollisionPoint;
+        }
+        else 
+          Fire->IsFire = 0;
+      }
+    }
+    
+    
     for (int i = 0; i < NumOfObjects; i++)
       Objects[i]->Response();
   } 
   rnd->Start();
 
+
   cam->Draw(rnd->MatrView, rnd->MatrVP, rnd->MatrProj);
   cam->Control();
+
+  char buf_font[300];
+  sprintf(buf_font, "TEST");
+  Fnt->Draw(buf_font, dlgl::vec3(0, 0, 0), 1, PolygonMode);
 
   for (int i = 0; i < NumOfObjects; i++)
     Objects[i]->Draw(rnd->MatrVP);
@@ -101,9 +136,17 @@ void anim::Keyboard( bool IsDown )
     for (int i = 0; i < NumOfObjects; i++)
     {
       if (Objects[i]->PolygonMode == GL_FILL)
-        Objects[i]->PolygonMode = GL_LINE;
+      {
+          Objects[i]->PolygonMode = GL_LINE;
+          PolygonMode = GL_LINE;
+      }
+      
       else if (Objects[i]->PolygonMode == GL_LINE)
-        Objects[i]->PolygonMode = GL_FILL;
+      {
+          Objects[i]->PolygonMode = GL_FILL;
+          PolygonMode = GL_FILL;
+      }
+      
     }
   }
 }
@@ -121,6 +164,16 @@ void anim::MouseMove( void )
 
 
 
+int anim::FindObject( std::string name )
+{
+  for (int i = 0; i < NumOfObjects; i++)
+  {
+    if (Objects[i]->name == name)
+    return i;
+  } 
+  return -1;
+
+}
 anim & anim::operator<<( object *Obj )
 {
   if (NumOfObjects < MaxNumOfObjects)

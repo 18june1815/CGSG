@@ -7,6 +7,8 @@
 #include "anim/rnd/camera.h"
 
 #define MAX_FLAKES 300
+#define MAX_FIRE 5
+
 class object
 {
 public:
@@ -126,12 +128,13 @@ public:
     dPos{0., 0., 0.},
     Angle{0, 0, 0},
     dAngle{0, 0, 0},
+    CollisionPoint{0, 0, 0},
 
     Dir{0., 0., 1.},
     OldDir{0., 0., 1.};
 
   dlgl::matr Scale = dlgl::matr::Scale(Sc);
-  int Sign = 1;
+  int Sign = 1, IsCollision = 0;
   float 
     CourseSpeed = 0, Speed = 0, xAngle = 0;
 
@@ -150,6 +153,7 @@ public:
   void BladesRotationX( void );
   void BladesRotationY( void );
   void Collisions( void );
+  void GetCollision( int isCollision, dlgl::vec3 collisionPoint);
 };
 
 
@@ -199,6 +203,19 @@ public:
 
   new_sky( render *R, camera *cam );
   void Draw( dlgl::matr MatrVP  ) override;
+};
+
+class CollisionFire: public object
+{
+public:
+  prim Prim;
+  vertex Loc[1];
+  int dTime;
+  int IsFire = 0;
+
+  CollisionFire( render *R, camera *cam );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Response( void ) override;
 };
 
 #endif /* __UNITS_H_ */

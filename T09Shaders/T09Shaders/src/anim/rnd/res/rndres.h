@@ -81,6 +81,7 @@ public:
   material mtl[MAX_MATERIALS] {};
   int NumOfMaterials = 0;
 
+
   int AddShader( const char *ShaderFileNamePrefix);
   void UpdateShader( void );
 
@@ -93,7 +94,8 @@ public:
   int ApplyMaterial( int MtlNo, UINT64 Time );
   int FindMaterial( std::string name );
   
-  
+  void PrintText()
+
   void Init( void );
   void Close( void ); 
 };
