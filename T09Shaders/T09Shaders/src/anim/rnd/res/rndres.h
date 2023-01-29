@@ -4,6 +4,7 @@
 #include "def.h"
 #include <string>
 
+
 #define STR_MAX 300
 #define MAX_SHADERS 300
 #define MAX_TEXTURES 300
@@ -69,6 +70,7 @@ public:
 };
 
 
+
 class resources
 {
 public:
@@ -80,7 +82,6 @@ public:
 
   material mtl[MAX_MATERIALS] {};
   int NumOfMaterials = 0;
-
 
   int AddShader( const char *ShaderFileNamePrefix);
   void UpdateShader( void );
@@ -94,7 +95,8 @@ public:
   int ApplyMaterial( int MtlNo, UINT64 Time );
   int FindMaterial( std::string name );
   
-  void PrintText()
+  bool LoadFont( const char *FileName );
+  void PrintText( char *Str, dlgl::vec3 Pos, float Size, UINT64 Time );
 
   void Init( void );
   void Close( void ); 

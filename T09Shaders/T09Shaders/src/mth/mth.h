@@ -318,6 +318,14 @@ namespace mth
                     -Loc & Right, -Loc & Up, Loc & Dir, 1);
       }
 
+      static matr Ortho( double Left, double Right, double Bottom, double Top, double Near, double Far )
+      {
+        return matr(      2 / (Right - Left),                                0,                                0,  0,
+                                           0,               2 / (Top - Bottom),                                0,  0,
+                                           0,                                0,                -2 / (Far - Near),  0,
+            -(Right + Left) / (Right - Left), -(Top + Bottom) / (Top - Bottom),     -(Near + Far) / (Far - Near),  1);
+      }
+
       static matr Frustum( double Left, double Right, double Bottom, double Top, double Near, double Far )
       {
         return matr(      2 * Near / (Right - Left),                               0,                               0,  0,

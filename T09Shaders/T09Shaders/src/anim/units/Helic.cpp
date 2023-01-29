@@ -78,12 +78,8 @@ void Helic::BladesRotationX( void )
 
 void Helic::Response( void )
 {
-  //CollisionPoint = dlgl::vec3(0, 0, 0);
   float dt = rnd->T.DeltaTime;
   float a = Dir.Angle(OldDir);
-
-  //cam->At = Pos;
-  //cam->Loc = dlgl::vec3{0.0, 0.2, -0.5};
 
   dPos.X = (Dir * Speed).X;
   dPos.Z = (Dir * Speed).Z;
@@ -202,7 +198,7 @@ void Helic::Collisions( void )
     IsCollision = 1;
     CollisionPoint = Pos;
   }
-  if (Posb.Y - Prims.MaxBB.Y < Hb)
+  else if (Posb.Y - Prims.MaxBB.Y < Hb)
   {
     dPos.Y = 0;
     Speed = 0;
@@ -211,7 +207,8 @@ void Helic::Collisions( void )
     IsCollision = 1;
     CollisionPoint = Pos;
   }
-
+  else if ((Posf.Y - Prims.MaxBB.Y > Hf + 0.15) && (Posb.Y - Prims.MaxBB.Y > Hb + 0.15))
+    IsCollision = 0;
 
 }
 

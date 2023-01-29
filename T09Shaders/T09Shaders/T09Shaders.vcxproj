@@ -166,6 +166,7 @@
     <ClCompile Include="src\anim\rnd\grid.cpp" />
     <ClCompile Include="src\anim\rnd\prim.cpp" />
     <ClCompile Include="src\anim\rnd\prims.cpp" />
+    <ClCompile Include="src\anim\rnd\res\rndfnt.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndmtl.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndres.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndshd.cpp" />

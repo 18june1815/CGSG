@@ -3,10 +3,9 @@
 
 void anim::SetScene( void )
 {
-  
   Fnt = new font(rnd, cam);
-  *this << new CenterPoint(rnd, cam);
- /* *this << new new_sky(rnd, cam);  
+  //*this << new CenterPoint(rnd, cam);
+  *this << new new_sky(rnd, cam);  
   m = new u_mounts(rnd, cam);
   *this << m;
   //*this << new Toyota(rnd, cam);
@@ -24,11 +23,14 @@ void anim::SetScene( void )
   //*this << new smoke(rnd, cam);
   *this << new CollisionFire(rnd, cam);  
  
-   */
+  
 }
 
 anim::~anim( void )
 { 
+  Fnt->Delete();
+  delete Fnt;
+
   for (int i = 0; i < NumOfObjects; i++)
   {
     Objects[i]->Delete();
@@ -36,13 +38,11 @@ anim::~anim( void )
     if (Objects[i]->name != "Mounts" && Objects[i]->name != "Helic")
       delete Objects[i];
   }
-  Fnt->Delete();
-  delete Fnt;
 
   delete Hel;
   delete m;
- 
-  
+
+
   rnd->Close();
   delete rnd;
   delete cam;
@@ -104,17 +104,13 @@ void anim::Draw( void )
   cam->Draw(rnd->MatrView, rnd->MatrVP, rnd->MatrProj);
   cam->Control();
 
-  char buf_font[300];
-  sprintf(buf_font, "TEST");
-  Fnt->Draw(buf_font, dlgl::vec3(0, 0, 0), 1, PolygonMode);
+  char buf[300];
+  sprintf(buf, "T08OpenGL, FPS: %.5f", rnd->T.FPS);
+  Fnt->Draw(buf, dlgl::vec3(-rnd->FrameW / 2 + 10, rnd->FrameH / 2 - 20, 0), 20, GL_FILL);
+  SetWindowText(rnd->hWnd, buf);
 
   for (int i = 0; i < NumOfObjects; i++)
     Objects[i]->Draw(rnd->MatrVP);
-      
-  static char buf[100];
-  sprintf(buf, "T08OpenGL, FPS: %.5f", rnd->T.FPS);
-  SetWindowText(rnd->hWnd, buf);
-  
 }
 
 

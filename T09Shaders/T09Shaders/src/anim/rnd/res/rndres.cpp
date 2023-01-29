@@ -12,6 +12,8 @@ void resources::Init( void )
   material m;
   m = m.DefMaterial(); 
   NumOfMaterials = AddMaterial(&m);
+
+//  LoadFont("bin/fonts/Book.g3df");
 }
 
 void resources::Close( void )
@@ -19,6 +21,8 @@ void resources::Close( void )
   
   for (int i = 0; i < NumOfShaders; i++)
     shd[i].Delete();
+
+  //Fnt.Delete();
 }
 
 int resources::AddShader( const char *ShaderFileNamePrefix)

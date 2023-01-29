@@ -7,7 +7,7 @@
 #include "anim/rnd/camera.h"
 
 #define MAX_FLAKES 300
-#define MAX_FIRE 5
+#define MAX_FIRE 3
 
 class object
 {
@@ -209,7 +209,7 @@ class CollisionFire: public object
 {
 public:
   prim Prim;
-  vertex Loc[1];
+  vertex Loc[MAX_FIRE];
   int dTime;
   int IsFire = 0;
 
