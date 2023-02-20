@@ -22,6 +22,7 @@ public:
     VA, VBuf, //Vertex array and vertex bubber number
     IBuf;     //Index buffer number
   int NumOfElements, //Number of elements (indexes or vertexes)
+      NumOfPatchPoints, //Number of patch points for tesselation
       NumOfV; // Number of vertexes
 
   int MtlNo = 0;  //Material number in material array
@@ -31,6 +32,9 @@ public:
   const char *FileName; //File name to Load prim
 
   dlgl::vec3 MinBB, MaxBB, center; // Bound box
+
+  int ShdAddonI[5];
+  float ShdAddonF[5];
 
 
   prim( void ) :

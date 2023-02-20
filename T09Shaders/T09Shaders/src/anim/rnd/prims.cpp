@@ -75,6 +75,12 @@ void prims::SetWorldTransormation( const dlgl::matr &MW )
   MatrWorld = MatrWorld * MW;
 }
 
+void prims::SetMatrWorld( const dlgl::matr &MW )
+{
+  for (int i = 0; i < NofElements; i++)
+    primitives[i]->MatrWorld = MW;
+
+}
 bool prims::LoadG3DM( const char *FileName )
 {
   int flen;
@@ -159,6 +165,7 @@ bool prims::LoadG3DM( const char *FileName )
     }
 
     primitives[p] = new prim();
+    primitives[p]->EvalBB(V.data(), V.size());
     primitives[p]->Create(V.data(), V.size(), Ind.data(), Ind.size());
     primitives[p]->MtlNo = MtlNo;
     EvalBB(V.data(), V.size());
@@ -213,7 +220,7 @@ bool prims::LoadG3DM( const char *FileName )
     ptr += 4;
 
     (void)rnd->resources.AddImg(Name, W, H, C, ptr);
-                  \
+                  
     ptr += W * H * C;
   } 
   
@@ -228,18 +235,19 @@ void prims::Draw( dlgl::matr MatrVP )
 
   // Draw all back-face-culling 
   glCullFace(GL_BACK);
-  for (int i = 0; i < NofElements; i++)
+  for (int i = 66; i < 79; i++)
   {
     int MtlNo = primitives[i]->MtlNo;
     material *mtl = &(rnd->resources.mtl[MtlNo]);
     
-    if (mtl->Trans == 1)
+    if (mtl->Tex[0] != -1)
       primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
   }
 
+  
     // Draw all front-face-culling 
   glCullFace(GL_FRONT);
-  for (int i = 0; i < NofElements; i++)
+ for (int i = 0; i < NofElements; i++)
   {
     int MtlNo = primitives[i]->MtlNo;
     material *mtl = &(rnd->resources.mtl[MtlNo]);
@@ -247,9 +255,9 @@ void prims::Draw( dlgl::matr MatrVP )
     if (mtl->Trans == 1)
       primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
   }
-         
+ 
   glDisable(GL_CULL_FACE);
-  
+           /*
   //Draw all transparent primitives
   for (int i = 0; i < NofElements; i++)
   {
@@ -260,7 +268,7 @@ void prims::Draw( dlgl::matr MatrVP )
     if (mtl->Trans != 1)
       primitives[i]->Draw(GL_FILL, GL_TRIANGLES, MatrVP, rnd, cam);
   }
- 
+    */
 }
 
 

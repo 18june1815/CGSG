@@ -1,6 +1,6 @@
 #include "camera.h"
 
-camera::camera ( render *R, input *I ): Loc(dlgl::vec3(20, 1, 2)), At(dlgl::vec3(0,0,0)), Up(dlgl::vec3(0,1,0)),
+camera::camera ( render *R, input *I ): Loc(dlgl::vec3(20, 10, 2)), At(dlgl::vec3(0,0,0)), Up(dlgl::vec3(0,1,0)),
                   MatrWorld(dlgl::matr::Identity())
 {
   LastMousePos[0] = 0; //Last X mouse position 

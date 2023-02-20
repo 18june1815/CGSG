@@ -42,7 +42,9 @@ int shader::Load( void )
   {
     {"vert", GL_VERTEX_SHADER},
     {"frag", GL_FRAGMENT_SHADER},
-    {"geom", GL_GEOMETRY_SHADER}
+    {"geom", GL_GEOMETRY_SHADER},
+    {"ctrl", GL_TESS_CONTROL_SHADER},
+    {"eval", GL_TESS_EVALUATION_SHADER},
   };
   int i, prg = 0, resources, Ns = sizeof(shd) / sizeof(shd[0]);
   bool is_ok = true;

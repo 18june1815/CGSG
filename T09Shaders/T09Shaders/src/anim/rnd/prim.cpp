@@ -29,7 +29,7 @@ void prim::Delete( void )
 void prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
 {
   
-  if (V != NULL)
+  if (V != NULL && NoofV != 0)
   {
     glGenVertexArrays(1, &VA);
     glGenBuffers(1, &VBuf);
@@ -50,20 +50,23 @@ void prim::Create( vertex *V, int NoofV, int *Ind, int NoofI )
     glEnableVertexAttribArray(2);
     glEnableVertexAttribArray(3);
     glBindVertexArray(0);
-  }
+
   
-  if (NoofI != 0)
-  {
-    glGenBuffers(1, &IBuf);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBuf);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * NoofI, Ind, GL_STATIC_DRAW);
-    NumOfElements = NoofI;
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    if (NoofI != 0)
+    {
+      glGenBuffers(1, &IBuf);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBuf);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * NoofI, Ind, GL_STATIC_DRAW);
+      NumOfElements = NoofI;
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+    else
+      NumOfElements = NoofV;
   }
   else
-    NumOfElements = NoofV;
+      NumOfElements = NoofV;
 
-  MatrWorld = dlgl::matr::Identity();          
+  MatrWorld = dlgl::matr::Identity();
 } // end of 'Create' function
 
 void prim::Autonormals( vertex *V, int NoofV, int *Ind, int NoofI )
@@ -124,16 +127,34 @@ void prim::Draw(int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, ren
   if ((loc = glGetUniformLocation(ProgId, "ProjDist")) != -1)
     glUniform1f(loc, rnd->ProjDist);
 
+  for (int i = 0; i < sizeof(ShdAddonI) / sizeof(ShdAddonI[0]); i++)
+  {
+    char Name[12] = "AddonInt0";
+    Name[8] = i + '0';
+    if ((loc = glGetUniformLocation(ProgId, Name)) != -1)
+      glUniform1i(loc, ShdAddonI[i]);
+  }
+  for (int i = 0; i < sizeof(ShdAddonF) / sizeof(ShdAddonF[0]); i++)
+  {
+    char Name[12] = "AddonFlt0";
+    Name[8] = i + '0';
+    if ((loc = glGetUniformLocation(ProgId, Name)) != -1)
+      glUniform1f(loc, ShdAddonF[i]);
+  }
     
+  if (ElementsMode == GL_PATCHES)
+    glPatchParameteri(GL_PATCH_VERTICES, NumOfPatchPoints);
+
   // Draw triangles
-  glPolygonMode(GL_FRONT_AND_BACK, PolygonMode);
+  //glPolygonMode(GL_FRONT_AND_BACK, PolygonMode);
   
-  glUseProgram(ProgId);
+  //glUseProgram(ProgId);
 
   glBindVertexArray(VA);
 
   if(IBuf == 0)
-    glDrawArrays(GL_POINTS, 0, NumOfElements);
+    //glDrawArrays(GL_POINTS, 0, NumOfElements);
+    glDrawArrays(ElementsMode, 0, NumOfElements);
   else
   {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBuf);
@@ -141,7 +162,7 @@ void prim::Draw(int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, ren
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
   glBindVertexArray(0);
-  glUseProgram(0);
+  //glUseProgram(0);
 } // end of Draw function
 
 
@@ -175,7 +196,7 @@ void prim::EvalBB( vertex *V, int NoofV )
       MaxBB.Z = V[i].P.Z;
   }
    
-  center = (MaxBB + MinBB) / 2; 
+  center = (MaxBB + MinBB) / 2.; 
 }
 
 void prim::SetBB( vertex *V, int NoofV )

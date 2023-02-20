@@ -37,6 +37,7 @@ public:
   bool Load( const char *FileName );
   void Delete( void );
   void SetWorldTransormation( const dlgl::matr &MW );
+  void SetMatrWorld( const dlgl::matr &MW );
   bool LoadG3DM( const char *FileName );
   void Draw( dlgl::matr MatrVP );
   void SetBB( void );

@@ -8,6 +8,7 @@
 
 #define MAX_FLAKES 300
 #define MAX_FIRE 3
+#define MAX_TREES 3
 
 class object
 {
@@ -25,7 +26,7 @@ public:
   {
   } /* End of 'Response' function */
 
-  virtual void Keyboard( BYTE Keys[256] )
+  virtual void Keyboard( BYTE Keys[256], int IsDown )
   {
   } /* End of 'Keyboard' function */
 
@@ -73,7 +74,7 @@ public:
   void Draw( dlgl::matr MatrVP  ) override;
   void Response( void ) override;
   void Delete( void ) override;
-  void ToPicCoors( dlgl::vec3 P, float &H );
+  float GetHeight( dlgl::vec3 P);
 };
 
 // Objects from .obj files
@@ -96,12 +97,25 @@ class Toyota : public object
 public:
   prim Prim;
   prims Prims;
-  Toyota ( render *R, camera *cam );  
+  u_mounts *Mounts;
+  dlgl::vec3 Pos{0, 0, 0}, Dir, OldDir, R;
+  dlgl::matr Initial, Mcur = dlgl::matr::Identity();
+  float Speed = 0, Angle = 0;
+  float BL, BW; // base length, base width
+  float dA;
+  int Sign = 1;
+    dlgl::vec3 WheelCurPos[4], WheelCentr[4], CurPos;
+  int IsRotation = 0;
+  
+
+  Toyota ( render *R, camera *cam, u_mounts *m );  
   bool Load( const char *FileName ); 
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
   int SetTexture( void );
   void Delete( void ) override;
+  void Response( void ) override;
+  void Keyboard( BYTE Keys[256], int IsDown ) override;
 };
 
 
@@ -148,7 +162,7 @@ public:
   void SetMaterial( void );
   void Draw( dlgl::matr MatrVP  ) override;
   void Response( void ) override;
-  void Keyboard( BYTE Keys[256] ) override;
+  void Keyboard( BYTE Keys[256], int IsDown ) override;
   void Delete( void ) override;
   void BladesRotationX( void );
   void BladesRotationY( void );
@@ -217,5 +231,46 @@ public:
   void Draw( dlgl::matr MatrVP  ) override;
   void Response( void ) override;
 };
+
+
+class grass: public object
+{
+public:
+  prim Prim;
+  
+  grass( render *R, camera *cam );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Response( void ) override;
+
+};
+
+class tess: public object
+{
+public:
+  prim Prim;
+  
+  tess( render *R, camera *cam );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Response( void ) override;
+};
+
+class trees : public object
+{
+public:
+  prim Prim;
+  prims Prims;
+  dlgl::vec3
+    pos[MAX_TREES],
+    scale[MAX_TREES];
+
+  u_mounts *Mounts;
+  trees ( render *R, camera *cam, u_mounts *mounts );  
+  bool Load( const char *FileName ); 
+  void SetMaterial( void );
+  void Draw( dlgl::matr MatrVP  ) override;
+  int SetTexture( void );
+  void Delete( void ) override;
+};
+
 
 #endif /* __UNITS_H_ */

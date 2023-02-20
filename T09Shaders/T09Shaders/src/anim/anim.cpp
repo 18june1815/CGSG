@@ -3,33 +3,36 @@
 
 void anim::SetScene( void )
 {
-  Fnt = new font(rnd, cam);
-  //*this << new CenterPoint(rnd, cam);
-  *this << new new_sky(rnd, cam);  
+  //Fnt = new font(rnd, cam);
+  *this << new CenterPoint(rnd, cam);
+  
+  //*this << new new_sky(rnd, cam);  
   m = new u_mounts(rnd, cam);
   *this << m;
-  //*this << new Toyota(rnd, cam);
+ // *this << new trees(rnd, cam, m);
+  *this << new Toyota(rnd, cam, m);
  // *this << new globe(rnd, cam);
   
   
-  *this << new cessna(rnd, cam);
+ // *this << new cessna(rnd, cam);
  //*this << new Helic(rnd, cam, m);
-  Hel = new Helic(rnd, cam, m);
-  *this << Hel;
+ // Hel = new Helic(rnd, cam, m);
+ // *this << Hel;
   //*this << new cow(rnd, cam);
     
   //*this << new sky(rnd, cam);
-  *this << new snow(rnd, cam);
+  //*this << new snow(rnd, cam);
   //*this << new smoke(rnd, cam);
-  *this << new CollisionFire(rnd, cam);  
+ // *this << new CollisionFire(rnd, cam);  
  
-  
+  //*this << new grass(rnd, cam);
+  *this << new tess(rnd, cam);
 }
 
 anim::~anim( void )
 { 
-  Fnt->Delete();
-  delete Fnt;
+  //Fnt->Delete();
+  //delete Fnt;
 
   for (int i = 0; i < NumOfObjects; i++)
   {
@@ -104,10 +107,10 @@ void anim::Draw( void )
   cam->Draw(rnd->MatrView, rnd->MatrVP, rnd->MatrProj);
   cam->Control();
 
-  char buf[300];
-  sprintf(buf, "T08OpenGL, FPS: %.5f", rnd->T.FPS);
-  Fnt->Draw(buf, dlgl::vec3(-rnd->FrameW / 2 + 10, rnd->FrameH / 2 - 20, 0), 20, GL_FILL);
-  SetWindowText(rnd->hWnd, buf);
+  //char buf[300];
+  //sprintf(buf, "T08OpenGL, FPS: %.5f", rnd->T.FPS);
+  //Fnt->Draw(buf, dlgl::vec3(-rnd->FrameW / 2 + 10, rnd->FrameH / 2 - 20, 0), 20, GL_FILL);
+  //SetWindowText(rnd->hWnd, buf);
 
   for (int i = 0; i < NumOfObjects; i++)
     Objects[i]->Draw(rnd->MatrVP);
@@ -123,8 +126,8 @@ void anim::Keyboard( bool IsDown )
 
   for (int i = 0; i < NumOfObjects; i++)
   {
-      if (Objects[i]->name == "Helic")
-        Objects[i]->Keyboard(Input->Keys);
+      if (Objects[i]->name == "Helic" || Objects[i]->name == "Toyota")
+        Objects[i]->Keyboard(Input->Keys, IsDown);
   }  
 
   if (Input->Keys['W'] != 0 && IsDown)

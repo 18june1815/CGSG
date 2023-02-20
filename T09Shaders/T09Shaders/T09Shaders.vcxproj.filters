@@ -177,5 +177,14 @@
     <ClCompile Include="src\anim\rnd\res\rndfnt.cpp">
       <Filter>Source Files\anim\rnd\res</Filter>
     </ClCompile>
+    <ClCompile Include="src\anim\units\Grass.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\Trees.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\tess.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -118,7 +118,7 @@ void Helic::Response( void )
   Collisions();
 }
 
-void Helic::Keyboard( BYTE Keys[256] )
+void Helic::Keyboard( BYTE Keys[256], int IsDown )
 {
   
   if (! rnd->T.IsPause)
@@ -186,8 +186,8 @@ void Helic::Collisions( void )
     Posb = Pos + Dir * Prims.MinBB.Z * 1.2;
 
   
-  Mounts->ToPicCoors(Posf, Hf);
-  Mounts->ToPicCoors(Posb, Hb);
+  Hf = Mounts->GetHeight(Posf);
+  Hb = Mounts->GetHeight(Posb);
 
   if (Posf.Y - Prims.MaxBB.Y < Hf)
   {
