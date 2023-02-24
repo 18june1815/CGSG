@@ -49,27 +49,24 @@ void Toyota::Response( void )
   int wheelN[4] = {66, 70, 74, 78};    
 
   int i = 0;
-
   for (int N : wheelN)
   {
-      WheelCentr[i] = {Prims.primitives[N]->center.X, 0, -Prims.primitives[N]->center.Y};
-      dlgl::matr M;
-      M = Initial.Inverse() * Prims.primitives[N]->MatrWorld;
-      WheelCurPos[i] = M.PointTransform(WheelCentr[i]);
-      i++;
+    WheelCentr[i] = {Prims.primitives[N]->center.X, 0, -Prims.primitives[N]->center.Y};
+    dlgl::matr M;
+    M = Initial.Inverse() * Prims.primitives[N]->MatrWorld;
+    WheelCurPos[i] = M.PointTransform(WheelCentr[i]);
+    i++;
   }
 
   float Rlen = 0;
   if (Angle != 0)
   {
-      if (Angle > 60) Angle = 60;
-      Rlen = Sign * 3.8; // BL / std::sqrt(2 * (1 - cos(Angle)));
-  //    Sign = Angle / abs(Angle);
-      if (IsRotation == 0)
-        Angle = -Angle;
+    if (Angle > 60) Angle = 60;
+    Rlen = Sign * 3.8; 
+    if (IsRotation == 0)
+      Angle = -Angle;
   }
   
-
   float aZ = Dir.Angle({0, 0, 1});
   float aX = Dir.Angle({1, 0, 0});
   float a = aZ;
@@ -79,46 +76,38 @@ void Toyota::Response( void )
   dlgl::matr 
     RotateSpeed = dlgl::matr::RotateY((a + Sign * dA) * Speed),
     Rotate90 = dlgl::matr::RotateY(90);
-
   dA = 0;
 
   dlgl::vec3 BackWheelv = WheelCurPos[2] - WheelCurPos[3];
   dlgl::vec3 BackWheelv1 = Rotate90.VecTransform(Dir);
+  Rlen = 0;
   R = dlgl::vec3(Rlen, 0, 0) - WheelCentr[3];
-  //R = BackWheelv1 * Rlen - WheelCentr[3];
  
   float ac = Dir.Angle(BackWheelv);
-  Pos = Dir * Speed;
+  Pos += Dir * Speed;
   dlgl::vec3 dPos = Dir * Speed;
   i = 0;
   
+
+  Prims.SetMatrWorld(Initial);
+
+
+  Prims.SetWorldTransormation(dlgl::matr::Translate(R));
+  Prims.SetWorldTransormation(RotateSpeed);
+  Prims.SetWorldTransormation(dlgl::matr::Translate(-R));    
+ 
+    
+  Prims.SetWorldTransormation(dlgl::matr::Translate({Pos.X, 0,Pos.Z}));
+  //Prims.SetWorldTransormation(Mcur);
+  Mcur = Initial.Inverse() * Prims.MatrWorld;
+
+  i = 0;
   for (int N : wheelN)
   {
-    Prims.primitives[N]->MatrWorld = Initial;
-
-    if (IsRotation == 1)
-    {
-      Prims.primitives[N]->SetWorldTransormation(dlgl::matr::Translate(R));
-      Prims.primitives[N]->SetWorldTransormation(RotateSpeed);
-      Prims.primitives[N]->SetWorldTransormation(dlgl::matr::Translate(-R));    
-    }
-    
-    //Pos = Prims.primitives[N]->MatrWorld.PointTransform({0, 0, 0}) + dPos;
-  
-    Prims.primitives[N]->SetWorldTransormation(dlgl::matr::Translate({Pos.X, 0,Pos.Z}));
-    Prims.primitives[N]->SetWorldTransormation(Mcur);
-    if ( N == 78 ) Mcur = Initial.Inverse() *  Prims.primitives[N]->MatrWorld;
-
-    dlgl:: matr M = Initial.Inverse() * Prims.primitives[N]->MatrWorld; 
-    WheelCurPos[i] = M.PointTransform(WheelCentr[i]);
-
-    //Prims.primitives[N]->SetWorldTransormation(dlgl::matr::Translate({Pos.X, 0,Pos.Z}));
+    WheelCurPos[i] = Mcur.PointTransform(WheelCentr[i]);
     Prims.primitives[N]->SetWorldTransormation(dlgl::matr::Translate({0, Mounts->GetHeight(WheelCurPos[i]),0}));
     i++;
   }
-  
- 
-  
 }
 /*
 void Toyota::Response( void )

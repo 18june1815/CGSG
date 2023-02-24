@@ -79,8 +79,9 @@ void prims::SetMatrWorld( const dlgl::matr &MW )
 {
   for (int i = 0; i < NofElements; i++)
     primitives[i]->MatrWorld = MW;
-
+  MatrWorld = MW;
 }
+
 bool prims::LoadG3DM( const char *FileName )
 {
   int flen;
