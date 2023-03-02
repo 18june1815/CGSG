@@ -106,6 +106,8 @@ void prim::Draw(int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, ren
     glUniform1f(loc, rnd->T.Time);
   if ((loc = glGetUniformLocation(ProgId, "MatrWVP")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, wvp.M[0]);
+  if ((loc = glGetUniformLocation(ProgId, "ShadowMatr")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, rnd->ShadowMatr.M[0]);
   if ((loc = glGetUniformLocation(ProgId, "MatrW")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, w.M[0]);
   if ((loc = glGetUniformLocation(ProgId, "MatrWInv")) != -1)

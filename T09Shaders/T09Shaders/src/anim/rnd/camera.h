@@ -26,6 +26,7 @@ public:
   void SetWorldTransormation( const dlgl::matr &MW );
   void Control( void );
   void SetDir( void );
+  void Set( dlgl::vec3 loc, dlgl::vec3 at);
 };
 
 #endif /* __CAMERA_H_*/

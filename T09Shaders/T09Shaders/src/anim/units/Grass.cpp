@@ -1,6 +1,5 @@
 #include "Units.h"
 
-
 grass::grass( render *R, camera *c )
 {
   name = "grass";
@@ -31,4 +30,4 @@ void grass::Response( void )
 
   //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertex) * MAX_FLAKES, Flakes);
   //glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
+}                          

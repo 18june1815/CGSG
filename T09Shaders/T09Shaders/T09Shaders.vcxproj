@@ -175,11 +175,14 @@
     <ClCompile Include="src\anim\units\CenterPoint.cpp" />
     <ClCompile Include="src\anim\units\Cessna.cpp" />
     <ClCompile Include="src\anim\units\CollisionFire.cpp" />
+    <ClCompile Include="src\anim\units\Debug.cpp" />
     <ClCompile Include="src\anim\units\Globe.cpp" />
     <ClCompile Include="src\anim\units\Grass.cpp" />
     <ClCompile Include="src\anim\units\Helic.cpp" />
     <ClCompile Include="src\anim\units\cow.cpp" />
     <ClCompile Include="src\anim\units\new_sky.cpp" />
+    <ClCompile Include="src\anim\units\Shadow.cpp" />
+    <ClCompile Include="src\anim\units\shadow_test.cpp" />
     <ClCompile Include="src\anim\units\sky.cpp" />
     <ClCompile Include="src\anim\units\smoke.cpp" />
     <ClCompile Include="src\anim\units\snow.cpp" />

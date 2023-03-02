@@ -89,6 +89,7 @@ public:
   int AddImg( std::string Name, int W, int H, int C, BYTE *Bits );
   void AddTexture( material *Mtl, std::string TexName, const char *TexFile );
   int AddTextureFromFile( material *Mtl, std::string TexName, const char *FileName );
+  int TexAddFmt( std::string Name, int W, int H, int GLType);
   int FindTexture( std::string name );
 
   int AddMaterial( material *Mtl );

@@ -15,7 +15,7 @@ CenterPoint::CenterPoint( render *Rnd, camera *c )
   g.PrimFromGrid(Prim);
   SetMaterial();
 
-  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,7,0)));
+  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0,0,0)));
   //Prim.SetWorldTransormation(dlgl::matr::Scale(dlgl::vec3(0,0,0)));
 }
 

@@ -55,6 +55,7 @@ void u_mounts::SetMaterial( void )
 {
   material m = material::GetLibMaterial("Mounts");
   rnd->resources.AddTexture(&m, "Mounts", "bin/textures/hftex.bmp");
+  m.Tex[1] = rnd->resources.FindTexture("ShadowMap");
   Prim.MtlNo = rnd->resources.AddMaterial(&m) - 1;
 }
 

@@ -12,6 +12,7 @@ camera::camera ( render *R, input *I ): Loc(dlgl::vec3(20, 10, 2)), At(dlgl::vec
   Inp = I;
 }
 
+
 void camera::Draw( dlgl::matr &MatrView, dlgl::matr &MatrVP, dlgl::matr &MatrProj ) 
 {
   Up = dlgl::vec3{0, 1, 0};
@@ -19,7 +20,8 @@ void camera::Draw( dlgl::matr &MatrView, dlgl::matr &MatrVP, dlgl::matr &MatrPro
   MatrView = MatrView * MatrWorld;
   MatrVP = MatrView * MatrProj;
   Dir   = dlgl::vec3(MatrView.M[0][2], MatrView.M[1][2], MatrView.M[2][2]);
-}                   
+}    
+
 
 void camera::SetDir( void )
 {

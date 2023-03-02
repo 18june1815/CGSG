@@ -186,5 +186,14 @@
     <ClCompile Include="src\anim\units\tess.cpp">
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
+    <ClCompile Include="src\anim\units\Shadow.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\shadow_test.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\Debug.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

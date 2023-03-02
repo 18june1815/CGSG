@@ -9,6 +9,7 @@
 #include "rnd/res/rndfnt.h"
 
 
+
 class anim
 {
 public:
@@ -21,6 +22,7 @@ public:
   Helic *Hel;
   camera *cam;
   font *Fnt;
+  shadow_test *shadow;
 
   input *Input; 
 

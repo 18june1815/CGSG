@@ -80,6 +80,7 @@ void render::Init( HWND hWnd )
 
   // Set MatrVP
   MatrVP = dlgl::matr::Identity();
+  ShadowMatr = dlgl::matr::Identity();
   ProjSet();
 
   SetTimer(hWnd, 30, 2, NULL);
@@ -136,6 +137,23 @@ void render::ProjSet( void )
     ry *= (double)FrameH / FrameW;
   
   MatrProj = dlgl::matr::Frustum(-rx / 2, rx / 2, -ry / 2, ry / 2,
+                                  ProjDist, ProjFarClip);
+  MatrVP = MatrView * MatrProj;
+}
+
+
+void render::ProjSetOrtho( void )
+{
+  double rx, ry;
+  rx = ry = ProjSize;
+  
+  /* Correct aspect ratio */
+  if (FrameW > FrameH)
+    rx *= (double)FrameW / FrameH;
+  else
+    ry *= (double)FrameH / FrameW;
+  
+  MatrProj = dlgl::matr::Ortho(-rx / 2, rx / 2, -ry / 2, ry / 2,
                                   ProjDist, ProjFarClip);
   MatrVP = MatrView * MatrProj;
 }

@@ -28,7 +28,8 @@ public:
   dlgl::matr 
     MatrView,  // View coordinate system matrix
     MatrProj,  // Projection coordinate system matrix
-    MatrVP; 
+    MatrVP,
+    ShadowMatr; 
 
   double 
     ProjSize = 0.1,
@@ -51,6 +52,7 @@ public:
   void Resize ( int W, int H );
   void CopyFrame( void );
   void ProjSet( void );
+  void ProjSetOrtho( void );
  
 };
 

@@ -273,4 +273,39 @@ public:
 };
 
 
+class Shadow: public object
+{
+public:
+  prim Prim;
+  GLuint FBO;
+  Shadow( render *R, camera *cam );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Delete( void ) override;
+};
+
+
+class shadow_test: public object
+{
+public:
+  prim Prim;
+  GLuint FBO;
+  std::vector<object *> Objects; 
+  shadow_test( render *R, camera *cam,  std::vector<object *> Objects );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Response( dlgl::matr MatrVP );
+  void Delete( void ) override;
+
+};
+
+
+class debug: public object
+{
+public:
+  prim Prim;
+  
+  debug( render *R, camera *cam );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Response( void ) override;
+
+};
 #endif /* __UNITS_H_ */

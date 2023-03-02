@@ -42,6 +42,27 @@ int resources::AddImg( std::string Name, int W, int H, int C, BYTE *Bits)
 }
 
 
+int resources::TexAddFmt( std::string Name, int W, int H, int GLType)
+{
+  if (NumOfTextures > MAX_TEXTURES)
+    return -1;
+
+  tex[NumOfTextures].Name = Name;
+  tex[NumOfTextures].W = W;
+  tex[NumOfTextures].H = H;
+
+  glGenTextures(1, &(tex[NumOfTextures].TexId));
+  glBindTexture(GL_TEXTURE_2D, tex[NumOfTextures].TexId);
+  glTexStorage2D(GL_TEXTURE_2D, 1, GLType, W, H);
+  
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  return NumOfTextures++;
+}
+
 void resources::AddTexture( material *Mtl, std::string TexName, const char *TexFile )
 {
   HBITMAP hBm;  
@@ -123,6 +144,8 @@ int resources::AddTextureFromFile( material *Mtl, std::string TexName, const cha
   
   return res;
 }
+
+
 
 int resources::FindTexture( std::string name )
 {

@@ -11,6 +11,7 @@ void anim::SetScene( void )
   *this << m;
  // *this << new trees(rnd, cam, m);
   *this << new Toyota(rnd, cam, m);
+
  // *this << new globe(rnd, cam);
   
   
@@ -21,12 +22,16 @@ void anim::SetScene( void )
   //*this << new cow(rnd, cam);
     
   //*this << new sky(rnd, cam);
-  //*this << new snow(rnd, cam);
+ // *this << new snow(rnd, cam);
   //*this << new smoke(rnd, cam);
  // *this << new CollisionFire(rnd, cam);  
  
   //*this << new grass(rnd, cam);
-  *this << new tess(rnd, cam);
+  //*this << new tess(rnd, cam);
+  
+  shadow = new shadow_test(rnd, cam, Objects);
+  *this << new debug(rnd, cam);
+  
 }
 
 anim::~anim( void )
@@ -44,6 +49,7 @@ anim::~anim( void )
 
   delete Hel;
   delete m;
+  delete shadow;
 
 
   rnd->Close();
@@ -101,6 +107,8 @@ void anim::Draw( void )
     for (int i = 0; i < NumOfObjects; i++)
       Objects[i]->Response();
   } 
+
+  shadow->Response(rnd->MatrVP);
   rnd->Start();
 
 
@@ -114,6 +122,8 @@ void anim::Draw( void )
 
   for (int i = 0; i < NumOfObjects; i++)
     Objects[i]->Draw(rnd->MatrVP);
+
+  shadow->Draw(rnd->MatrVP);
 }
 
 
