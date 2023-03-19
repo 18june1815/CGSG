@@ -22,7 +22,7 @@ public:
   Helic *Hel;
   camera *cam;
   font *Fnt;
-  shadow_test *shadow;
+  shadow *Shadow;
 
   input *Input; 
 
@@ -46,5 +46,6 @@ public:
   anim & operator<<( object *Obj );
   void SetScene( void );
   int FindObject( std::string name );
+  object* GetObject( std::string name );
 };
 #endif /* __ANIM_H_ */

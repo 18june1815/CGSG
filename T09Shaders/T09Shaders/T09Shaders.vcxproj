@@ -181,12 +181,12 @@
     <ClCompile Include="src\anim\units\Helic.cpp" />
     <ClCompile Include="src\anim\units\cow.cpp" />
     <ClCompile Include="src\anim\units\new_sky.cpp" />
-    <ClCompile Include="src\anim\units\Shadow.cpp" />
-    <ClCompile Include="src\anim\units\shadow_test.cpp" />
+    <ClCompile Include="src\anim\units\shadow.cpp" />
     <ClCompile Include="src\anim\units\sky.cpp" />
     <ClCompile Include="src\anim\units\smoke.cpp" />
     <ClCompile Include="src\anim\units\snow.cpp" />
     <ClCompile Include="src\anim\units\tess.cpp" />
+    <ClCompile Include="src\anim\units\tess_sphere.cpp" />
     <ClCompile Include="src\anim\units\Toyota.cpp" />
     <ClCompile Include="src\anim\units\Trees.cpp" />
     <ClCompile Include="src\anim\units\u_mounts.cpp" />

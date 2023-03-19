@@ -29,16 +29,11 @@ tess::tess( render *R, camera *c )
 
 void tess::Draw( dlgl::matr MatrVP  ) 
 {
-
   glPointSize(4);
   Prim.Draw(PolygonMode, GL_PATCHES, MatrVP, rnd, cam);
   //Prim.Draw(PolygonMode, GL_POINTS, MatrVP, rnd, cam);
-
 }
 
 void tess::Response( void )
 {
-
-  //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertex) * MAX_FLAKES, Flakes);
-  //glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

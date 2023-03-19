@@ -17,6 +17,7 @@ public:
   camera *cam;
   std::string name;
   int PolygonMode = GL_FILL;
+  bool IsActive = false;
 
   virtual void Draw( dlgl::matr MatrVP )
   {
@@ -98,13 +99,13 @@ public:
   prim Prim;
   prims Prims;
   u_mounts *Mounts;
-  dlgl::vec3 Pos{0, 0, 0}, Dir, OldDir, R;
+  dlgl::vec3 Pos{0, 0, 0}, CurPos = Pos, Dir, OldDir, R;
   dlgl::matr Initial, Mcur = dlgl::matr::Identity();
   float Speed = 0, Angle = 0;
   float BL, BW; // base length, base width
   float dA;
   int Sign = 1;
-    dlgl::vec3 WheelCurPos[4], WheelCentr[4], CurPos;
+  dlgl::vec3 WheelCurPos[4], WheelCentr[4], Centr = {0, 0, 0};
   int IsRotation = 0;
   
 
@@ -143,6 +144,7 @@ public:
     Angle{0, 0, 0},
     dAngle{0, 0, 0},
     CollisionPoint{0, 0, 0},
+    SaveCamLoc, SaveCamAt,
 
     Dir{0., 0., 1.},
     OldDir{0., 0., 1.};
@@ -257,7 +259,6 @@ public:
 class trees : public object
 {
 public:
-  prim Prim;
   prims Prims;
   dlgl::vec3
     pos[MAX_TREES],
@@ -273,24 +274,13 @@ public:
 };
 
 
-class Shadow: public object
-{
-public:
-  prim Prim;
-  GLuint FBO;
-  Shadow( render *R, camera *cam );
-  void Draw( dlgl::matr MatrVP  ) override;
-  void Delete( void ) override;
-};
-
-
-class shadow_test: public object
+class shadow: public object
 {
 public:
   prim Prim;
   GLuint FBO;
   std::vector<object *> Objects; 
-  shadow_test( render *R, camera *cam,  std::vector<object *> Objects );
+  shadow( render *R, camera *cam,  std::vector<object *> Objects );
   void Draw( dlgl::matr MatrVP  ) override;
   void Response( dlgl::matr MatrVP );
   void Delete( void ) override;
@@ -308,4 +298,16 @@ public:
   void Response( void ) override;
 
 };
+
+
+class tess_sphere: public object
+{
+public:
+  prim Prim;
+  
+  tess_sphere( render *R, camera *cam );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Response( void ) override;
+};
+
 #endif /* __UNITS_H_ */

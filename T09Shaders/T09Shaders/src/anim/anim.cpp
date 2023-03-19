@@ -3,22 +3,22 @@
 
 void anim::SetScene( void )
 {
-  //Fnt = new font(rnd, cam);
-  *this << new CenterPoint(rnd, cam);
+ 
+  //*this << new CenterPoint(rnd, cam);
   
   //*this << new new_sky(rnd, cam);  
-  m = new u_mounts(rnd, cam);
-  *this << m;
- // *this << new trees(rnd, cam, m);
-  *this << new Toyota(rnd, cam, m);
-
+  //m = new u_mounts(rnd, cam);
+  //*this << m;
+  //
+  //*this << new Toyota(rnd, cam, m);
+  //*this << new trees(rnd, cam, m);
  // *this << new globe(rnd, cam);
   
   
  // *this << new cessna(rnd, cam);
  //*this << new Helic(rnd, cam, m);
- // Hel = new Helic(rnd, cam, m);
- // *this << Hel;
+  //Hel = new Helic(rnd, cam, m);
+  //*this << Hel;
   //*this << new cow(rnd, cam);
     
   //*this << new sky(rnd, cam);
@@ -29,15 +29,18 @@ void anim::SetScene( void )
   //*this << new grass(rnd, cam);
   //*this << new tess(rnd, cam);
   
-  shadow = new shadow_test(rnd, cam, Objects);
-  *this << new debug(rnd, cam);
+  *this << new tess_sphere(rnd, cam);
+  //Shadow = new shadow(rnd, cam, Objects);
+  //*this << new debug(rnd, cam);
+
+  Fnt = new font(rnd, cam);
   
 }
 
 anim::~anim( void )
 { 
-  //Fnt->Delete();
-  //delete Fnt;
+  Fnt->Delete();
+  delete Fnt;
 
   for (int i = 0; i < NumOfObjects; i++)
   {
@@ -47,9 +50,10 @@ anim::~anim( void )
       delete Objects[i];
   }
 
-  delete Hel;
-  delete m;
-  delete shadow;
+  if (GetObject("Helic") != NULL)
+    delete Hel;
+  //delete m;
+  //delete Shadow;
 
 
   rnd->Close();
@@ -62,7 +66,7 @@ void anim::Init( HWND &hWnd )
 {
   rnd = new render();
   rnd->hWnd = hWnd;
-  rnd->Init(hWnd);                                                                                                
+  rnd->Init(hWnd);
   
   Input = new input();
   cam = new camera(rnd, Input);
@@ -108,22 +112,22 @@ void anim::Draw( void )
       Objects[i]->Response();
   } 
 
-  shadow->Response(rnd->MatrVP);
+  //Shadow->Response(rnd->MatrVP);
   rnd->Start();
 
 
   cam->Draw(rnd->MatrView, rnd->MatrVP, rnd->MatrProj);
   cam->Control();
 
-  //char buf[300];
-  //sprintf(buf, "T08OpenGL, FPS: %.5f", rnd->T.FPS);
-  //Fnt->Draw(buf, dlgl::vec3(-rnd->FrameW / 2 + 10, rnd->FrameH / 2 - 20, 0), 20, GL_FILL);
-  //SetWindowText(rnd->hWnd, buf);
+  char buf[300];
+  sprintf(buf, "T08OpenGL, FPS: %.5f", rnd->T.FPS);
+  Fnt->Draw(buf, dlgl::vec3(-rnd->FrameW / 2 + 10, rnd->FrameH / 2 - 20, 0), 20, GL_FILL);
+  SetWindowText(rnd->hWnd, buf);
 
   for (int i = 0; i < NumOfObjects; i++)
     Objects[i]->Draw(rnd->MatrVP);
 
-  shadow->Draw(rnd->MatrVP);
+  //Shadow->Draw(rnd->MatrVP);
 }
 
 
@@ -134,10 +138,21 @@ void anim::Keyboard( bool IsDown )
   if (Input->Keys['P'] != 0 && IsDown)
     rnd->T.IsPause =! rnd->T.IsPause; 
 
+  if (Input->Keys['C'] != 0 && IsDown)
+  {
+    if (GetObject("Helic") != NULL && GetObject("Toyota") != NULL)
+    {
+      GetObject("Helic")->IsActive = !GetObject("Helic")->IsActive;
+      GetObject("Toyota")->IsActive = !GetObject("Toyota")->IsActive;
+    }
+  }
+
   for (int i = 0; i < NumOfObjects; i++)
   {
-      if (Objects[i]->name == "Helic" || Objects[i]->name == "Toyota")
-        Objects[i]->Keyboard(Input->Keys, IsDown);
+    if (Objects[i]->name == "Helic" && Objects[i]->IsActive)
+      Objects[i]->Keyboard(Input->Keys, IsDown);
+    if (Objects[i]->name == "Toyota" && Objects[i]->IsActive)
+      Objects[i]->Keyboard(Input->Keys, IsDown);
   }  
 
   if (Input->Keys['W'] != 0 && IsDown)
@@ -181,7 +196,16 @@ int anim::FindObject( std::string name )
     return i;
   } 
   return -1;
+}
 
+object* anim::GetObject( std::string name )
+{
+  for (int i = 0; i < NumOfObjects; i++)
+  {
+    if (Objects[i]->name == name)
+    return Objects[i];
+  } 
+  return NULL;
 }
 anim & anim::operator<<( object *Obj )
 {

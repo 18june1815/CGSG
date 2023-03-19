@@ -12,13 +12,14 @@ Helic::Helic( render *R, camera *c )
   name = "Helic";
   rnd = R;
   cam = c;
-
+  IsActive = false;
   Prim.MtlNo = 0;
   //Prims.Load("bin/models/Mi28.obj");
 
   Prims.rnd = rnd;
   Prims.cam = cam;
   Prims.LoadG3DM("bin/models/Mi28.g3dm");
+  //dlgl::vec3 centr = dlgl::vec3(0, 0, 0.7);   
   dlgl::vec3 centr = dlgl::vec3(0, 0, 0.7);   
   Prims.SetWorldTransormation(dlgl::matr::Translate(centr));
   Prims.SetBB();
@@ -26,8 +27,16 @@ Helic::Helic( render *R, camera *c )
   Prims.MinBB = Scale.PointTransform(Prims.MinBB); 
   Prims.MaxBB = Scale.PointTransform(Prims.MaxBB); 
 
-  cam->At = Pos;
-  cam->Loc = dlgl::vec3{0.0, 0.2, -0.5};
+  SaveCamAt = Pos;
+  SaveCamLoc = dlgl::vec3{0.0, 0.2, -0.5};
+
+  Prims.SetWorldTransormation(dlgl::matr::Translate(Pos));
+  if (IsActive)
+  {
+    cam->At = Pos;
+    cam->Loc = dlgl::vec3{0.0, 0.2, -0.5};
+  }
+ 
   SetMaterial();
   
 }
@@ -78,44 +87,50 @@ void Helic::BladesRotationX( void )
 
 void Helic::Response( void )
 {
-  float dt = rnd->T.DeltaTime;
-  float a = Dir.Angle(OldDir);
+  if (IsActive)
+  {
+    float dt = rnd->T.DeltaTime;
+    float a = Dir.Angle(OldDir);
 
-  dPos.X = (Dir * Speed).X;
-  dPos.Z = (Dir * Speed).Z;
-  OldDir = Dir;
+    dPos.X = (Dir * Speed).X;
+    dPos.Z = (Dir * Speed).Z;
+    OldDir = Dir;
   
-  Angle.Y += Sign * a;
+    Angle.Y += Sign * a;
   
-  CourseSpeed += a;
-  CourseSpeed *= 1 - dt * 10;
-  dAngle.Z = CourseSpeed + Sign * 0.1 * Angle.Z;
-  Angle.Z += -Sign * dAngle.Z;
+    CourseSpeed += a;
+    CourseSpeed *= 1 - dt * 10;
+    dAngle.Z = CourseSpeed + Sign * 0.1 * Angle.Z;
+    Angle.Z += -Sign * dAngle.Z;
 
-  if (abs(Angle.Z) >= 30)
-    Angle.Z = Angle.Z / abs(Angle.Z) * 30;
+    if (abs(Angle.Z) >= 30)
+      Angle.Z = Angle.Z / abs(Angle.Z) * 30;
   
 
-  dlgl::matr M = Prims.MatrWorld;
-  Prims.SetWorldTransormation( M.Inverse());
+    dlgl::matr M = Prims.MatrWorld;
+    Prims.SetWorldTransormation( M.Inverse());
 
-  BladesRotationX();
-  BladesRotationY();
+    BladesRotationX();
+    BladesRotationY();
 
-  Prims.SetWorldTransormation(Scale);
-  Prims.SetWorldTransormation(dlgl::matr::RotateZ( Angle.Z));
-  Prims.SetWorldTransormation(dlgl::matr::RotateY( Angle.Y ));
-  Prims.SetWorldTransormation(dlgl::matr::Translate( Pos + dPos));
+    Prims.SetWorldTransormation(Scale);
+    Prims.SetWorldTransormation(dlgl::matr::RotateZ( Angle.Z));
+    Prims.SetWorldTransormation(dlgl::matr::RotateY( Angle.Y ));
+    Prims.SetWorldTransormation(dlgl::matr::Translate( Pos + dPos));
   
-  cam->Loc -= Pos;
-  cam->Loc = dlgl::matr::RotateY(Sign * a).PointTransform(cam->Loc); 
-  cam->Loc += (Pos + dPos);
-  
-  Pos += dPos;
-  cam->At = Pos;
-  cam->Up = {0, 1, 0};
 
-  Collisions();
+    cam->Loc -= Pos;
+    cam->Loc = dlgl::matr::RotateY(Sign * a).PointTransform(cam->Loc); 
+    cam->Loc += (Pos + dPos);
+  
+    Pos += dPos;
+    cam->At = Pos;
+    cam->Up = {0, 1, 0};
+
+    SaveCamAt = cam->At;
+    SaveCamLoc = cam->Loc;
+    Collisions();     
+  }
 }
 
 void Helic::Keyboard( BYTE Keys[256], int IsDown )
@@ -151,15 +166,10 @@ void Helic::Keyboard( BYTE Keys[256], int IsDown )
       Speed = 0;
   }
   
-  if (Keys['P'] && !rnd->T.IsPause)
+  if ((Keys['P'] || (Keys['C'] && IsActive)) && !rnd->T.IsPause)
   {
-    float az = Dir.Angle(dlgl::vec3(0,0,1));
-    
-    Sign = cos(az) * sin(az);
-    cam->At = Pos;
-    cam->Loc -= Pos;
-    cam->Loc = dlgl::matr::RotateY(Sign * az).PointTransform(cam->Loc); 
-    cam->Loc += Pos;
+    cam->At = SaveCamAt;
+    cam->Loc = SaveCamLoc;
     cam->Up = {0, 1, 0};
   }
 }

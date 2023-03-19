@@ -19,25 +19,21 @@ u_mounts::u_mounts( render *R, camera *c )
       for (int x = 0; x < bm.bmWidth; x++)
       {
 
-        BYTE c = *((BYTE *)bm.bmBits + bm.bmWidthBytes * y + x);
+        //BYTE c = *((BYTE *)bm.bmBits + bm.bmWidthBytes * y + x);
         g.V[y * g.W + x].P = 
             dlgl::vec3(size * x / (bm.bmWidth - 1.0) - size /2.,
                        //h * c / 255.0, 
                         0,
                        size * (1 - y / (bm.bmHeight - 1.0)) - size / 2.);
-        if (x == 504 && y == 476)
-          int a = 1;
-        if ( g.V[y * g.W + x].P.X >= -2.05 && g.V[y * g.W + x].P.X <= -2.04 &&
-             g.V[y * g.W + x].P.Z >= 10 && g.V[y * g.W + x].P.Z <=10.2)
-          int a = 1;
-        g.V[y * g.W + x].P.Y = GetHeight(g.V[y * g.W + x].P);
+
+        g.V[y * g.W + x].P.Y = GetHeight(g.V[y * g.W + x].P) + 5;
       }
     
     g.PrimFromGrid(Prim);
     //DeleteObject(hBm);
   }
   SetMaterial();
-  //Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0, -5, 0)));
+  Prim.SetWorldTransormation(dlgl::matr::Translate(dlgl::vec3(0, -5, 0)));
 }
 
 void u_mounts::Delete( void )
@@ -76,7 +72,7 @@ float u_mounts::GetHeight( dlgl::vec3 P )
   x = round((bm.bmWidth - 1.0) / size * (P.X + size / 2.));
   y = round((bm.bmHeight - 1.) / size * (size / 2. - P.Z));
   BYTE c = *((BYTE *)bm.bmBits + bm.bmWidthBytes * y + x);
-  float H = h * float(c) / 255.0;
+  float H = h * float(c) / 255.0 - 5;
   
   return H;
 }
