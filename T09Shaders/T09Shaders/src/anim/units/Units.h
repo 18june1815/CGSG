@@ -5,10 +5,19 @@
 #include "anim/rnd/prim.h"
 #include "anim/rnd/prims.h"
 #include "anim/rnd/camera.h"
+#include "../rnd/grid.h"  
 
 #define MAX_FLAKES 300
 #define MAX_FIRE 3
 #define MAX_TREES 3
+
+// Noise
+#define GRID_SIZE 30
+
+#define TAB_BITS 8
+#define TAB_SIZE (1 << TAB_BITS)
+#define TAB_MASK (TAB_SIZE - 1)
+
 
 class object
 {
@@ -309,5 +318,59 @@ public:
   void Draw( dlgl::matr MatrVP  ) override;
   void Response( void ) override;
 };
+
+class noise: public object
+{
+public:
+  float size = 15, h = 50;
+  prim Prim;
+  double TabNoise[TAB_SIZE];
+  int Perm[TAB_SIZE];
+  int Oct = 4;
+  vertex V[GRID_SIZE * GRID_SIZE];
+  grid *g = new grid(GRID_SIZE, GRID_SIZE);
+  
+  dlgl::noise *N;
+
+  noise( render *R, camera *cam );
+  void SetMaterial( void );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Response( void ) override;
+  void Delete( void ) override;
+  void Keyboard( BYTE Keys[256], int IsDown ) override;
+
+  void NoiseInit( void );
+  double Noise1D( double X );
+  double Noise2D( double X, double Y );
+  double NoiseTurb1D( double X, int Octaves );
+  double NoiseTurb2D( double X, double Y, int Octaves );
+};
+
+/*
+class noise_shd: public object
+{
+public:
+  float size = 15, h = 50;
+  prim Prim;
+  double TabNoise[TAB_SIZE];
+  int Perm[TAB_SIZE];
+  int Oct = 4;
+  vertex V[GRID_SIZE * GRID_SIZE];
+  grid *g = new grid(GRID_SIZE, GRID_SIZE);
+
+  noise_shd( render *R, camera *cam );
+  void SetMaterial( void );
+  void Draw( dlgl::matr MatrVP  ) override;
+  void Response( void ) override;
+  void Delete( void ) override;
+  void Keyboard( BYTE Keys[256], int IsDown ) override;
+
+  void NoiseInit( void );
+  double Noise1D( double X );
+  double Noise2D( double X, double Y );
+  double NoiseTurb1D( double X, int Octaves );
+  double NoiseTurb2D( double X, double Y, int Octaves );
+};
+  */
 
 #endif /* __UNITS_H_ */

@@ -6,6 +6,7 @@
 #include "def.h"
 #include "anim/rnd/timer.h"
 #include "res/rndres.h"
+#include "rndtgrt.h"
   
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")
@@ -20,7 +21,8 @@ public:
   HWND hWnd;
   HGLRC hGLRC; //OpenGL rendering context
  
-  resources resources;
+  res *resources;
+  tgrt targets;
   timer T;
  
   int FrameW = 300, FrameH = 400;
@@ -36,7 +38,6 @@ public:
     ProjDist = 0.1,
     ProjFarClip = 300;
 
-    
   render( void )
   {
     //Init();
@@ -49,6 +50,7 @@ public:
   void Init( HWND hWnd );
   void Close( void );
   void Start( void );
+  void End( dlgl::vec3 CamLoc );
   void Resize ( int W, int H );
   void CopyFrame( void );
   void ProjSet( void );

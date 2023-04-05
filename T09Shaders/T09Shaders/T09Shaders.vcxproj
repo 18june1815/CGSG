@@ -144,6 +144,7 @@
     <ClInclude Include="src\anim\rnd\res\rndfnt.h" />
     <ClInclude Include="src\anim\rnd\rnd.h" />
     <ClInclude Include="src\anim\rnd\res\rndres.h" />
+    <ClInclude Include="src\anim\rnd\rndtgrt.h" />
     <ClInclude Include="src\anim\rnd\timer.h" />
     <ClInclude Include="src\anim\units\Units.h" />
     <ClInclude Include="src\def.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="src\anim\rnd\res\rndshd.cpp" />
     <ClCompile Include="src\anim\rnd\res\rndtex.cpp" />
     <ClCompile Include="src\anim\rnd\rndbase.cpp" />
+    <ClCompile Include="src\anim\rnd\rndtrgt.cpp" />
     <ClCompile Include="src\anim\units\CenterPoint.cpp" />
     <ClCompile Include="src\anim\units\Cessna.cpp" />
     <ClCompile Include="src\anim\units\CollisionFire.cpp" />
@@ -181,6 +183,8 @@
     <ClCompile Include="src\anim\units\Helic.cpp" />
     <ClCompile Include="src\anim\units\cow.cpp" />
     <ClCompile Include="src\anim\units\new_sky.cpp" />
+    <ClCompile Include="src\anim\units\Noise.cpp" />
+    <ClCompile Include="src\anim\units\noise_shd.cpp" />
     <ClCompile Include="src\anim\units\shadow.cpp" />
     <ClCompile Include="src\anim\units\sky.cpp" />
     <ClCompile Include="src\anim\units\smoke.cpp" />

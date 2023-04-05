@@ -1,5 +1,9 @@
 #include "grid.h"
 
+grid::grid()
+{
+}
+
 grid::grid( int w, int h ) : W(w), H(h)
 {
   for (int i = 0; i < H; i++)

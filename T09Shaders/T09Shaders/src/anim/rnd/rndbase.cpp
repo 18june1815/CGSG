@@ -84,16 +84,20 @@ void render::Init( HWND hWnd )
   ProjSet();
 
   SetTimer(hWnd, 30, 2, NULL);
-  resources.Init();
+  resources = new res;
+  resources->Init();
+  targets.Init(resources, FrameW, FrameH);
 }
 
 void render::Close( void )
 {
-  resources.Close();
+  resources->Close();
   wglMakeCurrent(NULL, NULL);
   wglDeleteContext(hGLRC);
 
   glFinish();
+  targets.Close();
+  delete resources;
   ReleaseDC(hWnd, hDC); 
 }
 
@@ -105,10 +109,17 @@ void render::Start( void )
   if (T.GlobalTime - ReloadTime > 6)
   {
     ReloadTime = T.GlobalTime;
-    resources.UpdateShader();
+    resources->UpdateShader();
   }
 
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  targets.Start();
+}
+
+void render::End( dlgl::vec3 CamLoc )
+{
+  glFinish(); 
+  targets.End(T.Time, CamLoc);
 }
 
 void render::Resize ( int W, int H )
@@ -118,6 +129,7 @@ void render::Resize ( int W, int H )
   FrameH = H;
   ProjSet();
   T.Response();
+  targets.Resize(W, H);
 }              
 
 void render::CopyFrame( void )

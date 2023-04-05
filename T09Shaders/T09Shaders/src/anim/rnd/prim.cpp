@@ -101,7 +101,7 @@ void prim::Draw(int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, ren
   glLoadMatrixf(wvp.M[0]);
      
   // Pass render uniforms
-  ProgId = rnd->resources.ApplyMaterial(MtlNo, rnd->T.Time);  
+  ProgId = rnd->resources->ApplyMaterial(MtlNo, rnd->T.Time);  
    if ((loc = glGetUniformLocation(ProgId, "Time")) != -1)
     glUniform1f(loc, rnd->T.Time);
   if ((loc = glGetUniformLocation(ProgId, "MatrWVP")) != -1)
@@ -130,7 +130,7 @@ void prim::Draw(int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, ren
     glUniform1f(loc, rnd->ProjDist);
 
   for (int i = 0; i < sizeof(ShdAddonI) / sizeof(ShdAddonI[0]); i++)
-  {
+  {                                       
     char Name[12] = "AddonInt0";
     Name[8] = i + '0';
     if ((loc = glGetUniformLocation(ProgId, Name)) != -1)
@@ -148,9 +148,9 @@ void prim::Draw(int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, ren
     glPatchParameteri(GL_PATCH_VERTICES, NumOfPatchPoints);
 
   // Draw triangles
-  //glPolygonMode(GL_FRONT_AND_BACK, PolygonMode);
+  glPolygonMode(GL_FRONT_AND_BACK, PolygonMode);
   
-  //glUseProgram(ProgId);
+  glUseProgram(ProgId);
 
   glBindVertexArray(VA);
 
@@ -164,7 +164,7 @@ void prim::Draw(int PolygonMode, int ElementsMode, const dlgl::matr &MatrVP, ren
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
   glBindVertexArray(0);
-  //glUseProgram(0);
+  glUseProgram(0);
 } // end of Draw function
 
 

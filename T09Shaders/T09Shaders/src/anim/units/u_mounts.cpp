@@ -29,6 +29,7 @@ u_mounts::u_mounts( render *R, camera *c )
         g.V[y * g.W + x].P.Y = GetHeight(g.V[y * g.W + x].P) + 5;
       }
     
+    g.AutoNormals();
     g.PrimFromGrid(Prim);
     //DeleteObject(hBm);
   }
@@ -50,9 +51,9 @@ void u_mounts::Draw( dlgl::matr MatrVP )
 void u_mounts::SetMaterial( void )
 {
   material m = material::GetLibMaterial("Mounts");
-  rnd->resources.AddTexture(&m, "Mounts", "bin/textures/hftex.bmp");
-  m.Tex[1] = rnd->resources.FindTexture("ShadowMap");
-  Prim.MtlNo = rnd->resources.AddMaterial(&m) - 1;
+  rnd->resources->AddTexture(&m, "Mounts", "bin/textures/hftex.bmp");
+  m.Tex[1] = rnd->resources->FindTexture("ShadowMap");
+  Prim.MtlNo = rnd->resources->AddMaterial(&m) - 1;
 }
 
 void u_mounts::Response( void ) 

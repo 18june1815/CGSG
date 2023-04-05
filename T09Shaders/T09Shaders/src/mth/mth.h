@@ -7,6 +7,15 @@
 //#define D2R(X) ((X) * Pi / 180)
 //#define R2D(X) ((X) * 180 / Pi)
 
+
+#define INDEX1(X) (Perm[(X) & TAB_MASK])
+#define INDEX2(X, Y) (Perm[(X + INDEX1(Y)) & TAB_MASK])
+#define INDEX3(X, Y, Z) (Perm[(X + INDEX2(Y, Z)) & TAB_MASK])
+
+#define TAB_BITS 8
+#define TAB_SIZE (1 << TAB_BITS)
+#define TAB_MASK (TAB_SIZE - 1)
+
 namespace mth
 {
   const double PI = 3.14159265359;
@@ -445,6 +454,93 @@ namespace mth
         
       }         
   }; 
+
+  
+  class noise
+  {
+  public:
+    double TabNoise[TAB_SIZE];
+    int Perm[TAB_SIZE];
+    int Oct = 4;
+
+    noise( void )
+    {
+      for (int i = 0; i < TAB_SIZE; i++)
+        TabNoise[i] = (double)rand() / RAND_MAX;
+
+      for (int i = 0; i < TAB_SIZE; i++)
+        Perm[i] = i;
+      for (int i = 0; i < TAB_SIZE * 8; i++)
+      {
+        int 
+          a = rand() & TAB_MASK,
+          b = rand() & TAB_MASK,
+          tmp = Perm[a];
+        Perm[a] = Perm[b];
+        Perm[b] = tmp;
+      }
+    }
+
+    double Noise1D( double X )
+    {
+      int ix = int(floor(X)), ix1;
+      double fx;
+
+      fx = X - ix;
+      ix &= TAB_MASK;
+      ix1 = (ix + 1) & TAB_MASK;
+      return TabNoise[ix] * (1 - fx) + TabNoise[ix1] * fx;
+    }
+
+    double Noise2D( double X, double Y )
+    {
+      int ix = int(floor(X)), ix1, iy = int(floor(Y)), iy1;
+      double fx, fy;
+
+      fx = X - ix;
+      fx = (3 - 2 * fx) * fx * fx;
+      fy = Y - iy;
+      fy = (3 - 2 * fy) * fy * fy;
+      ix &= TAB_MASK;
+      ix1 = (ix + 1) & TAB_MASK;
+      iy &= TAB_MASK;
+      iy1 = (iy + 1) & TAB_MASK;
+      return 
+        TabNoise[INDEX2(iy, ix)] * (1 - fx) * (1 - fy) + 
+        TabNoise[INDEX2(iy, ix1)] * fx * (1 - fy) + 
+        TabNoise[INDEX2(iy1, ix)] * (1 - fx) * fy + 
+        TabNoise[INDEX2(iy1, ix1)] * fx * fy;
+    }
+
+    double NoiseTurb1D( double X, int Octaves )
+    {
+      int frac = 1;
+      double val = 0;
+
+      for (int i = 0; i < Octaves; i++ )
+      {
+        val += Noise1D(X) / frac;
+        X = (X + 30.03) * 2;
+        frac *= 2;
+      }
+      return val * ( 1 << (Octaves - 1)) / ((1 << Octaves) - 1);
+    }
+
+    double NoiseTurb2D( double X, double Y, int Octaves )
+    {
+      int frac = 1;
+      double val = 0;
+
+      for (int i = 0; i < Octaves; i++ )
+      {
+        val += Noise2D(X, Y) / frac;
+        X = (X + 30.03) * 2;
+        Y = (Y + 17.33) * 2;
+        frac *= 2;
+      }
+      return val * ( 1 << (Octaves - 1)) / ((1 << Octaves) - 1);
+    }
+  };
 }
 
 namespace dlgl
@@ -453,6 +549,7 @@ namespace dlgl
   typedef mth::vec3<float> vec3;
   typedef mth::vec4<float> vec4;
   typedef mth::matr<float> matr;
+  typedef mth::noise noise;
 }
 
  /*

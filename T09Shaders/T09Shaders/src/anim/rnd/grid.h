@@ -12,6 +12,7 @@ public:
   std::vector<vertex> V;
 
   grid( int w, int h );
+  grid( void );
   ~grid()
   {
   }

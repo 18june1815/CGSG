@@ -87,6 +87,9 @@
     <ClInclude Include="src\anim\rnd\res\rndfnt.h">
       <Filter>Source Files\anim\rnd\res</Filter>
     </ClInclude>
+    <ClInclude Include="src\anim\rnd\rndtgrt.h">
+      <Filter>Source Files\anim\rnd</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="T09Shaders.rc">
@@ -193,6 +196,15 @@
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
     <ClCompile Include="src\anim\units\tess_sphere.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\rnd\rndtrgt.cpp">
+      <Filter>Source Files\anim\rnd</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\Noise.cpp">
+      <Filter>Source Files\anim\units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anim\units\noise_shd.cpp">
       <Filter>Source Files\anim\units</Filter>
     </ClCompile>
   </ItemGroup>
